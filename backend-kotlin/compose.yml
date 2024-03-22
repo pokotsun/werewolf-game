@@ -1,0 +1,10 @@
+version: '3'
+services:
+  db:
+    image:  postgres:16.2
+    ports:
+      - ${DB_PORT:-5432}:5432
+    restart: always
+    environment:
+      POSTGRES_USER: "werewolf"
+      POSTGRES_PASSWORD: "password"
