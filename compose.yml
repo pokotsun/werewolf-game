@@ -1,13 +1,11 @@
 version: '3'
 services:
   db:
-    image:  mysql:8.0.32
+    image:  postgres:14.11
     ports:
-      - ${DB_PORT:-3306}:3306
+      - ${DB_PORT:-5432}:5432
     environment:
-      MYSQL_DATABASE: werewolf
-      MYSQL_ROOT_PASSWORD: root
-      MYSQL_USER: werewolf
-      MYSQL_PASSWORD: password
+      POSTGRES_USER: werewolf
+      POSTGRES_PASSWORD: password
     healthcheck:
-      test: mysqladmin ping -h 127.0.0.1 -uroot
+      test: pg_isready -U "${POSTGRES_USER:-postgres}" || exit 1
