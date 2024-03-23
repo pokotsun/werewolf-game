@@ -8,25 +8,26 @@ import java.sql.Connection
 import java.sql.SQLException
 import java.sql.Statement
 import java.time.LocalDateTime
+import java.util.UUID
 
 const val getUser = """-- name: getUser :one
-SELECT user_id, name, updated_at FROM user
+SELECT user_id, name, updated_at FROM "user"
         WHERE user_id = ? LIMIT 1
 """
 
 class QueriesImpl(private val conn: Connection) : Queries {
 
   @Throws(SQLException::class)
-  override fun getUser(userId: Int): User? {
+  override fun getUser(userId: UUID): User? {
     return conn.prepareStatement(getUser).use { stmt ->
-      stmt.setInt(1, userId)
+      stmt.setObject(1, userId)
 
       val results = stmt.executeQuery()
       if (!results.next()) {
         return null
       }
       val ret = User(
-                results.getInt(1),
+                results.getObject(1) as UUID,
                 results.getString(2),
                 results.getObject(3, LocalDateTime::class.java)
             )

@@ -5,9 +5,10 @@
 package com.example.generated
 
 import java.time.LocalDateTime
+import java.util.UUID
 
 data class User (
-  val userId: Int,
+  val userId: UUID,
   val name: String,
   val updatedAt: LocalDateTime
 )
