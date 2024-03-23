@@ -1,8 +1,10 @@
+import com.diffplug.gradle.spotless.SpotlessExtension
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
     id("org.springframework.boot") version "3.2.4"
     id("io.spring.dependency-management") version "1.1.4"
+    id("com.diffplug.spotless") version "6.23.0"
     id("org.flywaydb.flyway") version "6.2.2"
     kotlin("jvm") version "1.9.23"
     kotlin("plugin.spring") version "1.9.23"
@@ -51,6 +53,24 @@ tasks.withType<KotlinCompile> {
 
 tasks.withType<Test> {
     useJUnitPlatform()
+}
+
+// spotless フォーマッタ
+configure<SpotlessExtension> {
+    val ktlintVersion = "0.50.0"
+    kotlin {
+        targetExclude("**/generated/**/*.kt")
+        ktlint(ktlintVersion)
+    }
+    kotlinGradle {
+        target("*.gradle.kts")
+        ktlint(ktlintVersion)
+    }
+    format("misc") {
+        target("*.md", "*.gitignore", "**/*.yml", "**/*.yaml")
+        trimTrailingWhitespace()
+        endWithNewline()
+    }
 }
 
 flyway {
