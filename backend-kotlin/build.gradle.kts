@@ -5,7 +5,7 @@ plugins {
     id("org.springframework.boot") version "3.2.4"
     id("io.spring.dependency-management") version "1.1.4"
     id("com.diffplug.spotless") version "6.23.0"
-    id("org.flywaydb.flyway") version "6.2.2"
+    id("org.flywaydb.flyway") version "7.2.1"
     kotlin("jvm") version "1.9.23"
     kotlin("plugin.spring") version "1.9.23"
 }
@@ -44,9 +44,8 @@ dependencies {
     implementation("org.springframework.boot:spring-boot-starter-web")
     implementation("org.springframework.boot:spring-boot-starter-jdbc")
     implementation("com.fasterxml.jackson.module:jackson-module-kotlin")
-    implementation("org.flywaydb:flyway-mysql")
     implementation("org.jetbrains.kotlin:kotlin-reflect")
-    runtimeOnly("com.mysql:mysql-connector-j:8.3.0")
+    runtimeOnly("org.postgresql:postgresql:42.7.3")
 
     testImplementation("org.springframework.boot:spring-boot-starter-test")
 
@@ -87,7 +86,8 @@ configure<SpotlessExtension> {
 }
 
 flyway {
-    url = "jdbc:mysql://localhost:3306/werewolf"
+    driver = "org.postgresql.Driver"
+    url = "jdbc:postgresql://localhost:5432/werewolf"
     user = "werewolf"
     password = "password"
 }

@@ -5,6 +5,7 @@ import com.example.generated.Queries
 import com.example.generated.QueriesImpl
 import org.springframework.stereotype.Repository
 import java.sql.Connection
+import java.util.*
 
 @Repository
 class UserRepository(
@@ -13,7 +14,7 @@ class UserRepository(
     private val queryManager: Queries = QueriesImpl(connection)
 
     fun selectUser(id: Int): HelloResponse.User? {
-        val userDao = queryManager.getUser(id)
+        val userDao = queryManager.getUser(UUID.randomUUID())
         return userDao?.let { HelloResponse.User(it.userId, it.name) }
     }
 }
