@@ -4,16 +4,18 @@ import '../App.css';
 function Home() {
     const [count, setCount] = useState(0);
 
-  return (
-    <>
-      <h1>人狼オンライン</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-      </div>
-    </>
-  )
+    return (
+        <>
+            <div className="main-content background-image">
+                <h1 className="title">人狼オンライン</h1>
+                <div className="card">
+                    <button onClick={() => setCount((count) => count + 1)}>
+                        count is {count}
+                    </button>
+                </div>
+            </div>
+        </>
+    )
 }
 
 export default Home
