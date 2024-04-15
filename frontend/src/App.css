@@ -33,14 +33,12 @@
   margin: 0 0 1em;
 }
 
-.logo:hover {
-  filter: drop-shadow(0 0 2em #646cffaa);
-}
-
-.logo.react:hover {
-  filter: drop-shadow(0 0 2em #61dafbaa);
-}
-
 .card {
+  display: flex;
+  justify-content: space-between;
   padding: 2em;
+}
+
+.card button {
+  margin: 3em;
 }
