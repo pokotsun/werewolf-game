@@ -1,9 +1,14 @@
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import React, { useState } from "react";
 import './CreateVillage.css';
+import { DEFAULT_BACKGROUND_IMAGE_PATH } from '../../Const.ts'
+
+const BACKGROUND_IMAGE_PATH = "public/background-village-entrance.jpg"
 
 function CreateVillage() {
+    const location = useLocation();
     const navigate = useNavigate();
+    const backgroundImage = (location.pathname === "/create-village") ? BACKGROUND_IMAGE_PATH : DEFAULT_BACKGROUND_IMAGE_PATH;
     const [villageName, setVillageName] = useState('恐ろしい村');
     const [ownerName, setOwnerName] = useState('hogehoge');
     const handleSubmit = (e: React.FormEvent) => {
@@ -12,7 +17,7 @@ function CreateVillage() {
     }
 
     return (
-        <div className="background-image main-content">
+        <div className="background-image main-content" style={{ backgroundImage: `url(${backgroundImage})` }}>
             <h1 className="title">村を作る</h1>
             <form onSubmit={handleSubmit}>
                 <label>
