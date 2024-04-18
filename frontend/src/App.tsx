@@ -2,6 +2,7 @@
 import { Route, BrowserRouter, Routes } from 'react-router-dom'
 import Home from './pages/home'
 import CreateVillage from './pages/createVillage'
+import EnterVillage from './pages/enterVillage'
 
 function App() {
   return (
@@ -9,6 +10,7 @@ function App() {
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/create-village" element={<CreateVillage />} />
+        <Route path="/enter-village" element={<EnterVillage />} />
       </Routes>
     </BrowserRouter>
   )
