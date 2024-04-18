@@ -1,6 +1,6 @@
 import { useNavigate } from "react-router-dom";
 import React, { useState } from "react";
-import '../CreateVillage.css';
+import '../createVillage/CreateVillage.css';
 
 function EnterVillage() {
     const navigate = useNavigate();
