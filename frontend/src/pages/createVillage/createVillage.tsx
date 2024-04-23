@@ -13,7 +13,7 @@ function CreateVillage() {
     const [ownerName, setOwnerName] = useState('hogehoge');
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
-        navigate("/village");
+        navigate("/setting-village");
     }
 
     return (
