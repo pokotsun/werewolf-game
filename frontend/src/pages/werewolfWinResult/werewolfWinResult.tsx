@@ -1,9 +1,8 @@
 import { useNavigate } from "react-router-dom";
 import { DEFAULT_BACKGROUND_IMAGE_PATH } from "../../Const";
-import "./CitizenWinResult.css";
+import "./WerewolfWinResult.css";
 import userIcon from "/user-icon.jpg";
-import werewolfIcon from "/roles/werewolf-icon.jpg"
-import hunterIcon from "/roles/hunter-icon.jpg"
+import wereWolfIcon from "/roles/werewolf-icon.jpg"
 import divinerIcon from "/roles/diviner-icon.jpg";
 
 function CitizenWinResult() {
@@ -16,21 +15,21 @@ function CitizenWinResult() {
             <div className="main-content" style={{ backgroundImage: `url(${backgroundImage})` }}>
                 <h1>CITIZENS WIN!!!!</h1>
                 <div className="result-text-box">
-                    <small>この瞬間に人狼は息絶えました。</small>
-                    <h2>市民チームの勝利です。</h2>
+                    <small>この瞬間に人狼が人間と同数以上になりました。</small>
+                    <h2>人狼チームの勝利です。</h2>
                     <small>勝利したプレイヤーには、10ポイントが加算されます。</small>
                 </div>
                 <h1>Result</h1>
-                <h2 className="team-result-title">Winner: 市民チーム</h2>
+                <h2 className="team-result-title">Winner: 人狼チーム</h2>
+                <div className="team-members-container">
+                    <UserInfo userName="Bob" role="人狼" iconPath={wereWolfIcon} />
+                </div>
+                <h2 className="team-result-title">Loser: 人間チーム</h2>
                 <div className="team-members-container">
                     <UserInfo userName="Bob" role="市民" iconPath={divinerIcon} />
-                    <UserInfo userName="Alice" role="市民" iconPath={hunterIcon} />
+                    <UserInfo userName="Alice" role="市民" iconPath={divinerIcon} />
                     <UserInfo userName="Bobby" role="市民" iconPath={divinerIcon} />
                     <UserInfo userName="Som" role="市民" iconPath={divinerIcon} />
-                </div>
-                <h2 className="team-result-title">Loser: 人狼チーム</h2>
-                <div className="team-members-container">
-                    <UserInfo userName="Bob" role="人狼" iconPath={werewolfIcon} />
                 </div>
             </div>
         </>
