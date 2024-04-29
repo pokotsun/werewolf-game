@@ -48,7 +48,7 @@ function SettingVillage() {
                     </div>
                 </div>
                 <div>
-                    <button onClick={() => navigate("/")}> ゲームを開始する </button>
+                    <button onClick={() => navigate("/citizen-win-result")}> ゲームを開始する </button>
                 </div>
             </div >
         </>

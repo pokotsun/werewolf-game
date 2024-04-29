@@ -27,29 +27,60 @@
     align-items: center;
 }
 
-.role-settings-container {
+.result-text-box {
     margin: 2em 2em;
     padding: 3em 2em;
-    background-color: whitesmoke;
+    background-color: gray;
+    border: 0.2em solid whitesmoke;
 }
 
-.role-select {
+.team-result-title {
+    border-bottom: 0.2em solid maroon;
+}
+
+.team-members-container {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    flex-wrap: wrap;
+    max-width: 30em;
+    text-align: center;
+}
+
+.user-info-container,
+.user-role-names {
     display: flex;
     flex-direction: row;
     align-items: center;
 }
 
-.role-icon {
-    height: 15em;
-    width: 15em;
+.user-info-container {
+    min-width: 15em;
+    /* アイテムがコンテナの残りのスペースを埋めるのを防ぐ */
+    flex-grow: 0;
 }
 
-.role-description-container {
-    margin: 1em;
+.user-role-names {
+    border-bottom: 0.2em solid gray;
 }
 
-.participants-info-container {
-    margin: 2em 2em;
-    padding: 3em 2em;
-    background-color: whitesmoke;
+.user-info-name {
+    padding-left: 1em;
+    text-align: left;
+    width: 4em;
+    color: azure;
+}
+
+
+.user-icon {
+    margin: 0.2em;
+    height: 4em;
+    width: 4em;
+}
+
+
+.user-info-container .role-icon {
+    margin: 0.1em;
+    height: 3em;
+    width: 3em;
 }
