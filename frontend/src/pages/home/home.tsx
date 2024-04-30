@@ -1,6 +1,6 @@
 import { useNavigate } from 'react-router-dom';
 import '../../App.css';
-import { DEFAULT_BACKGROUND_IMAGE_PATH } from '../../Const.ts'
+import { DEFAULT_BACKGROUND_IMAGE_PATH } from '../../common/constants.ts';
 
 function Home() {
     const navigate = useNavigate();

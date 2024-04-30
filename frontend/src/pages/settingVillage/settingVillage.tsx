@@ -1,6 +1,6 @@
 import { useLocation, useNavigate } from 'react-router-dom';
 import './settingVillage.css'
-import { DEFAULT_BACKGROUND_IMAGE_PATH } from '../../Const';
+import { DEFAULT_BACKGROUND_IMAGE_PATH } from '../../common/constants.ts';
 import werewolfIcon from '/roles/werewolf-icon.jpg';
 
 const BACKGROUND_IMAGE_PATH = "public/background-village-entrance.jpg"
