@@ -1,0 +1,37 @@
+.user-info-container,
+.user-role-names {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+}
+
+.user-info-container {
+    min-width: 15em;
+    /* アイテムがコンテナの残りのスペースを埋めるのを防ぐ */
+    flex-grow: 0;
+}
+
+.user-role-names {
+    border-bottom: 0.2em solid gray;
+}
+
+.user-info-name {
+    padding-left: 1em;
+    text-align: left;
+    width: 4em;
+    color: azure;
+}
+
+
+.user-icon {
+    margin: 0.2em;
+    height: 4em;
+    width: 4em;
+}
+
+
+.user-info-container .role-icon {
+    margin: 0.1em;
+    height: 3em;
+    width: 3em;
+}

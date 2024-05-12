@@ -1,3 +1,6 @@
+import userIcon from "/user-icon.jpg";
+import "./result-user-info.css";
+
 export const ResultUserInfo = (props: { userName: string, role: string, iconPath: string }) => {
     return (
         <div className="user-info-container">
@@ -12,3 +15,5 @@ export const ResultUserInfo = (props: { userName: string, role: string, iconPath
         </div >
     )
 }
+
+export default ResultUserInfo
