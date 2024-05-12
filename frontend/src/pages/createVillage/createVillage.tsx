@@ -3,7 +3,7 @@ import React, { useState } from "react";
 import './CreateVillage.css';
 import { DEFAULT_BACKGROUND_IMAGE_PATH } from '@/common/constants.ts';
 
-const BACKGROUND_IMAGE_PATH = "public/background-village-entrance.jpg";
+const BACKGROUND_IMAGE_PATH = "/background-village-entrance.jpg";
 
 function CreateVillage() {
     const location = useLocation();

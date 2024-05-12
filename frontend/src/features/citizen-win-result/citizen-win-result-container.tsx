@@ -1,12 +1,12 @@
 import { useNavigate } from "react-router-dom";
 import { DEFAULT_BACKGROUND_IMAGE_PATH } from '@/common/constants.ts';
-import "./CitizenWinResult.css";
+import "./citizen-win-result-container.css";
 import userIcon from "/user-icon.jpg";
 import werewolfIcon from "/roles/werewolf-icon.jpg"
 import hunterIcon from "/roles/hunter-icon.jpg"
 import divinerIcon from "/roles/diviner-icon.jpg";
 
-function CitizenWinResult() {
+function CitizenWinResultContainer() {
     const navigate = useNavigate();
 
     const backgroundImage = DEFAULT_BACKGROUND_IMAGE_PATH;
@@ -51,4 +51,4 @@ const UserInfo = (props: { userName: string, role: string, iconPath: string }) =
 }
 
 
-export default CitizenWinResult
+export default CitizenWinResultContainer
