@@ -1,8 +1,8 @@
 import { useNavigate } from 'react-router-dom';
-import '../../App.css';
+import './home-container.css';
 import { DEFAULT_BACKGROUND_IMAGE_PATH } from '@/common/constants.ts';
 
-function Home() {
+function HomeContainer() {
     const navigate = useNavigate();
 
     const backgroundImage = DEFAULT_BACKGROUND_IMAGE_PATH;
@@ -10,7 +10,7 @@ function Home() {
     return (
         <div className="main-content background-image" style={{ backgroundImage: `url(${backgroundImage})` }}>
             <h1 className="title">人狼オンライン</h1>
-            <div className="card">
+            <div className="enter-button-container">
                 <button onClick={() => navigate("/create-village")}>
                     村を作る
                 </button>
@@ -22,4 +22,4 @@ function Home() {
     )
 }
 
-export default Home
+export default HomeContainer
