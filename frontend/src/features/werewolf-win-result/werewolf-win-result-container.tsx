@@ -1,7 +1,6 @@
 import { useNavigate } from "react-router-dom";
 import { DEFAULT_BACKGROUND_IMAGE_PATH } from '@/common/constants.ts';
-import "./WerewolfWinResult.css";
-import userIcon from "/user-icon.jpg";
+import "./werewolf-win-result-container.css";
 import wereWolfIcon from "/roles/werewolf-icon.jpg"
 import divinerIcon from "/roles/diviner-icon.jpg";
 import ResultUserInfo from "@/features/generic/result-user-info/result-user-info";

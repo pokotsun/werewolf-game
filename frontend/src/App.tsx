@@ -4,7 +4,7 @@ import Home from './pages/home/home'
 import CreateVillage from './pages/createVillage/createVillage'
 import EnterVillage from './pages/enterVillage/enterVillage'
 import SettingVillage from './pages/settingVillage/settingVillage'
-import WerewolfWinResult from './pages/werewolfWinResult/werewolfWinResult'
+import WerewolfWinResult from './features/werewolf-win-result/werewolf-win-result-container'
 import { CitizenWinResult } from './pages/citizen-win-result'
 
 function App() {
