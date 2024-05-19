@@ -2,10 +2,10 @@
 import { Route, BrowserRouter, Routes } from 'react-router-dom'
 import { Home } from './pages/home'
 import SettingVillage from './pages/settingVillage/settingVillage'
-import WerewolfWinResult from './features/werewolf-win-result/werewolf-win-result-container'
-import { CitizenWinResult } from './pages/citizen-win-result'
 import { CreateVillage } from './pages/create-village'
 import { EnterVillage } from './pages/enter-village'
+import { CitizenWinResult } from './pages/citizen-win-result'
+import { WerewolfWinResult } from './pages/werewolf-win-result'
 
 function App() {
   return (

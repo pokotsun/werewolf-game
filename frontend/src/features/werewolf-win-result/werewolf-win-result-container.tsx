@@ -5,7 +5,7 @@ import wereWolfIcon from "/roles/werewolf-icon.jpg"
 import divinerIcon from "/roles/diviner-icon.jpg";
 import ResultUserInfo from "@/features/generic/result-user-info/result-user-info";
 
-function CitizenWinResult() {
+function WerewolfWinResultContainer() {
     const navigate = useNavigate();
 
     const backgroundImage = DEFAULT_BACKGROUND_IMAGE_PATH;
@@ -36,4 +36,4 @@ function CitizenWinResult() {
     )
 }
 
-export default CitizenWinResult
+export default WerewolfWinResultContainer
