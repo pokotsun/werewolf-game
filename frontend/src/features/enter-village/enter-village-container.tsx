@@ -1,27 +1,27 @@
 import { useLocation, useNavigate } from "react-router-dom";
 import React, { useState } from "react";
-import './CreateVillage.css';
+import '../create-village/create-village-container.css';
 import { DEFAULT_BACKGROUND_IMAGE_PATH } from '@/common/constants.ts';
 
-const BACKGROUND_IMAGE_PATH = "/background-village-entrance.jpg";
+const BACKGROUND_IMAGE_PATH = "/background-village-entrance.jpg"
 
-function CreateVillage() {
+function EnterVillageContainer() {
     const location = useLocation();
+    const backgroundImage = (location.pathname === "/enter-village") ? BACKGROUND_IMAGE_PATH : DEFAULT_BACKGROUND_IMAGE_PATH;
     const navigate = useNavigate();
-    const backgroundImage = (location.pathname === "/create-village") ? BACKGROUND_IMAGE_PATH : DEFAULT_BACKGROUND_IMAGE_PATH;
     const [villageName, setVillageName] = useState('恐ろしい村');
     const [ownerName, setOwnerName] = useState('hogehoge');
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
-        navigate("/setting-village");
+        navigate("/village");
     }
 
     return (
-        <div className="background-image main-content" style={{ backgroundImage: `url(${backgroundImage})` }}>
-            <h1 className="title">村を作る</h1>
+        <div className="main-content background-image" style={{ backgroundImage: `url(${backgroundImage})` }}>
+            <h1 className="title">村に入る</h1>
             <form onSubmit={handleSubmit}>
                 <label>
-                    村の名前:
+                    村 ID:
                     <input type="text" value={villageName} onChange={e => setVillageName(e.target.value)} />
                 </label>
                 <label>
@@ -37,4 +37,4 @@ function CreateVillage() {
     )
 }
 
-export default CreateVillage
+export default EnterVillageContainer
