@@ -1,11 +1,11 @@
 import { useLocation, useNavigate } from 'react-router-dom';
-import './settingVillage.css'
+import './setting-vllage-container.css'
 import { DEFAULT_BACKGROUND_IMAGE_PATH } from '@/common/constants.ts';
 import werewolfIcon from '/roles/werewolf-icon.jpg';
 
 const BACKGROUND_IMAGE_PATH = "/background-village-entrance.jpg"
 
-function SettingVillage() {
+function SettingVillageContainer() {
     const location = useLocation();
     const navigate = useNavigate();
 
@@ -66,4 +66,4 @@ export const RoleDescription = (props: { label: string, value: string }) => {
     )
 }
 
-export default SettingVillage
+export default SettingVillageContainer
