@@ -1,6 +1,8 @@
 module github.com/pokotsun/werewolf-game
 
-go 1.20
+go 1.22
+
+toolchain go1.23.4
 
 require (
 	google.golang.org/grpc v1.69.4
