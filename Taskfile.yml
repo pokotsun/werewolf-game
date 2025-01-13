@@ -7,8 +7,12 @@ tasks:
   gen-grpc-client: 
     cmds:
       - protoc --go_out=./werewolf-cli/pkg/grpc/ --go-grpc_out=./werewolf-cli/pkg/grpc/ proto/village.proto
+  gen-grpc-server:
+    cmds:
+      - protoc --java_out=./backend-kotlin/src/generated/java proto/village.proto
   gen-grpc:
     cmds:
       - task: clean
       - task: gen-grpc-client
+      - task: gen-grpc-server
 
