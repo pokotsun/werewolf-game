@@ -1,0 +1,14 @@
+version: '3'
+
+tasks:
+  clean:
+    cmds:
+      - rm -rf ./werewolf-cli/pkg/grpc/*
+  gen-grpc-client: 
+    cmds:
+      - protoc --go_out=./werewolf-cli/pkg/grpc/ --go-grpc_out=./werewolf-cli/pkg/grpc/ proto/village.proto
+  gen-grpc:
+    cmds:
+      - task: clean
+      - task: gen-grpc-client
+
