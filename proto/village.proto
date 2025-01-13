@@ -1,0 +1,26 @@
+syntax = "proto3";
+
+package village;
+
+option go_package = "github.com/pokotsun/werewolf/grpc/village";
+
+// VillageService 定義
+service VillageService {
+  rpc CreateVillage(CreateVillageRequest) returns (CreateVillageResponse);
+}
+
+// VillageRequest メッセージ
+message CreateVillageRequest {
+  string name = 1;
+  int32 user_number = 2;
+  string created_at = 3;
+}
+
+// VillageResponse メッセージ
+message CreateVillageResponse {
+  string id = 1;
+  string name = 2;
+  int32 user_number = 3;
+  string created_at = 4;
+  string updated_at = 5;
+}
