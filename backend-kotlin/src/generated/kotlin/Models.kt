@@ -13,3 +13,11 @@ data class User (
   val updatedAt: LocalDateTime
 )
 
+data class Village (
+  val id: UUID,
+  val name: String,
+  val userCounts: java.math.BigDecimal,
+  val createdAt: LocalDateTime?,
+  val updatedAt: LocalDateTime?
+)
+

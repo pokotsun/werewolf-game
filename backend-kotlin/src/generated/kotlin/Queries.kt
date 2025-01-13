@@ -14,5 +14,8 @@ interface Queries {
   @Throws(SQLException::class)
   fun getUser(userId: UUID): User?
   
+  @Throws(SQLException::class)
+  fun getVillages(): List<Village>
+  
 }
 
