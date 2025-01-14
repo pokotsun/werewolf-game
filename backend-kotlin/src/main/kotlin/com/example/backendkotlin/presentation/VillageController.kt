@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.RestController
 
 @RestController
 class VillageController(
-    private val listAllVillagesUseCase: ListAllVillagesUseCase
+    private val listAllVillagesUseCase: ListAllVillagesUseCase,
 ) {
     @GetMapping("/villages")
     fun listAllVillages(): List<VillageResponse> {
