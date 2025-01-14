@@ -4,6 +4,10 @@ package village;
 
 option go_package = "github.com/pokotsun/werewolf/grpc/village";
 
+option java_multiple_files = true;
+option java_package = "com.example.backendkotlin.generated.grpc";
+option java_outer_classname = "VillageServiceProto";
+
 // VillageService 定義
 service VillageService {
   rpc CreateVillage(CreateVillageRequest) returns (CreateVillageResponse);
