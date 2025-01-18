@@ -2,7 +2,6 @@ package com.example.backendkotlin.infrastructure.db.table
 
 import org.jetbrains.exposed.dao.id.UUIDTable
 import org.jetbrains.exposed.sql.kotlin.datetime.CurrentDateTime
-import org.jetbrains.exposed.sql.kotlin.datetime.CurrentTimestamp
 import org.jetbrains.exposed.sql.kotlin.datetime.datetime
 
 object VillageTable : UUIDTable("village") {

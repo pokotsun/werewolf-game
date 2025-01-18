@@ -13,7 +13,7 @@ class UserRepository() {
         val queryResult = transaction {
             UserTable.select(
                 UserTable.id,
-                UserTable.name
+                UserTable.name,
             ).firstOrNull()
         }
         return queryResult?.let { HelloResponse.User(it[UserTable.id].value, it[UserTable.name]) }

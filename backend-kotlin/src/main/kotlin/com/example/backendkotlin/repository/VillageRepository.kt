@@ -16,11 +16,11 @@ class VillageRepository() {
             VillageTable.join(
                 RUserVillageTable,
                 JoinType.LEFT,
-                additionalConstraint = { VillageTable.id eq RUserVillageTable.villageId }
+                additionalConstraint = { VillageTable.id eq RUserVillageTable.villageId },
             ).join(
                 UserTable,
                 JoinType.LEFT,
-                additionalConstraint = { RUserVillageTable.userId eq UserTable.id }
+                additionalConstraint = { RUserVillageTable.userId eq UserTable.id },
             ).select(
                 VillageTable.id,
                 VillageTable.name,
@@ -34,7 +34,7 @@ class VillageRepository() {
             VillageResponse(
                 firstValue[VillageTable.name],
                 userCount,
-                firstValue[VillageTable.updatedAt].toString()
+                firstValue[VillageTable.updatedAt].toString(),
             )
         }
     }
