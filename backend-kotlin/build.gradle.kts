@@ -11,7 +11,6 @@ plugins {
 
 group = "com.example"
 version = "0.0.1-SNAPSHOT"
-val exposedVersion: String by project
 
 java {
     sourceCompatibility = JavaVersion.VERSION_17
@@ -43,6 +42,7 @@ sourceSets {
 dependencyManagement {
     imports {
         mavenBom("io.kotest:kotest-bom:5.8.0")
+        mavenBom("org.jetbrains.exposed:exposed-bom:0.58.0")
     }
 }
 
@@ -54,15 +54,13 @@ dependencies {
     runtimeOnly("org.postgresql:postgresql:42.7.3")
 
     // exposed 用の依存関係
-    implementation("org.jetbrains.exposed:exposed-core:$exposedVersion")
-    implementation("org.jetbrains.exposed:exposed-crypt:$exposedVersion")
-    implementation("org.jetbrains.exposed:exposed-dao:$exposedVersion")
-    implementation("org.jetbrains.exposed:exposed-jdbc:$exposedVersion")
-    implementation("org.jetbrains.exposed:exposed-kotlin-datetime:$exposedVersion")
+    implementation("org.jetbrains.exposed:exposed-core")
+    implementation("org.jetbrains.exposed:exposed-dao")
+    implementation("org.jetbrains.exposed:exposed-jdbc")
+    implementation("org.jetbrains.exposed:exposed-kotlin-datetime")
 
-    implementation("org.jetbrains.exposed:exposed-json:$exposedVersion")
-    implementation("org.jetbrains.exposed:exposed-money:$exposedVersion")
-    implementation("org.jetbrains.exposed:exposed-spring-boot-starter:$exposedVersion")
+    implementation("org.jetbrains.exposed:exposed-json")
+    implementation("org.jetbrains.exposed:exposed-spring-boot-starter")
 
     // grpc 用の依存関係
     implementation("com.google.protobuf:protobuf-java:4.29.3")
