@@ -5,13 +5,13 @@ plugins {
     id("org.springframework.boot") version "3.2.4"
     id("io.spring.dependency-management") version "1.1.4"
     id("com.diffplug.spotless") version "6.23.0"
-    id("org.flywaydb.flyway") version "7.2.1"
     kotlin("jvm") version "1.9.23"
     kotlin("plugin.spring") version "1.9.23"
 }
 
 group = "com.example"
 version = "0.0.1-SNAPSHOT"
+val exposedVersion: String by project
 
 java {
     sourceCompatibility = JavaVersion.VERSION_17
@@ -52,6 +52,17 @@ dependencies {
     implementation("com.fasterxml.jackson.module:jackson-module-kotlin")
     implementation("org.jetbrains.kotlin:kotlin-reflect")
     runtimeOnly("org.postgresql:postgresql:42.7.3")
+
+    // exposed 用の依存関係
+    implementation("org.jetbrains.exposed:exposed-core:$exposedVersion")
+    implementation("org.jetbrains.exposed:exposed-crypt:$exposedVersion")
+    implementation("org.jetbrains.exposed:exposed-dao:$exposedVersion")
+    implementation("org.jetbrains.exposed:exposed-jdbc:$exposedVersion")
+    implementation("org.jetbrains.exposed:exposed-kotlin-datetime:$exposedVersion")
+
+    implementation("org.jetbrains.exposed:exposed-json:$exposedVersion")
+    implementation("org.jetbrains.exposed:exposed-money:$exposedVersion")
+    implementation("org.jetbrains.exposed:exposed-spring-boot-starter:$exposedVersion")
 
     // grpc 用の依存関係
     implementation("com.google.protobuf:protobuf-java:4.29.3")
@@ -98,11 +109,4 @@ configure<SpotlessExtension> {
         trimTrailingWhitespace()
         endWithNewline()
     }
-}
-
-flyway {
-    driver = "org.postgresql.Driver"
-    url = "jdbc:postgresql://localhost:5432/werewolf"
-    user = "werewolf"
-    password = "password"
 }
