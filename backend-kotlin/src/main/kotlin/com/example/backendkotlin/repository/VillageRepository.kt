@@ -1,18 +1,41 @@
 package com.example.backendkotlin.repository
 
+import com.example.backendkotlin.infrastructure.db.table.RUserVillageTable
+import com.example.backendkotlin.infrastructure.db.table.UserTable
+import com.example.backendkotlin.infrastructure.db.table.VillageTable
 import com.example.backendkotlin.presentation.response.VillageResponse
-import com.example.generated.Queries
-import com.example.generated.QueriesImpl
+import org.jetbrains.exposed.sql.JoinType
+import org.jetbrains.exposed.sql.transactions.transaction
 import org.springframework.stereotype.Repository
-import java.sql.Connection
 
 @Repository
-class VillageRepository(private val connection: Connection) {
-    private val queryManager: Queries = QueriesImpl(connection)
+class VillageRepository() {
 
     fun selectAllVillages(): List<VillageResponse> {
-        return queryManager.getVillages().map {
-            VillageResponse(it.name, it.userCounts.toInt(), it.updatedAt.toString())
+        val queryResult = transaction {
+            VillageTable.join(
+                RUserVillageTable,
+                JoinType.LEFT,
+                additionalConstraint = { VillageTable.id eq RUserVillageTable.villageId }
+            ).join(
+                UserTable,
+                JoinType.LEFT,
+                additionalConstraint = { RUserVillageTable.userId eq UserTable.id }
+            ).select(
+                VillageTable.id,
+                VillageTable.name,
+                VillageTable.updatedAt,
+                UserTable.id,
+            ).toList()
+        }
+        return queryResult.groupBy { VillageTable.id }.map { (_, values) ->
+            val userCount = values.count()
+            val firstValue = values.first()
+            VillageResponse(
+                firstValue[VillageTable.name],
+                userCount,
+                firstValue[VillageTable.updatedAt].toString()
+            )
         }
     }
 }
