@@ -5,14 +5,14 @@ import org.jetbrains.exposed.sql.kotlin.datetime.CurrentDateTime
 import org.jetbrains.exposed.sql.kotlin.datetime.datetime
 
 object VillageTable : UUIDTable("village") {
-    val name = varchar("name", 255)
-    val password = varchar("password", 255)
-    val citizenCount = decimal("citizen_count", 2, 0)
-    val werewolfCount = decimal("werewolf_count", 1, 0)
-    val fortuneTellerCount = decimal("fortune_teller_count", 1, 0)
-    val knightCount = decimal("knight_count", 1, 0)
-    val psychicCount = decimal("psychic_count", 1, 0)
-    val madmanCount = decimal("madman_count", 1, 0)
+    val name = varchar("name", length = 255)
+    val password = varchar("password", length = 255)
+    val citizenCount = integer("citizen_count")
+    val werewolfCount = integer("werewolf_count")
+    val fortuneTellerCount = integer("fortune_teller_count")
+    val knightCount = integer("knight_count")
+    val psychicCount = integer("psychic_count")
+    val madmanCount = integer("madman_count",)
     val isInitialActionActive = bool("is_initial_action_active")
     val createdAt = datetime("created_at").defaultExpression(CurrentDateTime)
     val updatedAt = datetime("updated_at").defaultExpression(CurrentDateTime)
