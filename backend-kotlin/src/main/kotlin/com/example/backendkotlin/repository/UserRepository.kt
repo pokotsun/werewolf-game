@@ -1,20 +1,21 @@
 package com.example.backendkotlin.repository
 
+import com.example.backendkotlin.infrastructure.db.table.UserTable
 import com.example.backendkotlin.presentation.response.HelloResponse
-import com.example.generated.Queries
-import com.example.generated.QueriesImpl
+import org.jetbrains.exposed.sql.transactions.transaction
 import org.springframework.stereotype.Repository
-import java.sql.Connection
 import java.util.*
 
 @Repository
-class UserRepository(
-    private val connection: Connection,
-) {
-    private val queryManager: Queries = QueriesImpl(connection)
+class UserRepository() {
 
     fun selectUser(id: Int): HelloResponse.User? {
-        val userDao = queryManager.getUser(UUID.randomUUID())
-        return userDao?.let { HelloResponse.User(it.userId, it.name) }
+        val queryResult = transaction {
+            UserTable.select(
+                UserTable.id,
+                UserTable.name,
+            ).firstOrNull()
+        }
+        return queryResult?.let { HelloResponse.User(it[UserTable.id].value, it[UserTable.name]) }
     }
 }
