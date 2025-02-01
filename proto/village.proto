@@ -11,19 +11,52 @@ option java_outer_classname = "VillageServiceProto";
 // VillageService 定義
 service VillageService {
   rpc CreateVillage(CreateVillageRequest) returns (CreateVillageResponse);
+  rpc ListVillages(ListVillagesRequest) returns (ListVillagesResponse);
 }
 
 // VillageRequest メッセージ
 message CreateVillageRequest {
-  string name = 1;
-  int32 user_number = 2;
+    string name = 1;
+    int32 citizen_count = 2;
+    int32 werewolf_count = 3;
+    int32 fortune_teller_count = 4;
+    int32 knight_count = 5;
+    int32 psychic_count = 6;
+    int32 madman_count = 7;
+    bool is_initial_action_active = 8;
+    string password = 9;
 }
 
-// VillageResponse メッセージ
 message CreateVillageResponse {
-  string id = 1;
-  string name = 2;
-  int32 user_number = 3;
-  string created_at = 4;
-  string updated_at = 5;
+    string id = 1;
+    string name = 2;
+    int32 user_number = 3;
+    int32 citizen_count = 4;
+    int32 werewolf_count = 5;
+    int32 fortune_teller_count = 6;
+    int32 knight_count = 7;
+    int32 psychic_count = 8;
+    int32 madman_count = 9;
+    bool is_initial_action_active = 10;
+}
+
+// ListVillagesRequest メッセージ
+message ListVillagesRequest {}
+
+// ListVillagesResponse メッセージ
+message ListVillagesResponse {
+    repeated VillageResponse villages = 1;
+}
+
+message VillageResponse {
+    string id = 1;
+    string name = 2;
+    int32 user_number = 3;
+    int32 citizen_count = 4;
+    int32 werewolf_count = 5;
+    int32 fortune_teller_count = 6;
+    int32 knight_count = 7;
+    int32 psychic_count = 8;
+    int32 madman_count = 9;
+    bool is_initial_action_active = 10;
 }
