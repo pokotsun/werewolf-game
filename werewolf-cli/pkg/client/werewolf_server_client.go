@@ -43,9 +43,14 @@ func (c *WerewolfServerClient) CreateVillage(request client.CreateVillageRequest
 	}
 
 	response := domain.Village{
-		Id:           &res.Id,
-		Name:         &res.Name,
-		CitizenCount: res.CitizenCount,
+		Id:                    &res.Id,
+		Name:                  &res.Name,
+		CitizenCount:          res.CitizenCount,
+		FortuneTellerCount:    request.FortuneTellerCount,
+		KnightCount:           request.KnightCount,
+		PsychicCount:          request.PsychicCount,
+		MadmanCount:           request.MadmanCount,
+		IsInitialActionActive: true,
 	}
 
 	return &response, nil
