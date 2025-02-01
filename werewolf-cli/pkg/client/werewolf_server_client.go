@@ -9,18 +9,21 @@ import (
 )
 
 type WerewolfServerClient struct {
-	ctx  *context.Context
-	conn *grpc.ClientConn
+	ctx                  *context.Context
+	conn                 *grpc.ClientConn
+	villageServiceClient *village.VillageServiceClient
 }
 
 func NewWerewolfServerClient(ctx *context.Context, conn *grpc.ClientConn) *WerewolfServerClient {
-	return &WerewolfServerClient{ctx: ctx, conn: conn}
+	villageServiceClient := village.NewVillageServiceClient(conn)
+	return &WerewolfServerClient{
+		ctx:                  ctx,
+		conn:                 conn,
+		villageServiceClient: &villageServiceClient,
+	}
 }
 
 func (c *WerewolfServerClient) CreateVillage(request client.CreateVillageRequest) (*domain.Village, error) {
-	// クライアントを作成
-	cc := village.NewVillageServiceClient(c.conn)
-
 	isInitialActionActive := int32(1)
 	if !request.IsInitialActionActive {
 		isInitialActionActive = 0
@@ -37,7 +40,8 @@ func (c *WerewolfServerClient) CreateVillage(request client.CreateVillageRequest
 	}
 
 	// サーバーにリクエストを送信
-	res, err := cc.CreateVillage(*c.ctx, &req)
+
+	res, err := (*c.villageServiceClient).CreateVillage(*c.ctx, &req)
 	if err != nil {
 		return nil, err
 	}
@@ -54,4 +58,30 @@ func (c *WerewolfServerClient) CreateVillage(request client.CreateVillageRequest
 	}
 
 	return &response, nil
+}
+
+func (c *WerewolfServerClient) ListVillages() ([]*domain.Village, error) {
+	// サーバーにリクエストを送信
+	req := village.ListVillagesRequest{}
+	res, err := (*c.villageServiceClient).ListVillages(*c.ctx, &req)
+	if err != nil {
+		return nil, err
+	}
+
+	var targetList []*domain.Village
+	for _, villageResponse := range res.Villages {
+		target := domain.Village{
+			Id:                    &villageResponse.Id,
+			Name:                  &villageResponse.Name,
+			CitizenCount:          villageResponse.CitizenCount,
+			FortuneTellerCount:    villageResponse.FortuneTellerCount,
+			KnightCount:           villageResponse.KnightCount,
+			PsychicCount:          villageResponse.PsychicCount,
+			MadmanCount:           villageResponse.MadmanCount,
+			IsInitialActionActive: true,
+		}
+		targetList = append(targetList, &target)
+	}
+
+	return targetList, nil
 }
