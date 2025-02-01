@@ -2,7 +2,8 @@ package main
 
 import (
 	"context"
-	"github.com/pokotsun/werewolf-game/pkg/grpc/github.com/pokotsun/werewolf/grpc/village"
+	serverClient "github.com/pokotsun/werewolf-game/pkg/client"
+	createVillage "github.com/pokotsun/werewolf-game/pkg/client/createvillage"
 	_ "github.com/pokotsun/werewolf-game/pkg/grpc/github.com/pokotsun/werewolf/grpc/village"
 	"google.golang.org/grpc"
 	"log"
@@ -26,18 +27,27 @@ func main() {
 		}
 	}(conn)
 
-	// クライアントを作成
-	c := village.NewVillageServiceClient(conn)
+	client := serverClient.NewWerewolfServerClient(&ctx, conn)
 
 	// リクエストを作成
-	req := &village.CreateVillageRequest{Name: "Test Village 1st", UserNumber: 7}
+	name := "Test Village 1st"
+	req := createVillage.CreateVillageRequest{
+		Name:                  &name,
+		CitizenCount:          7,
+		WerewolfCount:         2,
+		FortuneTellerCount:    1,
+		KnightCount:           1,
+		PsychicCount:          1,
+		MadmanCount:           1,
+		IsInitialActionActive: true,
+	}
 
 	// サーバーにリクエストを送信
-	res, err := c.CreateVillage(ctx, req)
+	res, err := client.CreateVillage(req)
 	if err != nil {
 		log.Fatalf("could not get village info: %v", err)
 	}
 
 	// レスポンスを表示
-	log.Printf("Village Info: %v", res)
+	log.Printf("Village Info: %v, %v, %v", res, *res.Id, *res.Name)
 }
