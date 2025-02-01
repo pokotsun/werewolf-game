@@ -8,7 +8,7 @@ import static io.grpc.MethodDescriptor.generateFullMethodName;
  * </pre>
  */
 @javax.annotation.Generated(
-    value = "by gRPC proto compiler (version 1.69.0)",
+    value = "by gRPC proto compiler (version 1.69.1)",
     comments = "Source: proto/village.proto")
 @io.grpc.stub.annotations.GrpcGenerated
 public final class VillageServiceGrpc {
@@ -47,6 +47,37 @@ public final class VillageServiceGrpc {
       }
     }
     return getCreateVillageMethod;
+  }
+
+  private static volatile io.grpc.MethodDescriptor<com.example.backendkotlin.generated.grpc.ListVillagesRequest,
+      com.example.backendkotlin.generated.grpc.ListVillagesResponse> getListVillagesMethod;
+
+  @io.grpc.stub.annotations.RpcMethod(
+      fullMethodName = SERVICE_NAME + '/' + "ListVillages",
+      requestType = com.example.backendkotlin.generated.grpc.ListVillagesRequest.class,
+      responseType = com.example.backendkotlin.generated.grpc.ListVillagesResponse.class,
+      methodType = io.grpc.MethodDescriptor.MethodType.UNARY)
+  public static io.grpc.MethodDescriptor<com.example.backendkotlin.generated.grpc.ListVillagesRequest,
+      com.example.backendkotlin.generated.grpc.ListVillagesResponse> getListVillagesMethod() {
+    io.grpc.MethodDescriptor<com.example.backendkotlin.generated.grpc.ListVillagesRequest, com.example.backendkotlin.generated.grpc.ListVillagesResponse> getListVillagesMethod;
+    if ((getListVillagesMethod = VillageServiceGrpc.getListVillagesMethod) == null) {
+      synchronized (VillageServiceGrpc.class) {
+        if ((getListVillagesMethod = VillageServiceGrpc.getListVillagesMethod) == null) {
+          VillageServiceGrpc.getListVillagesMethod = getListVillagesMethod =
+              io.grpc.MethodDescriptor.<com.example.backendkotlin.generated.grpc.ListVillagesRequest, com.example.backendkotlin.generated.grpc.ListVillagesResponse>newBuilder()
+              .setType(io.grpc.MethodDescriptor.MethodType.UNARY)
+              .setFullMethodName(generateFullMethodName(SERVICE_NAME, "ListVillages"))
+              .setSampledToLocalTracing(true)
+              .setRequestMarshaller(io.grpc.protobuf.ProtoUtils.marshaller(
+                  com.example.backendkotlin.generated.grpc.ListVillagesRequest.getDefaultInstance()))
+              .setResponseMarshaller(io.grpc.protobuf.ProtoUtils.marshaller(
+                  com.example.backendkotlin.generated.grpc.ListVillagesResponse.getDefaultInstance()))
+              .setSchemaDescriptor(new VillageServiceMethodDescriptorSupplier("ListVillages"))
+              .build();
+        }
+      }
+    }
+    return getListVillagesMethod;
   }
 
   /**
@@ -106,6 +137,13 @@ public final class VillageServiceGrpc {
         io.grpc.stub.StreamObserver<com.example.backendkotlin.generated.grpc.CreateVillageResponse> responseObserver) {
       io.grpc.stub.ServerCalls.asyncUnimplementedUnaryCall(getCreateVillageMethod(), responseObserver);
     }
+
+    /**
+     */
+    default void listVillages(com.example.backendkotlin.generated.grpc.ListVillagesRequest request,
+        io.grpc.stub.StreamObserver<com.example.backendkotlin.generated.grpc.ListVillagesResponse> responseObserver) {
+      io.grpc.stub.ServerCalls.asyncUnimplementedUnaryCall(getListVillagesMethod(), responseObserver);
+    }
   }
 
   /**
@@ -148,6 +186,14 @@ public final class VillageServiceGrpc {
       io.grpc.stub.ClientCalls.asyncUnaryCall(
           getChannel().newCall(getCreateVillageMethod(), getCallOptions()), request, responseObserver);
     }
+
+    /**
+     */
+    public void listVillages(com.example.backendkotlin.generated.grpc.ListVillagesRequest request,
+        io.grpc.stub.StreamObserver<com.example.backendkotlin.generated.grpc.ListVillagesResponse> responseObserver) {
+      io.grpc.stub.ClientCalls.asyncUnaryCall(
+          getChannel().newCall(getListVillagesMethod(), getCallOptions()), request, responseObserver);
+    }
   }
 
   /**
@@ -174,6 +220,13 @@ public final class VillageServiceGrpc {
     public com.example.backendkotlin.generated.grpc.CreateVillageResponse createVillage(com.example.backendkotlin.generated.grpc.CreateVillageRequest request) {
       return io.grpc.stub.ClientCalls.blockingUnaryCall(
           getChannel(), getCreateVillageMethod(), getCallOptions(), request);
+    }
+
+    /**
+     */
+    public com.example.backendkotlin.generated.grpc.ListVillagesResponse listVillages(com.example.backendkotlin.generated.grpc.ListVillagesRequest request) {
+      return io.grpc.stub.ClientCalls.blockingUnaryCall(
+          getChannel(), getListVillagesMethod(), getCallOptions(), request);
     }
   }
 
@@ -203,9 +256,18 @@ public final class VillageServiceGrpc {
       return io.grpc.stub.ClientCalls.futureUnaryCall(
           getChannel().newCall(getCreateVillageMethod(), getCallOptions()), request);
     }
+
+    /**
+     */
+    public com.google.common.util.concurrent.ListenableFuture<com.example.backendkotlin.generated.grpc.ListVillagesResponse> listVillages(
+        com.example.backendkotlin.generated.grpc.ListVillagesRequest request) {
+      return io.grpc.stub.ClientCalls.futureUnaryCall(
+          getChannel().newCall(getListVillagesMethod(), getCallOptions()), request);
+    }
   }
 
   private static final int METHODID_CREATE_VILLAGE = 0;
+  private static final int METHODID_LIST_VILLAGES = 1;
 
   private static final class MethodHandlers<Req, Resp> implements
       io.grpc.stub.ServerCalls.UnaryMethod<Req, Resp>,
@@ -227,6 +289,10 @@ public final class VillageServiceGrpc {
         case METHODID_CREATE_VILLAGE:
           serviceImpl.createVillage((com.example.backendkotlin.generated.grpc.CreateVillageRequest) request,
               (io.grpc.stub.StreamObserver<com.example.backendkotlin.generated.grpc.CreateVillageResponse>) responseObserver);
+          break;
+        case METHODID_LIST_VILLAGES:
+          serviceImpl.listVillages((com.example.backendkotlin.generated.grpc.ListVillagesRequest) request,
+              (io.grpc.stub.StreamObserver<com.example.backendkotlin.generated.grpc.ListVillagesResponse>) responseObserver);
           break;
         default:
           throw new AssertionError();
@@ -253,6 +319,13 @@ public final class VillageServiceGrpc {
               com.example.backendkotlin.generated.grpc.CreateVillageRequest,
               com.example.backendkotlin.generated.grpc.CreateVillageResponse>(
                 service, METHODID_CREATE_VILLAGE)))
+        .addMethod(
+          getListVillagesMethod(),
+          io.grpc.stub.ServerCalls.asyncUnaryCall(
+            new MethodHandlers<
+              com.example.backendkotlin.generated.grpc.ListVillagesRequest,
+              com.example.backendkotlin.generated.grpc.ListVillagesResponse>(
+                service, METHODID_LIST_VILLAGES)))
         .build();
   }
 
@@ -302,6 +375,7 @@ public final class VillageServiceGrpc {
           serviceDescriptor = result = io.grpc.ServiceDescriptor.newBuilder(SERVICE_NAME)
               .setSchemaDescriptor(new VillageServiceFileDescriptorSupplier())
               .addMethod(getCreateVillageMethod())
+              .addMethod(getListVillagesMethod())
               .build();
         }
       }

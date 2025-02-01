@@ -6,10 +6,6 @@
 package com.example.backendkotlin.generated.grpc;
 
 /**
- * <pre>
- * VillageResponse メッセージ
- * </pre>
- *
  * Protobuf type {@code village.CreateVillageResponse}
  */
 public final class CreateVillageResponse extends
@@ -33,8 +29,6 @@ private static final long serialVersionUID = 0L;
   private CreateVillageResponse() {
     id_ = "";
     name_ = "";
-    createdAt_ = "";
-    updatedAt_ = "";
   }
 
   public static final com.google.protobuf.Descriptors.Descriptor
@@ -139,82 +133,81 @@ private static final long serialVersionUID = 0L;
     return userNumber_;
   }
 
-  public static final int CREATED_AT_FIELD_NUMBER = 4;
-  @SuppressWarnings("serial")
-  private volatile java.lang.Object createdAt_ = "";
+  public static final int CITIZEN_COUNT_FIELD_NUMBER = 4;
+  private int citizenCount_ = 0;
   /**
-   * <code>string created_at = 4;</code>
-   * @return The createdAt.
+   * <code>int32 citizen_count = 4;</code>
+   * @return The citizenCount.
    */
   @java.lang.Override
-  public java.lang.String getCreatedAt() {
-    java.lang.Object ref = createdAt_;
-    if (ref instanceof java.lang.String) {
-      return (java.lang.String) ref;
-    } else {
-      com.google.protobuf.ByteString bs = 
-          (com.google.protobuf.ByteString) ref;
-      java.lang.String s = bs.toStringUtf8();
-      createdAt_ = s;
-      return s;
-    }
-  }
-  /**
-   * <code>string created_at = 4;</code>
-   * @return The bytes for createdAt.
-   */
-  @java.lang.Override
-  public com.google.protobuf.ByteString
-      getCreatedAtBytes() {
-    java.lang.Object ref = createdAt_;
-    if (ref instanceof java.lang.String) {
-      com.google.protobuf.ByteString b = 
-          com.google.protobuf.ByteString.copyFromUtf8(
-              (java.lang.String) ref);
-      createdAt_ = b;
-      return b;
-    } else {
-      return (com.google.protobuf.ByteString) ref;
-    }
+  public int getCitizenCount() {
+    return citizenCount_;
   }
 
-  public static final int UPDATED_AT_FIELD_NUMBER = 5;
-  @SuppressWarnings("serial")
-  private volatile java.lang.Object updatedAt_ = "";
+  public static final int WEREWOLF_COUNT_FIELD_NUMBER = 5;
+  private int werewolfCount_ = 0;
   /**
-   * <code>string updated_at = 5;</code>
-   * @return The updatedAt.
+   * <code>int32 werewolf_count = 5;</code>
+   * @return The werewolfCount.
    */
   @java.lang.Override
-  public java.lang.String getUpdatedAt() {
-    java.lang.Object ref = updatedAt_;
-    if (ref instanceof java.lang.String) {
-      return (java.lang.String) ref;
-    } else {
-      com.google.protobuf.ByteString bs = 
-          (com.google.protobuf.ByteString) ref;
-      java.lang.String s = bs.toStringUtf8();
-      updatedAt_ = s;
-      return s;
-    }
+  public int getWerewolfCount() {
+    return werewolfCount_;
   }
+
+  public static final int FORTUNE_TELLER_COUNT_FIELD_NUMBER = 6;
+  private int fortuneTellerCount_ = 0;
   /**
-   * <code>string updated_at = 5;</code>
-   * @return The bytes for updatedAt.
+   * <code>int32 fortune_teller_count = 6;</code>
+   * @return The fortuneTellerCount.
    */
   @java.lang.Override
-  public com.google.protobuf.ByteString
-      getUpdatedAtBytes() {
-    java.lang.Object ref = updatedAt_;
-    if (ref instanceof java.lang.String) {
-      com.google.protobuf.ByteString b = 
-          com.google.protobuf.ByteString.copyFromUtf8(
-              (java.lang.String) ref);
-      updatedAt_ = b;
-      return b;
-    } else {
-      return (com.google.protobuf.ByteString) ref;
-    }
+  public int getFortuneTellerCount() {
+    return fortuneTellerCount_;
+  }
+
+  public static final int KNIGHT_COUNT_FIELD_NUMBER = 7;
+  private int knightCount_ = 0;
+  /**
+   * <code>int32 knight_count = 7;</code>
+   * @return The knightCount.
+   */
+  @java.lang.Override
+  public int getKnightCount() {
+    return knightCount_;
+  }
+
+  public static final int PSYCHIC_COUNT_FIELD_NUMBER = 8;
+  private int psychicCount_ = 0;
+  /**
+   * <code>int32 psychic_count = 8;</code>
+   * @return The psychicCount.
+   */
+  @java.lang.Override
+  public int getPsychicCount() {
+    return psychicCount_;
+  }
+
+  public static final int MADMAN_COUNT_FIELD_NUMBER = 9;
+  private int madmanCount_ = 0;
+  /**
+   * <code>int32 madman_count = 9;</code>
+   * @return The madmanCount.
+   */
+  @java.lang.Override
+  public int getMadmanCount() {
+    return madmanCount_;
+  }
+
+  public static final int IS_INITIAL_ACTION_ACTIVE_FIELD_NUMBER = 10;
+  private boolean isInitialActionActive_ = false;
+  /**
+   * <code>bool is_initial_action_active = 10;</code>
+   * @return The isInitialActionActive.
+   */
+  @java.lang.Override
+  public boolean getIsInitialActionActive() {
+    return isInitialActionActive_;
   }
 
   private byte memoizedIsInitialized = -1;
@@ -240,11 +233,26 @@ private static final long serialVersionUID = 0L;
     if (userNumber_ != 0) {
       output.writeInt32(3, userNumber_);
     }
-    if (!com.google.protobuf.GeneratedMessage.isStringEmpty(createdAt_)) {
-      com.google.protobuf.GeneratedMessage.writeString(output, 4, createdAt_);
+    if (citizenCount_ != 0) {
+      output.writeInt32(4, citizenCount_);
     }
-    if (!com.google.protobuf.GeneratedMessage.isStringEmpty(updatedAt_)) {
-      com.google.protobuf.GeneratedMessage.writeString(output, 5, updatedAt_);
+    if (werewolfCount_ != 0) {
+      output.writeInt32(5, werewolfCount_);
+    }
+    if (fortuneTellerCount_ != 0) {
+      output.writeInt32(6, fortuneTellerCount_);
+    }
+    if (knightCount_ != 0) {
+      output.writeInt32(7, knightCount_);
+    }
+    if (psychicCount_ != 0) {
+      output.writeInt32(8, psychicCount_);
+    }
+    if (madmanCount_ != 0) {
+      output.writeInt32(9, madmanCount_);
+    }
+    if (isInitialActionActive_ != false) {
+      output.writeBool(10, isInitialActionActive_);
     }
     getUnknownFields().writeTo(output);
   }
@@ -265,11 +273,33 @@ private static final long serialVersionUID = 0L;
       size += com.google.protobuf.CodedOutputStream
         .computeInt32Size(3, userNumber_);
     }
-    if (!com.google.protobuf.GeneratedMessage.isStringEmpty(createdAt_)) {
-      size += com.google.protobuf.GeneratedMessage.computeStringSize(4, createdAt_);
+    if (citizenCount_ != 0) {
+      size += com.google.protobuf.CodedOutputStream
+        .computeInt32Size(4, citizenCount_);
     }
-    if (!com.google.protobuf.GeneratedMessage.isStringEmpty(updatedAt_)) {
-      size += com.google.protobuf.GeneratedMessage.computeStringSize(5, updatedAt_);
+    if (werewolfCount_ != 0) {
+      size += com.google.protobuf.CodedOutputStream
+        .computeInt32Size(5, werewolfCount_);
+    }
+    if (fortuneTellerCount_ != 0) {
+      size += com.google.protobuf.CodedOutputStream
+        .computeInt32Size(6, fortuneTellerCount_);
+    }
+    if (knightCount_ != 0) {
+      size += com.google.protobuf.CodedOutputStream
+        .computeInt32Size(7, knightCount_);
+    }
+    if (psychicCount_ != 0) {
+      size += com.google.protobuf.CodedOutputStream
+        .computeInt32Size(8, psychicCount_);
+    }
+    if (madmanCount_ != 0) {
+      size += com.google.protobuf.CodedOutputStream
+        .computeInt32Size(9, madmanCount_);
+    }
+    if (isInitialActionActive_ != false) {
+      size += com.google.protobuf.CodedOutputStream
+        .computeBoolSize(10, isInitialActionActive_);
     }
     size += getUnknownFields().getSerializedSize();
     memoizedSize = size;
@@ -292,10 +322,20 @@ private static final long serialVersionUID = 0L;
         .equals(other.getName())) return false;
     if (getUserNumber()
         != other.getUserNumber()) return false;
-    if (!getCreatedAt()
-        .equals(other.getCreatedAt())) return false;
-    if (!getUpdatedAt()
-        .equals(other.getUpdatedAt())) return false;
+    if (getCitizenCount()
+        != other.getCitizenCount()) return false;
+    if (getWerewolfCount()
+        != other.getWerewolfCount()) return false;
+    if (getFortuneTellerCount()
+        != other.getFortuneTellerCount()) return false;
+    if (getKnightCount()
+        != other.getKnightCount()) return false;
+    if (getPsychicCount()
+        != other.getPsychicCount()) return false;
+    if (getMadmanCount()
+        != other.getMadmanCount()) return false;
+    if (getIsInitialActionActive()
+        != other.getIsInitialActionActive()) return false;
     if (!getUnknownFields().equals(other.getUnknownFields())) return false;
     return true;
   }
@@ -313,10 +353,21 @@ private static final long serialVersionUID = 0L;
     hash = (53 * hash) + getName().hashCode();
     hash = (37 * hash) + USER_NUMBER_FIELD_NUMBER;
     hash = (53 * hash) + getUserNumber();
-    hash = (37 * hash) + CREATED_AT_FIELD_NUMBER;
-    hash = (53 * hash) + getCreatedAt().hashCode();
-    hash = (37 * hash) + UPDATED_AT_FIELD_NUMBER;
-    hash = (53 * hash) + getUpdatedAt().hashCode();
+    hash = (37 * hash) + CITIZEN_COUNT_FIELD_NUMBER;
+    hash = (53 * hash) + getCitizenCount();
+    hash = (37 * hash) + WEREWOLF_COUNT_FIELD_NUMBER;
+    hash = (53 * hash) + getWerewolfCount();
+    hash = (37 * hash) + FORTUNE_TELLER_COUNT_FIELD_NUMBER;
+    hash = (53 * hash) + getFortuneTellerCount();
+    hash = (37 * hash) + KNIGHT_COUNT_FIELD_NUMBER;
+    hash = (53 * hash) + getKnightCount();
+    hash = (37 * hash) + PSYCHIC_COUNT_FIELD_NUMBER;
+    hash = (53 * hash) + getPsychicCount();
+    hash = (37 * hash) + MADMAN_COUNT_FIELD_NUMBER;
+    hash = (53 * hash) + getMadmanCount();
+    hash = (37 * hash) + IS_INITIAL_ACTION_ACTIVE_FIELD_NUMBER;
+    hash = (53 * hash) + com.google.protobuf.Internal.hashBoolean(
+        getIsInitialActionActive());
     hash = (29 * hash) + getUnknownFields().hashCode();
     memoizedHashCode = hash;
     return hash;
@@ -415,10 +466,6 @@ private static final long serialVersionUID = 0L;
     return builder;
   }
   /**
-   * <pre>
-   * VillageResponse メッセージ
-   * </pre>
-   *
    * Protobuf type {@code village.CreateVillageResponse}
    */
   public static final class Builder extends
@@ -455,8 +502,13 @@ private static final long serialVersionUID = 0L;
       id_ = "";
       name_ = "";
       userNumber_ = 0;
-      createdAt_ = "";
-      updatedAt_ = "";
+      citizenCount_ = 0;
+      werewolfCount_ = 0;
+      fortuneTellerCount_ = 0;
+      knightCount_ = 0;
+      psychicCount_ = 0;
+      madmanCount_ = 0;
+      isInitialActionActive_ = false;
       return this;
     }
 
@@ -500,10 +552,25 @@ private static final long serialVersionUID = 0L;
         result.userNumber_ = userNumber_;
       }
       if (((from_bitField0_ & 0x00000008) != 0)) {
-        result.createdAt_ = createdAt_;
+        result.citizenCount_ = citizenCount_;
       }
       if (((from_bitField0_ & 0x00000010) != 0)) {
-        result.updatedAt_ = updatedAt_;
+        result.werewolfCount_ = werewolfCount_;
+      }
+      if (((from_bitField0_ & 0x00000020) != 0)) {
+        result.fortuneTellerCount_ = fortuneTellerCount_;
+      }
+      if (((from_bitField0_ & 0x00000040) != 0)) {
+        result.knightCount_ = knightCount_;
+      }
+      if (((from_bitField0_ & 0x00000080) != 0)) {
+        result.psychicCount_ = psychicCount_;
+      }
+      if (((from_bitField0_ & 0x00000100) != 0)) {
+        result.madmanCount_ = madmanCount_;
+      }
+      if (((from_bitField0_ & 0x00000200) != 0)) {
+        result.isInitialActionActive_ = isInitialActionActive_;
       }
     }
 
@@ -532,15 +599,26 @@ private static final long serialVersionUID = 0L;
       if (other.getUserNumber() != 0) {
         setUserNumber(other.getUserNumber());
       }
-      if (!other.getCreatedAt().isEmpty()) {
-        createdAt_ = other.createdAt_;
-        bitField0_ |= 0x00000008;
-        onChanged();
+      if (other.getCitizenCount() != 0) {
+        setCitizenCount(other.getCitizenCount());
       }
-      if (!other.getUpdatedAt().isEmpty()) {
-        updatedAt_ = other.updatedAt_;
-        bitField0_ |= 0x00000010;
-        onChanged();
+      if (other.getWerewolfCount() != 0) {
+        setWerewolfCount(other.getWerewolfCount());
+      }
+      if (other.getFortuneTellerCount() != 0) {
+        setFortuneTellerCount(other.getFortuneTellerCount());
+      }
+      if (other.getKnightCount() != 0) {
+        setKnightCount(other.getKnightCount());
+      }
+      if (other.getPsychicCount() != 0) {
+        setPsychicCount(other.getPsychicCount());
+      }
+      if (other.getMadmanCount() != 0) {
+        setMadmanCount(other.getMadmanCount());
+      }
+      if (other.getIsInitialActionActive() != false) {
+        setIsInitialActionActive(other.getIsInitialActionActive());
       }
       this.mergeUnknownFields(other.getUnknownFields());
       onChanged();
@@ -583,16 +661,41 @@ private static final long serialVersionUID = 0L;
               bitField0_ |= 0x00000004;
               break;
             } // case 24
-            case 34: {
-              createdAt_ = input.readStringRequireUtf8();
+            case 32: {
+              citizenCount_ = input.readInt32();
               bitField0_ |= 0x00000008;
               break;
-            } // case 34
-            case 42: {
-              updatedAt_ = input.readStringRequireUtf8();
+            } // case 32
+            case 40: {
+              werewolfCount_ = input.readInt32();
               bitField0_ |= 0x00000010;
               break;
-            } // case 42
+            } // case 40
+            case 48: {
+              fortuneTellerCount_ = input.readInt32();
+              bitField0_ |= 0x00000020;
+              break;
+            } // case 48
+            case 56: {
+              knightCount_ = input.readInt32();
+              bitField0_ |= 0x00000040;
+              break;
+            } // case 56
+            case 64: {
+              psychicCount_ = input.readInt32();
+              bitField0_ |= 0x00000080;
+              break;
+            } // case 64
+            case 72: {
+              madmanCount_ = input.readInt32();
+              bitField0_ |= 0x00000100;
+              break;
+            } // case 72
+            case 80: {
+              isInitialActionActive_ = input.readBool();
+              bitField0_ |= 0x00000200;
+              break;
+            } // case 80
             default: {
               if (!super.parseUnknownField(input, extensionRegistry, tag)) {
                 done = true; // was an endgroup tag
@@ -786,146 +889,226 @@ private static final long serialVersionUID = 0L;
       return this;
     }
 
-    private java.lang.Object createdAt_ = "";
+    private int citizenCount_ ;
     /**
-     * <code>string created_at = 4;</code>
-     * @return The createdAt.
+     * <code>int32 citizen_count = 4;</code>
+     * @return The citizenCount.
      */
-    public java.lang.String getCreatedAt() {
-      java.lang.Object ref = createdAt_;
-      if (!(ref instanceof java.lang.String)) {
-        com.google.protobuf.ByteString bs =
-            (com.google.protobuf.ByteString) ref;
-        java.lang.String s = bs.toStringUtf8();
-        createdAt_ = s;
-        return s;
-      } else {
-        return (java.lang.String) ref;
-      }
+    @java.lang.Override
+    public int getCitizenCount() {
+      return citizenCount_;
     }
     /**
-     * <code>string created_at = 4;</code>
-     * @return The bytes for createdAt.
-     */
-    public com.google.protobuf.ByteString
-        getCreatedAtBytes() {
-      java.lang.Object ref = createdAt_;
-      if (ref instanceof String) {
-        com.google.protobuf.ByteString b = 
-            com.google.protobuf.ByteString.copyFromUtf8(
-                (java.lang.String) ref);
-        createdAt_ = b;
-        return b;
-      } else {
-        return (com.google.protobuf.ByteString) ref;
-      }
-    }
-    /**
-     * <code>string created_at = 4;</code>
-     * @param value The createdAt to set.
+     * <code>int32 citizen_count = 4;</code>
+     * @param value The citizenCount to set.
      * @return This builder for chaining.
      */
-    public Builder setCreatedAt(
-        java.lang.String value) {
-      if (value == null) { throw new NullPointerException(); }
-      createdAt_ = value;
+    public Builder setCitizenCount(int value) {
+
+      citizenCount_ = value;
       bitField0_ |= 0x00000008;
       onChanged();
       return this;
     }
     /**
-     * <code>string created_at = 4;</code>
+     * <code>int32 citizen_count = 4;</code>
      * @return This builder for chaining.
      */
-    public Builder clearCreatedAt() {
-      createdAt_ = getDefaultInstance().getCreatedAt();
+    public Builder clearCitizenCount() {
       bitField0_ = (bitField0_ & ~0x00000008);
-      onChanged();
-      return this;
-    }
-    /**
-     * <code>string created_at = 4;</code>
-     * @param value The bytes for createdAt to set.
-     * @return This builder for chaining.
-     */
-    public Builder setCreatedAtBytes(
-        com.google.protobuf.ByteString value) {
-      if (value == null) { throw new NullPointerException(); }
-      checkByteStringIsUtf8(value);
-      createdAt_ = value;
-      bitField0_ |= 0x00000008;
+      citizenCount_ = 0;
       onChanged();
       return this;
     }
 
-    private java.lang.Object updatedAt_ = "";
+    private int werewolfCount_ ;
     /**
-     * <code>string updated_at = 5;</code>
-     * @return The updatedAt.
+     * <code>int32 werewolf_count = 5;</code>
+     * @return The werewolfCount.
      */
-    public java.lang.String getUpdatedAt() {
-      java.lang.Object ref = updatedAt_;
-      if (!(ref instanceof java.lang.String)) {
-        com.google.protobuf.ByteString bs =
-            (com.google.protobuf.ByteString) ref;
-        java.lang.String s = bs.toStringUtf8();
-        updatedAt_ = s;
-        return s;
-      } else {
-        return (java.lang.String) ref;
-      }
+    @java.lang.Override
+    public int getWerewolfCount() {
+      return werewolfCount_;
     }
     /**
-     * <code>string updated_at = 5;</code>
-     * @return The bytes for updatedAt.
-     */
-    public com.google.protobuf.ByteString
-        getUpdatedAtBytes() {
-      java.lang.Object ref = updatedAt_;
-      if (ref instanceof String) {
-        com.google.protobuf.ByteString b = 
-            com.google.protobuf.ByteString.copyFromUtf8(
-                (java.lang.String) ref);
-        updatedAt_ = b;
-        return b;
-      } else {
-        return (com.google.protobuf.ByteString) ref;
-      }
-    }
-    /**
-     * <code>string updated_at = 5;</code>
-     * @param value The updatedAt to set.
+     * <code>int32 werewolf_count = 5;</code>
+     * @param value The werewolfCount to set.
      * @return This builder for chaining.
      */
-    public Builder setUpdatedAt(
-        java.lang.String value) {
-      if (value == null) { throw new NullPointerException(); }
-      updatedAt_ = value;
+    public Builder setWerewolfCount(int value) {
+
+      werewolfCount_ = value;
       bitField0_ |= 0x00000010;
       onChanged();
       return this;
     }
     /**
-     * <code>string updated_at = 5;</code>
+     * <code>int32 werewolf_count = 5;</code>
      * @return This builder for chaining.
      */
-    public Builder clearUpdatedAt() {
-      updatedAt_ = getDefaultInstance().getUpdatedAt();
+    public Builder clearWerewolfCount() {
       bitField0_ = (bitField0_ & ~0x00000010);
+      werewolfCount_ = 0;
+      onChanged();
+      return this;
+    }
+
+    private int fortuneTellerCount_ ;
+    /**
+     * <code>int32 fortune_teller_count = 6;</code>
+     * @return The fortuneTellerCount.
+     */
+    @java.lang.Override
+    public int getFortuneTellerCount() {
+      return fortuneTellerCount_;
+    }
+    /**
+     * <code>int32 fortune_teller_count = 6;</code>
+     * @param value The fortuneTellerCount to set.
+     * @return This builder for chaining.
+     */
+    public Builder setFortuneTellerCount(int value) {
+
+      fortuneTellerCount_ = value;
+      bitField0_ |= 0x00000020;
       onChanged();
       return this;
     }
     /**
-     * <code>string updated_at = 5;</code>
-     * @param value The bytes for updatedAt to set.
+     * <code>int32 fortune_teller_count = 6;</code>
      * @return This builder for chaining.
      */
-    public Builder setUpdatedAtBytes(
-        com.google.protobuf.ByteString value) {
-      if (value == null) { throw new NullPointerException(); }
-      checkByteStringIsUtf8(value);
-      updatedAt_ = value;
-      bitField0_ |= 0x00000010;
+    public Builder clearFortuneTellerCount() {
+      bitField0_ = (bitField0_ & ~0x00000020);
+      fortuneTellerCount_ = 0;
+      onChanged();
+      return this;
+    }
+
+    private int knightCount_ ;
+    /**
+     * <code>int32 knight_count = 7;</code>
+     * @return The knightCount.
+     */
+    @java.lang.Override
+    public int getKnightCount() {
+      return knightCount_;
+    }
+    /**
+     * <code>int32 knight_count = 7;</code>
+     * @param value The knightCount to set.
+     * @return This builder for chaining.
+     */
+    public Builder setKnightCount(int value) {
+
+      knightCount_ = value;
+      bitField0_ |= 0x00000040;
+      onChanged();
+      return this;
+    }
+    /**
+     * <code>int32 knight_count = 7;</code>
+     * @return This builder for chaining.
+     */
+    public Builder clearKnightCount() {
+      bitField0_ = (bitField0_ & ~0x00000040);
+      knightCount_ = 0;
+      onChanged();
+      return this;
+    }
+
+    private int psychicCount_ ;
+    /**
+     * <code>int32 psychic_count = 8;</code>
+     * @return The psychicCount.
+     */
+    @java.lang.Override
+    public int getPsychicCount() {
+      return psychicCount_;
+    }
+    /**
+     * <code>int32 psychic_count = 8;</code>
+     * @param value The psychicCount to set.
+     * @return This builder for chaining.
+     */
+    public Builder setPsychicCount(int value) {
+
+      psychicCount_ = value;
+      bitField0_ |= 0x00000080;
+      onChanged();
+      return this;
+    }
+    /**
+     * <code>int32 psychic_count = 8;</code>
+     * @return This builder for chaining.
+     */
+    public Builder clearPsychicCount() {
+      bitField0_ = (bitField0_ & ~0x00000080);
+      psychicCount_ = 0;
+      onChanged();
+      return this;
+    }
+
+    private int madmanCount_ ;
+    /**
+     * <code>int32 madman_count = 9;</code>
+     * @return The madmanCount.
+     */
+    @java.lang.Override
+    public int getMadmanCount() {
+      return madmanCount_;
+    }
+    /**
+     * <code>int32 madman_count = 9;</code>
+     * @param value The madmanCount to set.
+     * @return This builder for chaining.
+     */
+    public Builder setMadmanCount(int value) {
+
+      madmanCount_ = value;
+      bitField0_ |= 0x00000100;
+      onChanged();
+      return this;
+    }
+    /**
+     * <code>int32 madman_count = 9;</code>
+     * @return This builder for chaining.
+     */
+    public Builder clearMadmanCount() {
+      bitField0_ = (bitField0_ & ~0x00000100);
+      madmanCount_ = 0;
+      onChanged();
+      return this;
+    }
+
+    private boolean isInitialActionActive_ ;
+    /**
+     * <code>bool is_initial_action_active = 10;</code>
+     * @return The isInitialActionActive.
+     */
+    @java.lang.Override
+    public boolean getIsInitialActionActive() {
+      return isInitialActionActive_;
+    }
+    /**
+     * <code>bool is_initial_action_active = 10;</code>
+     * @param value The isInitialActionActive to set.
+     * @return This builder for chaining.
+     */
+    public Builder setIsInitialActionActive(boolean value) {
+
+      isInitialActionActive_ = value;
+      bitField0_ |= 0x00000200;
+      onChanged();
+      return this;
+    }
+    /**
+     * <code>bool is_initial_action_active = 10;</code>
+     * @return This builder for chaining.
+     */
+    public Builder clearIsInitialActionActive() {
+      bitField0_ = (bitField0_ & ~0x00000200);
+      isInitialActionActive_ = false;
       onChanged();
       return this;
     }

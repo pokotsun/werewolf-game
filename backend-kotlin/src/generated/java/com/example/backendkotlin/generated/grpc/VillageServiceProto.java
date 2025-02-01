@@ -35,6 +35,21 @@ public final class VillageServiceProto {
   static final 
     com.google.protobuf.GeneratedMessage.FieldAccessorTable
       internal_static_village_CreateVillageResponse_fieldAccessorTable;
+  static final com.google.protobuf.Descriptors.Descriptor
+    internal_static_village_ListVillagesRequest_descriptor;
+  static final 
+    com.google.protobuf.GeneratedMessage.FieldAccessorTable
+      internal_static_village_ListVillagesRequest_fieldAccessorTable;
+  static final com.google.protobuf.Descriptors.Descriptor
+    internal_static_village_ListVillagesResponse_descriptor;
+  static final 
+    com.google.protobuf.GeneratedMessage.FieldAccessorTable
+      internal_static_village_ListVillagesResponse_fieldAccessorTable;
+  static final com.google.protobuf.Descriptors.Descriptor
+    internal_static_village_VillageResponse_descriptor;
+  static final 
+    com.google.protobuf.GeneratedMessage.FieldAccessorTable
+      internal_static_village_VillageResponse_fieldAccessorTable;
 
   public static com.google.protobuf.Descriptors.FileDescriptor
       getDescriptor() {
@@ -44,17 +59,35 @@ public final class VillageServiceProto {
       descriptor;
   static {
     java.lang.String[] descriptorData = {
-      "\n\023proto/village.proto\022\007village\"9\n\024Create" +
-      "VillageRequest\022\014\n\004name\030\001 \001(\t\022\023\n\013user_num" +
-      "ber\030\002 \001(\005\"n\n\025CreateVillageResponse\022\n\n\002id" +
-      "\030\001 \001(\t\022\014\n\004name\030\002 \001(\t\022\023\n\013user_number\030\003 \001(" +
-      "\005\022\022\n\ncreated_at\030\004 \001(\t\022\022\n\nupdated_at\030\005 \001(" +
-      "\t2`\n\016VillageService\022N\n\rCreateVillage\022\035.v" +
-      "illage.CreateVillageRequest\032\036.village.Cr" +
-      "eateVillageResponseBl\n(com.example.backe" +
-      "ndkotlin.generated.grpcB\023VillageServiceP" +
-      "rotoP\001Z)github.com/pokotsun/werewolf/grp" +
-      "c/villageb\006proto3"
+      "\n\023proto/village.proto\022\007village\"\350\001\n\024Creat" +
+      "eVillageRequest\022\014\n\004name\030\001 \001(\t\022\025\n\rcitizen" +
+      "_count\030\002 \001(\005\022\026\n\016werewolf_count\030\003 \001(\005\022\034\n\024" +
+      "fortune_teller_count\030\004 \001(\005\022\024\n\014knight_cou" +
+      "nt\030\005 \001(\005\022\025\n\rpsychic_count\030\006 \001(\005\022\024\n\014madma" +
+      "n_count\030\007 \001(\005\022 \n\030is_initial_action_activ" +
+      "e\030\010 \001(\010\022\020\n\010password\030\t \001(\t\"\370\001\n\025CreateVill" +
+      "ageResponse\022\n\n\002id\030\001 \001(\t\022\014\n\004name\030\002 \001(\t\022\023\n" +
+      "\013user_number\030\003 \001(\005\022\025\n\rcitizen_count\030\004 \001(" +
+      "\005\022\026\n\016werewolf_count\030\005 \001(\005\022\034\n\024fortune_tel" +
+      "ler_count\030\006 \001(\005\022\024\n\014knight_count\030\007 \001(\005\022\025\n" +
+      "\rpsychic_count\030\010 \001(\005\022\024\n\014madman_count\030\t \001" +
+      "(\005\022 \n\030is_initial_action_active\030\n \001(\010\"\025\n\023" +
+      "ListVillagesRequest\"B\n\024ListVillagesRespo" +
+      "nse\022*\n\010villages\030\001 \003(\0132\030.village.VillageR" +
+      "esponse\"\362\001\n\017VillageResponse\022\n\n\002id\030\001 \001(\t\022" +
+      "\014\n\004name\030\002 \001(\t\022\023\n\013user_number\030\003 \001(\005\022\025\n\rci" +
+      "tizen_count\030\004 \001(\005\022\026\n\016werewolf_count\030\005 \001(" +
+      "\005\022\034\n\024fortune_teller_count\030\006 \001(\005\022\024\n\014knigh" +
+      "t_count\030\007 \001(\005\022\025\n\rpsychic_count\030\010 \001(\005\022\024\n\014" +
+      "madman_count\030\t \001(\005\022 \n\030is_initial_action_" +
+      "active\030\n \001(\0102\255\001\n\016VillageService\022N\n\rCreat" +
+      "eVillage\022\035.village.CreateVillageRequest\032" +
+      "\036.village.CreateVillageResponse\022K\n\014ListV" +
+      "illages\022\034.village.ListVillagesRequest\032\035." +
+      "village.ListVillagesResponseBl\n(com.exam" +
+      "ple.backendkotlin.generated.grpcB\023Villag" +
+      "eServiceProtoP\001Z)github.com/pokotsun/wer" +
+      "ewolf/grpc/villageb\006proto3"
     };
     descriptor = com.google.protobuf.Descriptors.FileDescriptor
       .internalBuildGeneratedFileFrom(descriptorData,
@@ -65,13 +98,31 @@ public final class VillageServiceProto {
     internal_static_village_CreateVillageRequest_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessage.FieldAccessorTable(
         internal_static_village_CreateVillageRequest_descriptor,
-        new java.lang.String[] { "Name", "UserNumber", });
+        new java.lang.String[] { "Name", "CitizenCount", "WerewolfCount", "FortuneTellerCount", "KnightCount", "PsychicCount", "MadmanCount", "IsInitialActionActive", "Password", });
     internal_static_village_CreateVillageResponse_descriptor =
       getDescriptor().getMessageTypes().get(1);
     internal_static_village_CreateVillageResponse_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessage.FieldAccessorTable(
         internal_static_village_CreateVillageResponse_descriptor,
-        new java.lang.String[] { "Id", "Name", "UserNumber", "CreatedAt", "UpdatedAt", });
+        new java.lang.String[] { "Id", "Name", "UserNumber", "CitizenCount", "WerewolfCount", "FortuneTellerCount", "KnightCount", "PsychicCount", "MadmanCount", "IsInitialActionActive", });
+    internal_static_village_ListVillagesRequest_descriptor =
+      getDescriptor().getMessageTypes().get(2);
+    internal_static_village_ListVillagesRequest_fieldAccessorTable = new
+      com.google.protobuf.GeneratedMessage.FieldAccessorTable(
+        internal_static_village_ListVillagesRequest_descriptor,
+        new java.lang.String[] { });
+    internal_static_village_ListVillagesResponse_descriptor =
+      getDescriptor().getMessageTypes().get(3);
+    internal_static_village_ListVillagesResponse_fieldAccessorTable = new
+      com.google.protobuf.GeneratedMessage.FieldAccessorTable(
+        internal_static_village_ListVillagesResponse_descriptor,
+        new java.lang.String[] { "Villages", });
+    internal_static_village_VillageResponse_descriptor =
+      getDescriptor().getMessageTypes().get(4);
+    internal_static_village_VillageResponse_fieldAccessorTable = new
+      com.google.protobuf.GeneratedMessage.FieldAccessorTable(
+        internal_static_village_VillageResponse_descriptor,
+        new java.lang.String[] { "Id", "Name", "UserNumber", "CitizenCount", "WerewolfCount", "FortuneTellerCount", "KnightCount", "PsychicCount", "MadmanCount", "IsInitialActionActive", });
     descriptor.resolveAllFeaturesImmutable();
   }
 
