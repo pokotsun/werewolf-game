@@ -4,10 +4,10 @@ type Village struct {
 	Id                    *string
 	Name                  *string
 	CitizenCount          int32
-	werewolfCount         int32
-	fortuneTellerCount    int32
-	knightCount           int32
-	psychicCount          int32
-	madmanCount           int32
-	isInitialActionActive bool
+	WerewolfCount         int32
+	FortuneTellerCount    int32
+	KnightCount           int32
+	PsychicCount          int32
+	MadmanCount           int32
+	IsInitialActionActive bool
 }
