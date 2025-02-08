@@ -35,33 +35,37 @@ class VillageGrpcService(
         responseObserver: StreamObserver<CreateVillageResponse>,
     ) {
         val newVillageId = VillageId(UUID.randomUUID())
-        val newVillageRequest = Village(
-            id = newVillageId,
-            name = request.name,
-            citizenCount = request.citizenCount,
-            werewolfCount = request.werewolfCount,
-            fortuneTellerCount = request.fortuneTellerCount,
-            knightCount = request.knightCount,
-            psychicCount = request.psychicCount,
-            madmanCount = request.madmanCount,
-            isInitialActionActive = request.isInitialActionActive,
-        )
-        val insertedVillage = createVillageUseCase.invoke(newVillageRequest, request.password).let {
+        val newVillageRequest = request.let { r ->
+            Village(
+                id = newVillageId,
+                name = r.name,
+                citizenCount = r.citizenCount,
+                werewolfCount = r.werewolfCount,
+                fortuneTellerCount = r.fortuneTellerCount,
+                knightCount = r.knightCount,
+                psychicCount = r.psychicCount,
+                madmanCount = r.madmanCount,
+                isInitialActionActive = r.isInitialActionActive,
+            )
+        }
+        val insertedVillage = createVillageUseCase.invoke(newVillageRequest, request.password).let { res ->
             CreateVillageResponse.newBuilder()
-                .setId(it.id.value.toString())
-                .setName(it.name)
-                .setUserNumber(it.citizenCount + it.werewolfCount + it.fortuneTellerCount + it.knightCount + it.psychicCount + it.madmanCount)
-                .setCitizenCount(it.citizenCount)
-                .setWerewolfCount(it.werewolfCount)
-                .setFortuneTellerCount(it.fortuneTellerCount)
-                .setKnightCount(it.knightCount)
-                .setPsychicCount(it.psychicCount)
-                .setMadmanCount(it.madmanCount)
-                .setIsInitialActionActive(it.isInitialActionActive)
+                .setId(res.id.value.toString())
+                .setName(res.name)
+                .setUserNumber(res.citizenCount + res.werewolfCount + res.fortuneTellerCount + res.knightCount + res.psychicCount + res.madmanCount)
+                .setCitizenCount(res.citizenCount)
+                .setWerewolfCount(res.werewolfCount)
+                .setFortuneTellerCount(res.fortuneTellerCount)
+                .setKnightCount(res.knightCount)
+                .setPsychicCount(res.psychicCount)
+                .setMadmanCount(res.madmanCount)
+                .setIsInitialActionActive(res.isInitialActionActive)
                 .build()
         }
-        responseObserver?.onNext(insertedVillage)
-        responseObserver?.onCompleted()
+        responseObserver.let { r ->
+            r.onNext(insertedVillage)
+            r.onCompleted()
+        }
     }
 
     /**
@@ -74,22 +78,24 @@ class VillageGrpcService(
      */
     override fun listVillages(request: ListVillagesRequest, responseObserver: StreamObserver<ListVillagesResponse>) {
         val response = ListVillagesResponse.newBuilder().addAllVillages(
-            listVillagesUseCase.invoke().map {
+            listVillagesUseCase.invoke().map { res ->
                 VillageResponse.newBuilder()
-                    .setId(it.id.value.toString())
-                    .setName(it.name)
-                    .setUserNumber(it.citizenCount + it.werewolfCount + it.fortuneTellerCount + it.knightCount + it.psychicCount + it.madmanCount)
-                    .setCitizenCount(it.citizenCount)
-                    .setWerewolfCount(it.werewolfCount)
-                    .setFortuneTellerCount(it.fortuneTellerCount)
-                    .setKnightCount(it.knightCount)
-                    .setPsychicCount(it.psychicCount)
-                    .setMadmanCount(it.madmanCount)
-                    .setIsInitialActionActive(it.isInitialActionActive)
+                    .setId(res.id.value.toString())
+                    .setName(res.name)
+                    .setUserNumber(res.citizenCount + res.werewolfCount + res.fortuneTellerCount + res.knightCount + res.psychicCount + res.madmanCount)
+                    .setCitizenCount(res.citizenCount)
+                    .setWerewolfCount(res.werewolfCount)
+                    .setFortuneTellerCount(res.fortuneTellerCount)
+                    .setKnightCount(res.knightCount)
+                    .setPsychicCount(res.psychicCount)
+                    .setMadmanCount(res.madmanCount)
+                    .setIsInitialActionActive(res.isInitialActionActive)
                     .build()
             },
         ).build()
-        responseObserver.onNext(response)
-        responseObserver.onCompleted()
+        responseObserver.let { r ->
+            r.onNext(response)
+            r.onCompleted()
+        }
     }
 }
