@@ -11,6 +11,8 @@ data class Village(
     val madmanCount: Int,
     val isInitialActionActive: Boolean,
 ) {
+    val userNumber: Int
+        get() = citizenCount + werewolfCount + fortuneTellerCount + knightCount + psychicCount + madmanCount
     init {
         require(citizenCount >= 0) { "citizenCount must be greater than or equal to 0" }
         require(werewolfCount >= 0) { "werewolfCount must be greater than or equal to 0" }
@@ -18,5 +20,6 @@ data class Village(
         require(knightCount >= 0) { "knightCount must be greater than or equal to 0" }
         require(psychicCount >= 0) { "psychicCount must be greater than or equal to 0" }
         require(madmanCount >= 0) { "madmanCount must be greater than or equal to 0" }
+        require(userNumber >= 0) { "user_number must be greater than or equal to 0" }
     }
 }

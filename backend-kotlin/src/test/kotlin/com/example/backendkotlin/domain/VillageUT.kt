@@ -6,7 +6,7 @@ import io.kotest.matchers.shouldBe
 import org.junit.jupiter.api.assertDoesNotThrow
 import java.util.UUID
 
-class VillageUT: DescribeSpec() {
+class VillageUT : DescribeSpec() {
     init {
         describe("Village") {
             it("全ての値が条件を満たしているので正常に初期化できる") {
@@ -20,10 +20,28 @@ class VillageUT: DescribeSpec() {
                         knightCount = 1,
                         psychicCount = 1,
                         madmanCount = 1,
-                        isInitialActionActive = true
+                        isInitialActionActive = true,
                     )
                 }
             }
+            it("userNumberが全役職の数の合計になっている") {
+                // given
+                val village = Village(
+                    id = VillageId(UUID.randomUUID()),
+                    name = "Village 1",
+                    citizenCount = 10,
+                    werewolfCount = 2,
+                    fortuneTellerCount = 1,
+                    knightCount = 1,
+                    psychicCount = 1,
+                    madmanCount = 1,
+                    isInitialActionActive = true,
+                )
+
+                // then
+                village.userNumber shouldBe 16
+            }
+
             it("市民の数が0未満の場合は例外が発生する") {
                 // when
                 val exception = shouldThrow<IllegalArgumentException> {
@@ -36,7 +54,7 @@ class VillageUT: DescribeSpec() {
                         knightCount = 1,
                         psychicCount = 1,
                         madmanCount = 1,
-                        isInitialActionActive = true
+                        isInitialActionActive = true,
                     )
                 }
 
@@ -55,7 +73,7 @@ class VillageUT: DescribeSpec() {
                         knightCount = 1,
                         psychicCount = 1,
                         madmanCount = 1,
-                        isInitialActionActive = true
+                        isInitialActionActive = true,
                     )
                 }
 
