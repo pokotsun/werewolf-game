@@ -33,14 +33,12 @@ $ ./gradlew bootRun
 動作確認
 TODO: 仮実装のため、後ほど Quick TEST 等に変更
 ```shell
-$ grpcurl --plaintext -d '{"name": "test"}' localhost:9090 village.VillageService/CreateVillage
+$ grpcurl --plaintext localhost:9090 village.VillageService/ListVillages
 {
-  "id": "12345",
-  "name": "VillageName",
-  "created_at": "2022-01-01T00:00:00",
-  "updated_at": "2022-01-01T00:00:15"
+  "villages": []
 }
 ```
+
 ### CLI Client 側動作確認
 ```shell
 $ cd werewolf-cli
