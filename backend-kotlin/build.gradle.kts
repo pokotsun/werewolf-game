@@ -43,6 +43,7 @@ dependencyManagement {
     imports {
         mavenBom("io.kotest:kotest-bom:5.8.0")
         mavenBom("org.jetbrains.exposed:exposed-bom:0.58.0")
+        mavenBom("org.testcontainers:testcontainers-bom:1.20.4")
     }
 }
 
@@ -79,6 +80,9 @@ dependencies {
     testImplementation("io.kotest:kotest-assertions-json")
     testImplementation("io.kotest.extensions:kotest-extensions-spring:1.1.3")
     testImplementation("com.ninja-squad:springmockk:4.0.2")
+
+    // postgresql testcontainers
+    testImplementation("org.testcontainers:postgresql")
 }
 
 tasks.withType<KotlinCompile> {
