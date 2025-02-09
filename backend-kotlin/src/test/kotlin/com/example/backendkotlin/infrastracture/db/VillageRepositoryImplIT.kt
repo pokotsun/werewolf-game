@@ -1,13 +1,17 @@
 package com.example.backendkotlin.infrastracture.db
 
+import com.example.backendkotlin.domain.User
+import com.example.backendkotlin.domain.UserId
 import com.example.backendkotlin.domain.Village
 import com.example.backendkotlin.domain.VillageId
 import com.example.backendkotlin.infrastructure.db.VillageRepositoryImpl
+import com.example.backendkotlin.infrastructure.db.table.UserTable
 import com.example.backendkotlin.infrastructure.db.table.VillageTable
 import io.kotest.assertions.throwables.shouldNotThrowAny
 import io.kotest.assertions.throwables.shouldThrowExactly
 import io.kotest.core.test.TestCase
 import io.kotest.core.test.TestResult
+import io.kotest.core.spec.Spec
 import io.kotest.matchers.collections.shouldBeEmpty
 import io.kotest.matchers.shouldBe
 import org.jetbrains.exposed.exceptions.ExposedSQLException
@@ -21,6 +25,26 @@ import java.util.UUID
 class VillageRepositoryImplIT(
     private val villageRepository: VillageRepositoryImpl,
 ) : DescribeSpecUsingPostgreSQLTestContainer() {
+    private companion object {
+        const val GAME_MASTER_USER_ID_STRING = "00000000-0000-0000-0000-000000000000"
+    }
+
+    // テスト前にGameMaster用のユーザーデータをUserTableに挿入する
+    override suspend fun beforeSpec(spec: Spec) {
+        super.beforeSpec(spec)
+        transaction {
+            val gameMaster = User(
+                id = UserId(UUID.fromString(GAME_MASTER_USER_ID_STRING)),
+                name = "gameMaster",
+                isActive = true
+            )
+            UserTable.insert {
+                it[id] = gameMaster.id.value
+                it[name] = gameMaster.name
+                it[isActive] = gameMaster.isActive
+            }
+        }
+    }
 
     override suspend fun afterTest(testCase: TestCase, result: TestResult) {
         super.afterTest(testCase, result)
@@ -161,15 +185,17 @@ class VillageRepositoryImplIT(
                         val salt = "salt"
 
                         // when, then
-                        shouldNotThrowAny { villageRepository.createVillage(village, passwordHash, salt) }
+                        shouldNotThrowAny {
+                            villageRepository.createVillage(village, passwordHash, salt, UUID.fromString(GAME_MASTER_USER_ID_STRING))
+                        }
                     }
                 }
                 context("異常系") {
                     it("同じIDの村が作成された場合は村が作成されずに例外がthrowされる") {
                         // given
-                        val sameId = VillageId(UUID.randomUUID())
+                        val sameVillageId = VillageId(UUID.randomUUID())
                         val village = Village(
-                            id = sameId,
+                            id = sameVillageId,
                             name = "村1",
                             citizenCount = 10,
                             werewolfCount = 2,
