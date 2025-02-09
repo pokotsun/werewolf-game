@@ -19,4 +19,12 @@ interface RUserVillageRepository {
      * @return ユーザーID一覧
      */
     fun selectByVillageId(villageId: VillageId): List<UserId>
+
+    /**
+     * 村IDのリストからその村に参加しているユーザーID一覧を取得する
+     *
+     * @param villageIds 村IDのリスト
+     * @return 村IDとユーザーIDのマップの一覧
+     */
+    fun selectByVillageIds(villageIds: List<VillageId>): Map<VillageId, List<UserId>>
 }
