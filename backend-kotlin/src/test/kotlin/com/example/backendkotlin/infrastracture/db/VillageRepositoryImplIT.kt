@@ -4,6 +4,7 @@ import com.example.backendkotlin.domain.User
 import com.example.backendkotlin.domain.UserId
 import com.example.backendkotlin.domain.Village
 import com.example.backendkotlin.domain.VillageId
+import com.example.backendkotlin.infrastracture.db.record.RUserVillageRecord
 import com.example.backendkotlin.infrastracture.db.record.UserRecord
 import com.example.backendkotlin.infrastracture.db.record.VillageRecord
 import com.example.backendkotlin.infrastructure.db.VillageRepositoryImpl
@@ -28,16 +29,23 @@ class VillageRepositoryImplIT(
                     // then
                     actual.shouldBeEmpty()
                 }
-                it("村が1つ返却される") {
+                it("現在のユーザー数を含めて村が1つ返却される") {
                     // given
                     val gameMaster = User(
                         id = UserId.generate(),
                         name = "GM",
                         isActive = true,
                     )
+                    val user1 = User(
+                        id = UserId.generate(),
+                        name = "user1",
+                        isActive = true,
+                    )
+                    val village1Users = listOf(gameMaster, user1)
+                    val villageId = VillageId.generate()
                     val expected = listOf(
                         Village(
-                            id = VillageId.generate(),
+                            id = villageId,
                             name = "村1",
                             citizenCount = 10,
                             werewolfCount = 2,
@@ -47,32 +55,44 @@ class VillageRepositoryImplIT(
                             madmanCount = 1,
                             isInitialActionActive = true,
                             gameMasterUserId = gameMaster.id,
+                            currentUserNumber = village1Users.size,
                         ),
                     )
+
                     val saltInput = "salt"
                     val hashedPassword = "passwordHash"
 
                     // and
                     UserRecord(gameMaster).insert()
+                    UserRecord(user1).insert()
                     expected.forEach { village ->
                         VillageRecord(village, saltInput, hashedPassword).insert()
                     }
-
+                    village1Users.forEach { user ->
+                        RUserVillageRecord(user.id, villageId).insert()
+                    }
                     // when
                     val actual = villageRepository.selectAllVillages()
 
                     // then
                     actual.shouldContainExactlyInAnyOrder(expected)
                 }
-                it("村が全て返却される") {
+                it("現在のユーザー数を含めて村が全て返却される") {
                     // given
                     val gameMaster = User(
                         id = UserId.generate(),
                         name = "GM",
                         isActive = true,
                     )
+                    val village1User = User(
+                        id = UserId.generate(),
+                        name = "user1",
+                        isActive = true,
+                    )
+                    val village1Users = listOf(gameMaster, village1User)
+                    val village1VillageId = VillageId.generate()
                     val village1 = Village(
-                        id = VillageId.generate(),
+                        id = village1VillageId,
                         name = "村1",
                         citizenCount = 10,
                         werewolfCount = 2,
@@ -82,9 +102,12 @@ class VillageRepositoryImplIT(
                         madmanCount = 1,
                         isInitialActionActive = false,
                         gameMasterUserId = gameMaster.id,
+                        currentUserNumber = village1Users.size,
                     )
+                    val village2Users = listOf(gameMaster)
+                    val village2VillageId = VillageId.generate()
                     val village2 = Village(
-                        id = VillageId.generate(),
+                        id = village2VillageId,
                         name = "村2",
                         citizenCount = 10,
                         werewolfCount = 2,
@@ -94,6 +117,7 @@ class VillageRepositoryImplIT(
                         madmanCount = 1,
                         isInitialActionActive = false,
                         gameMasterUserId = gameMaster.id,
+                        currentUserNumber = village2Users.size,
                     )
                     val expected = listOf(village1, village2)
                     val saltInput = "salt"
@@ -101,8 +125,16 @@ class VillageRepositoryImplIT(
 
                     // and
                     UserRecord(gameMaster).insert()
+                    UserRecord(village1User).insert()
+                    // village2のユーザーはgameMasterのみですでにinsertされている
                     expected.forEach { village ->
                         VillageRecord(village, saltInput, hashedPassword).insert()
+                    }
+                    village1Users.forEach { user ->
+                        RUserVillageRecord(user.id, village1VillageId).insert()
+                    }
+                    village2Users.forEach { user ->
+                        RUserVillageRecord(user.id, village2VillageId).insert()
                     }
 
                     // when

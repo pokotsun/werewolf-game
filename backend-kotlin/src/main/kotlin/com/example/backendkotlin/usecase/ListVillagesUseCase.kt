@@ -8,9 +8,11 @@ import org.springframework.stereotype.Service
  * 村の一覧を取得するユースケース
  */
 @Service
-class ListVillagesUseCase(private val villageRepository: VillageRepository) {
+class ListVillagesUseCase(
+    private val villageRepository: VillageRepository,
+) {
     /**
-     * 村の一覧を取得する
+     * 村ごとの現在の参加者数を取得し、それを含めた村の一覧を返す
      *
      * @return 村の一覧
      */
