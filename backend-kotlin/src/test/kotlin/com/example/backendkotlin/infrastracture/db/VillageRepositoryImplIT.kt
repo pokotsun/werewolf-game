@@ -8,6 +8,7 @@ import io.kotest.assertions.throwables.shouldNotThrowAny
 import io.kotest.assertions.throwables.shouldThrow
 import io.kotest.matchers.collections.shouldBeEmpty
 import io.kotest.matchers.shouldBe
+import org.jetbrains.exposed.sql.deleteAll
 import org.jetbrains.exposed.sql.insert
 import org.jetbrains.exposed.sql.transactions.transaction
 import java.util.UUID
@@ -16,6 +17,13 @@ class VillageRepositoryImplIT() : DescribeSpecUsingPostgreSQLTestContainer() {
     private val villageRepository = VillageRepositoryImpl()
 
     init {
+        // 全てのテスト後にVillageTableのデータを初期化する
+        afterTest {
+            transaction {
+                VillageTable.deleteAll()
+            }
+        }
+
         describe("SelectAllVillages") {
             context("村が1つも存在しない場合") {
                 it("空のリストが返却される") {
@@ -79,7 +87,17 @@ class VillageRepositoryImplIT() : DescribeSpecUsingPostgreSQLTestContainer() {
             context("村が複数ある場合") {
                 it("村が全て返却される") {
                     // given
-                    // 村1は1つ前のテストでデータ投入済みのため、村2のみ追加
+                    val village1 = Village(
+                        id = VillageId(UUID.randomUUID()),
+                        name = "村1",
+                        citizenCount = 10,
+                        werewolfCount = 2,
+                        fortuneTellerCount = 1,
+                        knightCount = 1,
+                        psychicCount = 1,
+                        madmanCount = 1,
+                        isInitialActionActive = false,
+                    )
                     val village2 = Village(
                         id = VillageId(UUID.randomUUID()),
                         name = "村2",
@@ -97,6 +115,19 @@ class VillageRepositoryImplIT() : DescribeSpecUsingPostgreSQLTestContainer() {
                     // and
                     transaction {
                         VillageTable.insert {
+                            it[id] = village1.id.value
+                            it[name] = village1.name
+                            it[VillageTable.salt] = salt
+                            it[VillageTable.passwordHash] = passwordHash
+                            it[citizenCount] = village1.citizenCount
+                            it[werewolfCount] = village1.werewolfCount
+                            it[fortuneTellerCount] = village1.fortuneTellerCount
+                            it[knightCount] = village1.knightCount
+                            it[psychicCount] = village1.psychicCount
+                            it[madmanCount] = village1.madmanCount
+                            it[isInitialActionActive] = village1.isInitialActionActive
+                        }
+                        VillageTable.insert {
                             it[id] = village2.id.value
                             it[name] = village2.name
                             it[VillageTable.salt] = salt
@@ -113,6 +144,8 @@ class VillageRepositoryImplIT() : DescribeSpecUsingPostgreSQLTestContainer() {
 
                     // when
                     val villages = villageRepository.selectAllVillages()
+
+                    // then
                     villages.size.shouldBe(2)
                 }
             }
@@ -134,7 +167,7 @@ class VillageRepositoryImplIT() : DescribeSpecUsingPostgreSQLTestContainer() {
                         val passwordHash = "passwordHash"
                         val salt = "salt"
 
-                        // then
+                        // when, then
                         shouldNotThrowAny { villageRepository.createVillage(village, passwordHash, salt) }
                     }
                 }
@@ -156,8 +189,11 @@ class VillageRepositoryImplIT() : DescribeSpecUsingPostgreSQLTestContainer() {
                         val salt = "salt"
                         val passwordHash = "passwordHash"
 
+                        // when
                         shouldNotThrowAny { villageRepository.createVillage(village, passwordHash, salt) }
                         val exception = shouldThrow<RuntimeException> { villageRepository.createVillage(village, passwordHash, salt) }
+
+                        // then
                         exception.message.shouldBe("Failed to create village")
                     }
                 }
