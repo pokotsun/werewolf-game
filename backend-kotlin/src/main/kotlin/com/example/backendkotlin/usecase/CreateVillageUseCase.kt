@@ -10,7 +10,6 @@ import com.example.backendkotlin.domain.VillageRepository
 import org.springframework.security.crypto.bcrypt.BCrypt
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
-import java.util.*
 
 /**
  *　村を作成するユースケース
