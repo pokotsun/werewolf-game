@@ -91,6 +91,7 @@ class VillageGrpcService(
                 .setPsychicCount(res.psychicCount)
                 .setMadmanCount(res.madmanCount)
                 .setIsInitialActionActive(res.isInitialActionActive)
+                .setCurrentUserNumber(res.currentUserNumber)
                 .build()
         }
         val listVillagesResponse = ListVillagesResponse.newBuilder().addAllVillages(villageResponseList).build()
