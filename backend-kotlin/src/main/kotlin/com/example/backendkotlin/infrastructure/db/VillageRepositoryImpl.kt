@@ -1,5 +1,6 @@
 package com.example.backendkotlin.infrastructure.db
 
+import com.example.backendkotlin.domain.UserId
 import com.example.backendkotlin.domain.Village
 import com.example.backendkotlin.domain.VillageId
 import com.example.backendkotlin.domain.VillageRepository
@@ -29,6 +30,7 @@ class VillageRepositoryImpl() : VillageRepository {
                 VillageTable.psychicCount,
                 VillageTable.madmanCount,
                 VillageTable.isInitialActionActive,
+                VillageTable.gameMasterUserId,
             ).toList()
         }
         return queryResult.map {
@@ -42,6 +44,7 @@ class VillageRepositoryImpl() : VillageRepository {
                 psychicCount = it[VillageTable.psychicCount],
                 madmanCount = it[VillageTable.madmanCount],
                 isInitialActionActive = it[VillageTable.isInitialActionActive],
+                gameMasterUserId = UserId(it[VillageTable.gameMasterUserId]),
             )
         }
     }
@@ -63,6 +66,7 @@ class VillageRepositoryImpl() : VillageRepository {
                 it[psychicCount] = village.psychicCount
                 it[madmanCount] = village.madmanCount
                 it[isInitialActionActive] = village.isInitialActionActive
+                it[gameMasterUserId] = village.gameMasterUserId.value
             }
         }
         return village

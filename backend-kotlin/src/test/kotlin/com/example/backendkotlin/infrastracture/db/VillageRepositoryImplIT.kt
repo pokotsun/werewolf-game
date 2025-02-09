@@ -9,9 +9,9 @@ import com.example.backendkotlin.infrastructure.db.table.UserTable
 import com.example.backendkotlin.infrastructure.db.table.VillageTable
 import io.kotest.assertions.throwables.shouldNotThrowAny
 import io.kotest.assertions.throwables.shouldThrowExactly
+import io.kotest.core.spec.Spec
 import io.kotest.core.test.TestCase
 import io.kotest.core.test.TestResult
-import io.kotest.core.spec.Spec
 import io.kotest.matchers.collections.shouldBeEmpty
 import io.kotest.matchers.shouldBe
 import org.jetbrains.exposed.exceptions.ExposedSQLException
@@ -36,7 +36,7 @@ class VillageRepositoryImplIT(
             val gameMaster = User(
                 id = UserId(UUID.fromString(GAME_MASTER_USER_ID_STRING)),
                 name = "gameMaster",
-                isActive = true
+                isActive = true,
             )
             UserTable.insert {
                 it[id] = gameMaster.id.value
@@ -78,6 +78,7 @@ class VillageRepositoryImplIT(
                             psychicCount = 1,
                             madmanCount = 1,
                             isInitialActionActive = true,
+                            gameMasterUserId = UserId(UUID.fromString(GAME_MASTER_USER_ID_STRING)),
                         ),
                     )
                     val saltInput = "salt"
@@ -99,6 +100,7 @@ class VillageRepositoryImplIT(
                                 it[psychicCount] = village.psychicCount
                                 it[madmanCount] = village.madmanCount
                                 it[isInitialActionActive] = village.isInitialActionActive
+                                it[gameMasterUserId] = UUID.fromString(GAME_MASTER_USER_ID_STRING)
                             }
                         }
                     }
@@ -122,6 +124,7 @@ class VillageRepositoryImplIT(
                         psychicCount = 1,
                         madmanCount = 1,
                         isInitialActionActive = false,
+                        gameMasterUserId = UserId(UUID.fromString(GAME_MASTER_USER_ID_STRING)),
                     )
                     val village2 = Village(
                         id = VillageId(UUID.randomUUID()),
@@ -133,6 +136,7 @@ class VillageRepositoryImplIT(
                         psychicCount = 1,
                         madmanCount = 1,
                         isInitialActionActive = false,
+                        gameMasterUserId = UserId(UUID.fromString(GAME_MASTER_USER_ID_STRING)),
                     )
                     val expected = listOf(village1, village2)
                     val expectedSize = expected.size
@@ -154,6 +158,7 @@ class VillageRepositoryImplIT(
                                 it[psychicCount] = village.psychicCount
                                 it[madmanCount] = village.madmanCount
                                 it[isInitialActionActive] = village.isInitialActionActive
+                                it[gameMasterUserId] = UUID.fromString(GAME_MASTER_USER_ID_STRING)
                             }
                         }
 
@@ -180,13 +185,14 @@ class VillageRepositoryImplIT(
                             psychicCount = 1,
                             madmanCount = 1,
                             isInitialActionActive = false,
+                            gameMasterUserId = UserId(UUID.fromString(GAME_MASTER_USER_ID_STRING)),
                         )
                         val passwordHash = "passwordHash"
                         val salt = "salt"
 
                         // when, then
                         shouldNotThrowAny {
-                            villageRepository.createVillage(village, passwordHash, salt, UUID.fromString(GAME_MASTER_USER_ID_STRING))
+                            villageRepository.createVillage(village, passwordHash, salt)
                         }
                     }
                 }
@@ -204,6 +210,7 @@ class VillageRepositoryImplIT(
                             psychicCount = 1,
                             madmanCount = 1,
                             isInitialActionActive = false,
+                            gameMasterUserId = UserId(UUID.fromString(GAME_MASTER_USER_ID_STRING)),
                         )
                         val salt = "salt"
                         val passwordHash = "passwordHash"
@@ -217,6 +224,27 @@ class VillageRepositoryImplIT(
                                 salt,
                             )
                         }
+                    }
+                    it("UserTableに登録されてないGameMasterUserIdを持つ村が作成された場合は村が作成されずに例外がthrowされる") {
+                        // given
+                        val notExistGameMasterUserId = UserId(UUID.randomUUID())
+                        val village = Village(
+                            id = VillageId(UUID.randomUUID()),
+                            name = "村1",
+                            citizenCount = 10,
+                            werewolfCount = 2,
+                            fortuneTellerCount = 1,
+                            knightCount = 1,
+                            psychicCount = 1,
+                            madmanCount = 1,
+                            isInitialActionActive = false,
+                            gameMasterUserId = notExistGameMasterUserId,
+                        )
+                        val salt = "salt"
+                        val passwordHash = "passwordHash"
+
+                        // when, then
+                        shouldThrowExactly<ExposedSQLException> { villageRepository.createVillage(village, passwordHash, salt) }
                     }
                 }
             }

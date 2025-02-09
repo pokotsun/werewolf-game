@@ -1,7 +1,5 @@
 package com.example.backendkotlin.domain
 
-import java.util.UUID
-
 /**
  * Villageに関するRepository
  */
@@ -20,9 +18,8 @@ interface VillageRepository {
      * @param village 村
      * @param passwordHash パスワードのハッシュ
      * @param salt パスワードのソルト
-     * @param gameMasterUserId ゲームマスターのユーザID
      *
      * @return 作成した村
      */
-    fun createVillage(village: Village, passwordHash: String, salt: String, gameMasterUserId: UUID): Village
+    fun createVillage(village: Village, passwordHash: String, salt: String): Village
 }
