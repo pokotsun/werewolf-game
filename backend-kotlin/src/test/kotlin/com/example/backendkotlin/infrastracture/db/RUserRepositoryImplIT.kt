@@ -18,7 +18,7 @@ import org.jetbrains.exposed.sql.deleteAll
 import org.jetbrains.exposed.sql.insert
 import org.jetbrains.exposed.sql.transactions.transaction
 import org.springframework.boot.test.context.SpringBootTest
-
+import java.util.UUID
 /**
  * RUserRepositoryImplの結合テスト
  *
@@ -38,6 +38,131 @@ class RUserRepositoryImplIT(
     }
 
     init {
+        this.describe("selectByVillageId") {
+            context("正常系") {
+                it("存在してないVillageIdを指定しても空のリストが取得できる") {
+                    // given
+                    val villageId = VillageId.generate()
+
+                    // when
+                    val result = rUserVillageRepository.selectByVillageId(villageId)
+
+                    // then
+                    result shouldBe emptyList()
+                }
+                it("村に参加しているユーザーID一覧(1つ)を取得できる") {
+                    // given
+                    val userId = UserId.generate()
+                    val user = User(userId, "user", true)
+                    val villageId = VillageId.generate()
+                    val village = Village(
+                        id = villageId,
+                        name = "村1",
+                        citizenCount = 10,
+                        werewolfCount = 2,
+                        fortuneTellerCount = 1,
+                        knightCount = 1,
+                        psychicCount = 1,
+                        madmanCount = 1,
+                        isInitialActionActive = false,
+                        gameMasterUserId = userId,
+                    )
+
+                    // and
+                    transaction {
+                        UserTable.insert {
+                            it[UserTable.id] = userId.value
+                            it[name] = user.name
+                            it[isActive] = user.isActive
+                        }
+                        VillageTable.insert {
+                            it[VillageTable.id] = villageId.value
+                            it[name] = village.name
+                            it[salt] = "salt"
+                            it[passwordHash] = "hashedPassword"
+                            it[citizenCount] = village.citizenCount
+                            it[werewolfCount] = village.werewolfCount
+                            it[fortuneTellerCount] = village.fortuneTellerCount
+                            it[knightCount] = village.knightCount
+                            it[psychicCount] = village.psychicCount
+                            it[madmanCount] = village.madmanCount
+                            it[isInitialActionActive] = village.isInitialActionActive
+                            it[gameMasterUserId] = village.gameMasterUserId.value
+                        }
+                        RUserVillageTable.insert {
+                            it[RUserVillageTable.userId] = userId.value
+                            it[RUserVillageTable.villageId] = villageId.value
+                        }
+                    }
+
+                    // when
+                    val result = rUserVillageRepository.selectByVillageId(villageId)
+
+                    // then
+                    result shouldBe listOf(userId)
+                }
+                it("村に参加しているユーザーID一覧(複数)を取得できる") {
+                    // given
+                    val villageId = VillageId.generate()
+                    val userId1 = UserId(UUID.randomUUID())
+                    val userId2 = UserId(UUID.randomUUID())
+                    val village = Village(
+                        id = villageId,
+                        name = "村1",
+                        citizenCount = 10,
+                        werewolfCount = 2,
+                        fortuneTellerCount = 1,
+                        knightCount = 1,
+                        psychicCount = 1,
+                        madmanCount = 1,
+                        isInitialActionActive = false,
+                        gameMasterUserId = userId1,
+                    )
+
+                    // and
+                    transaction {
+                        UserTable.insert {
+                            it[UserTable.id] = userId1.value
+                            it[name] = "ユーザ1"
+                            it[isActive] = true
+                        }
+                        UserTable.insert {
+                            it[UserTable.id] = userId2.value
+                            it[name] = "ユーザ2"
+                            it[isActive] = true
+                        }
+                        VillageTable.insert {
+                            it[VillageTable.id] = villageId.value
+                            it[name] = village.name
+                            it[salt] = "salt"
+                            it[passwordHash] = "hashedPassword"
+                            it[citizenCount] = village.citizenCount
+                            it[werewolfCount] = village.werewolfCount
+                            it[fortuneTellerCount] = village.fortuneTellerCount
+                            it[knightCount] = village.knightCount
+                            it[psychicCount] = village.psychicCount
+                            it[madmanCount] = village.madmanCount
+                            it[isInitialActionActive] = village.isInitialActionActive
+                            it[gameMasterUserId] = village.gameMasterUserId.value
+                        }
+                        RUserVillageTable.insert {
+                            it[userId] = userId1.value
+                            it[RUserVillageTable.villageId] = villageId.value
+                        }
+                        RUserVillageTable.insert {
+                            it[userId] = userId2.value
+                            it[RUserVillageTable.villageId] = villageId.value
+                        }
+                    }
+
+                    // when
+                    val result = rUserVillageRepository.selectByVillageId(villageId)
+
+                    // then
+                    result shouldBe listOf(userId1, userId2)
+                }
+            }
+        }
         this.describe("save") {
             context("正常系") {
                 it("ユーザが村に参加する") {
