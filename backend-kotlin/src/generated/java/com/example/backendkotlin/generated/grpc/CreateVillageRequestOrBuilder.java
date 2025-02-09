@@ -74,4 +74,16 @@ public interface CreateVillageRequestOrBuilder extends
    */
   com.google.protobuf.ByteString
       getPasswordBytes();
+
+  /**
+   * <code>string game_master_name = 10;</code>
+   * @return The gameMasterName.
+   */
+  java.lang.String getGameMasterName();
+  /**
+   * <code>string game_master_name = 10;</code>
+   * @return The bytes for gameMasterName.
+   */
+  com.google.protobuf.ByteString
+      getGameMasterNameBytes();
 }
