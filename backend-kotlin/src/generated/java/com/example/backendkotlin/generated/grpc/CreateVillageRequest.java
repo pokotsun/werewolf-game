@@ -33,6 +33,7 @@ private static final long serialVersionUID = 0L;
   private CreateVillageRequest() {
     name_ = "";
     password_ = "";
+    gameMasterName_ = "";
   }
 
   public static final com.google.protobuf.Descriptors.Descriptor
@@ -203,6 +204,45 @@ private static final long serialVersionUID = 0L;
     }
   }
 
+  public static final int GAME_MASTER_NAME_FIELD_NUMBER = 10;
+  @SuppressWarnings("serial")
+  private volatile java.lang.Object gameMasterName_ = "";
+  /**
+   * <code>string game_master_name = 10;</code>
+   * @return The gameMasterName.
+   */
+  @java.lang.Override
+  public java.lang.String getGameMasterName() {
+    java.lang.Object ref = gameMasterName_;
+    if (ref instanceof java.lang.String) {
+      return (java.lang.String) ref;
+    } else {
+      com.google.protobuf.ByteString bs = 
+          (com.google.protobuf.ByteString) ref;
+      java.lang.String s = bs.toStringUtf8();
+      gameMasterName_ = s;
+      return s;
+    }
+  }
+  /**
+   * <code>string game_master_name = 10;</code>
+   * @return The bytes for gameMasterName.
+   */
+  @java.lang.Override
+  public com.google.protobuf.ByteString
+      getGameMasterNameBytes() {
+    java.lang.Object ref = gameMasterName_;
+    if (ref instanceof java.lang.String) {
+      com.google.protobuf.ByteString b = 
+          com.google.protobuf.ByteString.copyFromUtf8(
+              (java.lang.String) ref);
+      gameMasterName_ = b;
+      return b;
+    } else {
+      return (com.google.protobuf.ByteString) ref;
+    }
+  }
+
   private byte memoizedIsInitialized = -1;
   @java.lang.Override
   public final boolean isInitialized() {
@@ -243,6 +283,9 @@ private static final long serialVersionUID = 0L;
     }
     if (!com.google.protobuf.GeneratedMessage.isStringEmpty(password_)) {
       com.google.protobuf.GeneratedMessage.writeString(output, 9, password_);
+    }
+    if (!com.google.protobuf.GeneratedMessage.isStringEmpty(gameMasterName_)) {
+      com.google.protobuf.GeneratedMessage.writeString(output, 10, gameMasterName_);
     }
     getUnknownFields().writeTo(output);
   }
@@ -287,6 +330,9 @@ private static final long serialVersionUID = 0L;
     if (!com.google.protobuf.GeneratedMessage.isStringEmpty(password_)) {
       size += com.google.protobuf.GeneratedMessage.computeStringSize(9, password_);
     }
+    if (!com.google.protobuf.GeneratedMessage.isStringEmpty(gameMasterName_)) {
+      size += com.google.protobuf.GeneratedMessage.computeStringSize(10, gameMasterName_);
+    }
     size += getUnknownFields().getSerializedSize();
     memoizedSize = size;
     return size;
@@ -320,6 +366,8 @@ private static final long serialVersionUID = 0L;
         != other.getIsInitialActionActive()) return false;
     if (!getPassword()
         .equals(other.getPassword())) return false;
+    if (!getGameMasterName()
+        .equals(other.getGameMasterName())) return false;
     if (!getUnknownFields().equals(other.getUnknownFields())) return false;
     return true;
   }
@@ -350,6 +398,8 @@ private static final long serialVersionUID = 0L;
         getIsInitialActionActive());
     hash = (37 * hash) + PASSWORD_FIELD_NUMBER;
     hash = (53 * hash) + getPassword().hashCode();
+    hash = (37 * hash) + GAME_MASTER_NAME_FIELD_NUMBER;
+    hash = (53 * hash) + getGameMasterName().hashCode();
     hash = (29 * hash) + getUnknownFields().hashCode();
     memoizedHashCode = hash;
     return hash;
@@ -494,6 +544,7 @@ private static final long serialVersionUID = 0L;
       madmanCount_ = 0;
       isInitialActionActive_ = false;
       password_ = "";
+      gameMasterName_ = "";
       return this;
     }
 
@@ -554,6 +605,9 @@ private static final long serialVersionUID = 0L;
       if (((from_bitField0_ & 0x00000100) != 0)) {
         result.password_ = password_;
       }
+      if (((from_bitField0_ & 0x00000200) != 0)) {
+        result.gameMasterName_ = gameMasterName_;
+      }
     }
 
     @java.lang.Override
@@ -597,6 +651,11 @@ private static final long serialVersionUID = 0L;
       if (!other.getPassword().isEmpty()) {
         password_ = other.password_;
         bitField0_ |= 0x00000100;
+        onChanged();
+      }
+      if (!other.getGameMasterName().isEmpty()) {
+        gameMasterName_ = other.gameMasterName_;
+        bitField0_ |= 0x00000200;
         onChanged();
       }
       this.mergeUnknownFields(other.getUnknownFields());
@@ -670,6 +729,11 @@ private static final long serialVersionUID = 0L;
               bitField0_ |= 0x00000100;
               break;
             } // case 74
+            case 82: {
+              gameMasterName_ = input.readStringRequireUtf8();
+              bitField0_ |= 0x00000200;
+              break;
+            } // case 82
             default: {
               if (!super.parseUnknownField(input, extensionRegistry, tag)) {
                 done = true; // was an endgroup tag
@@ -1051,6 +1115,78 @@ private static final long serialVersionUID = 0L;
       checkByteStringIsUtf8(value);
       password_ = value;
       bitField0_ |= 0x00000100;
+      onChanged();
+      return this;
+    }
+
+    private java.lang.Object gameMasterName_ = "";
+    /**
+     * <code>string game_master_name = 10;</code>
+     * @return The gameMasterName.
+     */
+    public java.lang.String getGameMasterName() {
+      java.lang.Object ref = gameMasterName_;
+      if (!(ref instanceof java.lang.String)) {
+        com.google.protobuf.ByteString bs =
+            (com.google.protobuf.ByteString) ref;
+        java.lang.String s = bs.toStringUtf8();
+        gameMasterName_ = s;
+        return s;
+      } else {
+        return (java.lang.String) ref;
+      }
+    }
+    /**
+     * <code>string game_master_name = 10;</code>
+     * @return The bytes for gameMasterName.
+     */
+    public com.google.protobuf.ByteString
+        getGameMasterNameBytes() {
+      java.lang.Object ref = gameMasterName_;
+      if (ref instanceof String) {
+        com.google.protobuf.ByteString b = 
+            com.google.protobuf.ByteString.copyFromUtf8(
+                (java.lang.String) ref);
+        gameMasterName_ = b;
+        return b;
+      } else {
+        return (com.google.protobuf.ByteString) ref;
+      }
+    }
+    /**
+     * <code>string game_master_name = 10;</code>
+     * @param value The gameMasterName to set.
+     * @return This builder for chaining.
+     */
+    public Builder setGameMasterName(
+        java.lang.String value) {
+      if (value == null) { throw new NullPointerException(); }
+      gameMasterName_ = value;
+      bitField0_ |= 0x00000200;
+      onChanged();
+      return this;
+    }
+    /**
+     * <code>string game_master_name = 10;</code>
+     * @return This builder for chaining.
+     */
+    public Builder clearGameMasterName() {
+      gameMasterName_ = getDefaultInstance().getGameMasterName();
+      bitField0_ = (bitField0_ & ~0x00000200);
+      onChanged();
+      return this;
+    }
+    /**
+     * <code>string game_master_name = 10;</code>
+     * @param value The bytes for gameMasterName to set.
+     * @return This builder for chaining.
+     */
+    public Builder setGameMasterNameBytes(
+        com.google.protobuf.ByteString value) {
+      if (value == null) { throw new NullPointerException(); }
+      checkByteStringIsUtf8(value);
+      gameMasterName_ = value;
+      bitField0_ |= 0x00000200;
       onChanged();
       return this;
     }

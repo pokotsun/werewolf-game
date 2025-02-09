@@ -80,4 +80,22 @@ public interface CreateVillageResponseOrBuilder extends
    * @return The isInitialActionActive.
    */
   boolean getIsInitialActionActive();
+
+  /**
+   * <code>string game_master_user_id = 11;</code>
+   * @return The gameMasterUserId.
+   */
+  java.lang.String getGameMasterUserId();
+  /**
+   * <code>string game_master_user_id = 11;</code>
+   * @return The bytes for gameMasterUserId.
+   */
+  com.google.protobuf.ByteString
+      getGameMasterUserIdBytes();
+
+  /**
+   * <code>int32 current_user_number = 12;</code>
+   * @return The currentUserNumber.
+   */
+  int getCurrentUserNumber();
 }
