@@ -35,7 +35,11 @@ class CreateVillageUseCaseUT : DescribeSpec() {
                     val password = "password"
 
                     // and
-                    every { villageRepository.createVillage(village, any(), any()) } returns village
+                    mockkStatic(BCrypt::class)
+                    every { BCrypt.gensalt() } returns "salt"
+                    every { BCrypt.hashpw(password, "salt") } returns "hashedPassword"
+                    every { BCrypt.checkpw(password, "hashedPassword") } returns true
+                    every { villageRepository.createVillage(village, "hashedPassword", "salt") } returns village
 
                     // when
                     val result = target.invoke(village, password)
@@ -66,7 +70,7 @@ class CreateVillageUseCaseUT : DescribeSpec() {
                     every { BCrypt.hashpw(password, "salt") } returns "hashedPassword"
                     every { BCrypt.checkpw(password, "hashedPassword") } returns false
 
-                    // when
+                    // when, then
                     val exception = shouldThrowExactly<RuntimeException> {
                         target.invoke(village, password)
                     }
