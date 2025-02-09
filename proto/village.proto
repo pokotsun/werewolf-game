@@ -25,6 +25,7 @@ message CreateVillageRequest {
     int32 madman_count = 7;
     bool is_initial_action_active = 8;
     string password = 9;
+    string game_master_name = 10;
 }
 
 message CreateVillageResponse {
@@ -38,6 +39,8 @@ message CreateVillageResponse {
     int32 psychic_count = 8;
     int32 madman_count = 9;
     bool is_initial_action_active = 10;
+    string game_master_user_id = 11;
+    int32 current_user_number = 12;
 }
 
 // ListVillagesRequest メッセージ
