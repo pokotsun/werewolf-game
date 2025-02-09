@@ -1,5 +1,7 @@
 package com.example.backendkotlin.presentation
 
+import com.example.backendkotlin.domain.User
+import com.example.backendkotlin.domain.UserId
 import com.example.backendkotlin.domain.Village
 import com.example.backendkotlin.domain.VillageId
 import com.example.backendkotlin.generated.grpc.CreateVillageRequest
@@ -34,6 +36,14 @@ class VillageGrpcService(
         request: CreateVillageRequest,
         responseObserver: StreamObserver<CreateVillageResponse>,
     ) {
+        // 新しいゲームマスターエンティティの作成
+        val newGameMasterId = UserId(UUID.randomUUID())
+        val newGameMaster = User(
+            id = newGameMasterId,
+            name = request.gameMasterName,
+            isActive = true,
+        )
+        // 新しい村エンティティの作成
         val newVillageId = VillageId(UUID.randomUUID())
         val newVillage = request.let { r ->
             Village(
@@ -46,10 +56,11 @@ class VillageGrpcService(
                 psychicCount = r.psychicCount,
                 madmanCount = r.madmanCount,
                 isInitialActionActive = r.isInitialActionActive,
+                gameMasterUserId = newGameMasterId,
             )
         }
         // 村を作成
-        val createdVillage = createVillageUseCase.invoke(newVillage, request.password)
+        val createdVillage = createVillageUseCase.invoke(newVillage, request.password, newGameMaster)
         // レスポンスを作成
         val createVillageResponse = createdVillage.let { res ->
             CreateVillageResponse.newBuilder()
@@ -63,6 +74,8 @@ class VillageGrpcService(
                 .setPsychicCount(res.psychicCount)
                 .setMadmanCount(res.madmanCount)
                 .setIsInitialActionActive(res.isInitialActionActive)
+                .setGameMasterUserId(res.gameMasterUserId.value.toString())
+                .setCurrentUserNumber(res.currentUserNumber)
                 .build()
         }
         responseObserver.let { r ->

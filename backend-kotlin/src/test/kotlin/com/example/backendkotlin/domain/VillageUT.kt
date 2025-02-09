@@ -6,6 +6,9 @@ import io.kotest.core.spec.style.DescribeSpec
 import io.kotest.matchers.shouldBe
 import java.util.UUID
 
+/**
+ * Villageエンティティのテスト
+ */
 class VillageUT : DescribeSpec() {
     init {
         describe("Village") {
@@ -20,6 +23,7 @@ class VillageUT : DescribeSpec() {
                 val psychicCount = 1
                 val madmanCount = 1
                 val isInitialActionActive = true
+                val gameMasterUserId = UserId(UUID.randomUUID())
 
                 // when, then
                 shouldNotThrowAny {
@@ -33,6 +37,7 @@ class VillageUT : DescribeSpec() {
                         psychicCount = psychicCount,
                         madmanCount = madmanCount,
                         isInitialActionActive = isInitialActionActive,
+                        gameMasterUserId = gameMasterUserId,
                     )
                 }
             }
@@ -47,6 +52,7 @@ class VillageUT : DescribeSpec() {
                 val psychicCount = 1
                 val madmanCount = 1
                 val isInitialActionActive = true
+                val gameMasterUserId = UserId(UUID.randomUUID())
                 val expectedUserNumber = citizenCount + werewolfCount + fortuneTellerCount + knightCount + psychicCount + madmanCount
 
                 // when
@@ -60,6 +66,7 @@ class VillageUT : DescribeSpec() {
                     psychicCount = psychicCount,
                     madmanCount = madmanCount,
                     isInitialActionActive = isInitialActionActive,
+                    gameMasterUserId = gameMasterUserId,
                 )
                 val actual = village.userNumber
 
@@ -78,6 +85,7 @@ class VillageUT : DescribeSpec() {
                 val psychicCount = 1
                 val madmanCount = 1
                 val isInitialActionActive = true
+                val gameMasterUserId = UserId(UUID.randomUUID())
 
                 // when
                 val exception = shouldThrow<IllegalArgumentException> {
@@ -91,6 +99,7 @@ class VillageUT : DescribeSpec() {
                         psychicCount = psychicCount,
                         madmanCount = madmanCount,
                         isInitialActionActive = isInitialActionActive,
+                        gameMasterUserId = gameMasterUserId,
                     )
                 }
 
@@ -108,6 +117,7 @@ class VillageUT : DescribeSpec() {
                 val psychicCount = 1
                 val madmanCount = 1
                 val isInitialActionActive = true
+                val gameMasterUserId = UserId(UUID.randomUUID())
 
                 // when
                 val exception = shouldThrow<IllegalArgumentException> {
@@ -121,6 +131,7 @@ class VillageUT : DescribeSpec() {
                         psychicCount = psychicCount,
                         madmanCount = madmanCount,
                         isInitialActionActive = isInitialActionActive,
+                        gameMasterUserId = gameMasterUserId,
                     )
                 }
 

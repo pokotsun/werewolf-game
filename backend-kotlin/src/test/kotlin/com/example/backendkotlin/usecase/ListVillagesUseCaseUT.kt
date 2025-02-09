@@ -1,5 +1,6 @@
 package com.example.backendkotlin.usecase
 
+import com.example.backendkotlin.domain.UserId
 import com.example.backendkotlin.domain.Village
 import com.example.backendkotlin.domain.VillageId
 import com.example.backendkotlin.domain.VillageRepository
@@ -37,6 +38,7 @@ class ListVillagesUseCaseUT(
             context("正常系") {
                 it("全ての村を取得する") {
                     // given
+                    val gameMasterUserId = UserId(UUID.randomUUID())
                     val expected = listOf(
                         Village(
                             id = VillageId(UUID.randomUUID()),
@@ -48,6 +50,7 @@ class ListVillagesUseCaseUT(
                             psychicCount = 1,
                             madmanCount = 1,
                             isInitialActionActive = true,
+                            gameMasterUserId = gameMasterUserId,
                         ),
                         Village(
                             id = VillageId(UUID.randomUUID()),
@@ -59,6 +62,7 @@ class ListVillagesUseCaseUT(
                             psychicCount = 1,
                             madmanCount = 1,
                             isInitialActionActive = true,
+                            gameMasterUserId = gameMasterUserId,
                         ),
                     )
 
