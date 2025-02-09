@@ -76,20 +76,21 @@ public final class VillageServiceProto {
       "er_id\030\013 \001(\t\022\033\n\023current_user_number\030\014 \001(\005" +
       "\"\025\n\023ListVillagesRequest\"B\n\024ListVillagesR" +
       "esponse\022*\n\010villages\030\001 \003(\0132\030.village.Vill" +
-      "ageResponse\"\362\001\n\017VillageResponse\022\n\n\002id\030\001 " +
+      "ageResponse\"\217\002\n\017VillageResponse\022\n\n\002id\030\001 " +
       "\001(\t\022\014\n\004name\030\002 \001(\t\022\023\n\013user_number\030\003 \001(\005\022\025" +
       "\n\rcitizen_count\030\004 \001(\005\022\026\n\016werewolf_count\030" +
       "\005 \001(\005\022\034\n\024fortune_teller_count\030\006 \001(\005\022\024\n\014k" +
       "night_count\030\007 \001(\005\022\025\n\rpsychic_count\030\010 \001(\005" +
       "\022\024\n\014madman_count\030\t \001(\005\022 \n\030is_initial_act" +
-      "ion_active\030\n \001(\0102\255\001\n\016VillageService\022N\n\rC" +
-      "reateVillage\022\035.village.CreateVillageRequ" +
-      "est\032\036.village.CreateVillageResponse\022K\n\014L" +
-      "istVillages\022\034.village.ListVillagesReques" +
-      "t\032\035.village.ListVillagesResponseBl\n(com." +
-      "example.backendkotlin.generated.grpcB\023Vi" +
-      "llageServiceProtoP\001Z)github.com/pokotsun" +
-      "/werewolf/grpc/villageb\006proto3"
+      "ion_active\030\n \001(\010\022\033\n\023current_user_number\030" +
+      "\013 \001(\0052\255\001\n\016VillageService\022N\n\rCreateVillag" +
+      "e\022\035.village.CreateVillageRequest\032\036.villa" +
+      "ge.CreateVillageResponse\022K\n\014ListVillages" +
+      "\022\034.village.ListVillagesRequest\032\035.village" +
+      ".ListVillagesResponseBl\n(com.example.bac" +
+      "kendkotlin.generated.grpcB\023VillageServic" +
+      "eProtoP\001Z)github.com/pokotsun/werewolf/g" +
+      "rpc/villageb\006proto3"
     };
     descriptor = com.google.protobuf.Descriptors.FileDescriptor
       .internalBuildGeneratedFileFrom(descriptorData,
@@ -124,7 +125,7 @@ public final class VillageServiceProto {
     internal_static_village_VillageResponse_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessage.FieldAccessorTable(
         internal_static_village_VillageResponse_descriptor,
-        new java.lang.String[] { "Id", "Name", "UserNumber", "CitizenCount", "WerewolfCount", "FortuneTellerCount", "KnightCount", "PsychicCount", "MadmanCount", "IsInitialActionActive", });
+        new java.lang.String[] { "Id", "Name", "UserNumber", "CitizenCount", "WerewolfCount", "FortuneTellerCount", "KnightCount", "PsychicCount", "MadmanCount", "IsInitialActionActive", "CurrentUserNumber", });
     descriptor.resolveAllFeaturesImmutable();
   }
 

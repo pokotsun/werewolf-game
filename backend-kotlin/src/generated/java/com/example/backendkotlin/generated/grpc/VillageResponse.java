@@ -210,6 +210,17 @@ private static final long serialVersionUID = 0L;
     return isInitialActionActive_;
   }
 
+  public static final int CURRENT_USER_NUMBER_FIELD_NUMBER = 11;
+  private int currentUserNumber_ = 0;
+  /**
+   * <code>int32 current_user_number = 11;</code>
+   * @return The currentUserNumber.
+   */
+  @java.lang.Override
+  public int getCurrentUserNumber() {
+    return currentUserNumber_;
+  }
+
   private byte memoizedIsInitialized = -1;
   @java.lang.Override
   public final boolean isInitialized() {
@@ -253,6 +264,9 @@ private static final long serialVersionUID = 0L;
     }
     if (isInitialActionActive_ != false) {
       output.writeBool(10, isInitialActionActive_);
+    }
+    if (currentUserNumber_ != 0) {
+      output.writeInt32(11, currentUserNumber_);
     }
     getUnknownFields().writeTo(output);
   }
@@ -301,6 +315,10 @@ private static final long serialVersionUID = 0L;
       size += com.google.protobuf.CodedOutputStream
         .computeBoolSize(10, isInitialActionActive_);
     }
+    if (currentUserNumber_ != 0) {
+      size += com.google.protobuf.CodedOutputStream
+        .computeInt32Size(11, currentUserNumber_);
+    }
     size += getUnknownFields().getSerializedSize();
     memoizedSize = size;
     return size;
@@ -336,6 +354,8 @@ private static final long serialVersionUID = 0L;
         != other.getMadmanCount()) return false;
     if (getIsInitialActionActive()
         != other.getIsInitialActionActive()) return false;
+    if (getCurrentUserNumber()
+        != other.getCurrentUserNumber()) return false;
     if (!getUnknownFields().equals(other.getUnknownFields())) return false;
     return true;
   }
@@ -368,6 +388,8 @@ private static final long serialVersionUID = 0L;
     hash = (37 * hash) + IS_INITIAL_ACTION_ACTIVE_FIELD_NUMBER;
     hash = (53 * hash) + com.google.protobuf.Internal.hashBoolean(
         getIsInitialActionActive());
+    hash = (37 * hash) + CURRENT_USER_NUMBER_FIELD_NUMBER;
+    hash = (53 * hash) + getCurrentUserNumber();
     hash = (29 * hash) + getUnknownFields().hashCode();
     memoizedHashCode = hash;
     return hash;
@@ -509,6 +531,7 @@ private static final long serialVersionUID = 0L;
       psychicCount_ = 0;
       madmanCount_ = 0;
       isInitialActionActive_ = false;
+      currentUserNumber_ = 0;
       return this;
     }
 
@@ -572,6 +595,9 @@ private static final long serialVersionUID = 0L;
       if (((from_bitField0_ & 0x00000200) != 0)) {
         result.isInitialActionActive_ = isInitialActionActive_;
       }
+      if (((from_bitField0_ & 0x00000400) != 0)) {
+        result.currentUserNumber_ = currentUserNumber_;
+      }
     }
 
     @java.lang.Override
@@ -619,6 +645,9 @@ private static final long serialVersionUID = 0L;
       }
       if (other.getIsInitialActionActive() != false) {
         setIsInitialActionActive(other.getIsInitialActionActive());
+      }
+      if (other.getCurrentUserNumber() != 0) {
+        setCurrentUserNumber(other.getCurrentUserNumber());
       }
       this.mergeUnknownFields(other.getUnknownFields());
       onChanged();
@@ -696,6 +725,11 @@ private static final long serialVersionUID = 0L;
               bitField0_ |= 0x00000200;
               break;
             } // case 80
+            case 88: {
+              currentUserNumber_ = input.readInt32();
+              bitField0_ |= 0x00000400;
+              break;
+            } // case 88
             default: {
               if (!super.parseUnknownField(input, extensionRegistry, tag)) {
                 done = true; // was an endgroup tag
@@ -1109,6 +1143,38 @@ private static final long serialVersionUID = 0L;
     public Builder clearIsInitialActionActive() {
       bitField0_ = (bitField0_ & ~0x00000200);
       isInitialActionActive_ = false;
+      onChanged();
+      return this;
+    }
+
+    private int currentUserNumber_ ;
+    /**
+     * <code>int32 current_user_number = 11;</code>
+     * @return The currentUserNumber.
+     */
+    @java.lang.Override
+    public int getCurrentUserNumber() {
+      return currentUserNumber_;
+    }
+    /**
+     * <code>int32 current_user_number = 11;</code>
+     * @param value The currentUserNumber to set.
+     * @return This builder for chaining.
+     */
+    public Builder setCurrentUserNumber(int value) {
+
+      currentUserNumber_ = value;
+      bitField0_ |= 0x00000400;
+      onChanged();
+      return this;
+    }
+    /**
+     * <code>int32 current_user_number = 11;</code>
+     * @return This builder for chaining.
+     */
+    public Builder clearCurrentUserNumber() {
+      bitField0_ = (bitField0_ & ~0x00000400);
+      currentUserNumber_ = 0;
       onChanged();
       return this;
     }

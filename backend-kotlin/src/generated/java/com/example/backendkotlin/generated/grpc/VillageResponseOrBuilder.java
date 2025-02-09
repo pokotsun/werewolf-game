@@ -80,4 +80,10 @@ public interface VillageResponseOrBuilder extends
    * @return The isInitialActionActive.
    */
   boolean getIsInitialActionActive();
+
+  /**
+   * <code>int32 current_user_number = 11;</code>
+   * @return The currentUserNumber.
+   */
+  int getCurrentUserNumber();
 }
