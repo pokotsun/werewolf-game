@@ -7,6 +7,7 @@ import io.kotest.core.annotation.AutoScan
 import io.kotest.core.listeners.BeforeProjectListener
 import org.jetbrains.exposed.sql.Database
 import org.jetbrains.exposed.sql.SchemaUtils
+import org.jetbrains.exposed.sql.transactions.TransactionManager
 import org.jetbrains.exposed.sql.transactions.transaction
 import org.testcontainers.containers.PostgreSQLContainer
 
@@ -20,14 +21,13 @@ object WerewolfGameProjectListener : BeforeProjectListener {
         withDatabaseName("werewolf")
         withUsername("werewolf")
         withPassword("password")
-        withExposedPorts(5432)
     }
 
     override suspend fun beforeProject() {
         testContainer.start()
-        Database.connect(
+        val db = Database.connect(
             url = testContainer.jdbcUrl,
-            driver = "org.postgresql.Driver",
+            driver = testContainer.driverClassName,
             user = testContainer.username,
             password = testContainer.password,
         )
@@ -38,5 +38,12 @@ object WerewolfGameProjectListener : BeforeProjectListener {
                 RUserVillageTable,
             )
         }
+        // 初期設定が終わったのでコネクションを閉じる
+        TransactionManager.closeAndUnregister(db)
+
+        // Springの世界に入ります
+        System.setProperty("spring.datasource.url", testContainer.jdbcUrl)
+        System.setProperty("spring.datasource.username", testContainer.username)
+        System.setProperty("spring.datasource.password", testContainer.password)
     }
 }
