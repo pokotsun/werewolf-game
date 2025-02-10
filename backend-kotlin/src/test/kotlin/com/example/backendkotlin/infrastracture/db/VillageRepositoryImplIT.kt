@@ -6,7 +6,6 @@ import com.example.backendkotlin.infrastructure.db.VillageRepositoryImpl
 import com.example.backendkotlin.infrastructure.db.table.VillageTable
 import io.kotest.assertions.throwables.shouldNotThrowAny
 import io.kotest.assertions.throwables.shouldThrowExactly
-import io.kotest.core.Tuple2
 import io.kotest.core.test.TestCase
 import io.kotest.core.test.TestResult
 import io.kotest.matchers.collections.shouldBeEmpty
@@ -23,15 +22,15 @@ class VillageRepositoryImplIT(
     private val villageRepository: VillageRepositoryImpl,
 ) : DescribeSpecUsingPostgreSQLTestContainer() {
 
-    override fun afterTest(f: suspend (Tuple2<TestCase, TestResult>) -> Unit) {
-        // 全てのテスト後にVillageTableのデータを初期化する
-        super.afterTest(f)
+    override suspend fun afterTest(testCase: TestCase, result: TestResult) {
+        super.afterTest(testCase, result)
         transaction {
             VillageTable.deleteAll()
         }
     }
 
     init {
+
         this.describe("SelectAllVillages") {
             context("正常系") {
                 it("村が1つもない場合、空のリストが返却される") {
@@ -52,7 +51,7 @@ class VillageRepositoryImplIT(
                         knightCount = 1,
                         psychicCount = 1,
                         madmanCount = 1,
-                        isInitialActionActive = false,
+                        isInitialActionActive = true,
                     )
                     val salt = "salt"
                     val passwordHash = "passwordHash"
