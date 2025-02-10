@@ -31,6 +31,7 @@ class VillageRepositoryImplIT(
     }
 
     init {
+
         this.describe("SelectAllVillages") {
             context("正常系") {
                 it("村が1つもない場合、空のリストが返却される") {
