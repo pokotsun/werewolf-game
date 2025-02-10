@@ -18,7 +18,6 @@ import org.jetbrains.exposed.sql.deleteAll
 import org.jetbrains.exposed.sql.insert
 import org.jetbrains.exposed.sql.transactions.transaction
 import org.springframework.boot.test.context.SpringBootTest
-import java.util.UUID
 /**
  * RUserRepositoryImplの結合テスト
  *
