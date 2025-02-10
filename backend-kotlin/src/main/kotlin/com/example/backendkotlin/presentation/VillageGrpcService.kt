@@ -35,7 +35,7 @@ class VillageGrpcService(
         responseObserver: StreamObserver<CreateVillageResponse>,
     ) {
         val newVillageId = VillageId(UUID.randomUUID())
-        val newVillageRequest = request.let { r ->
+        val newVillage = request.let { r ->
             Village(
                 id = newVillageId,
                 name = r.name,
@@ -48,7 +48,10 @@ class VillageGrpcService(
                 isInitialActionActive = r.isInitialActionActive,
             )
         }
-        val insertedVillage = createVillageUseCase.invoke(newVillageRequest, request.password).let { res ->
+        // 村を作成
+        val createdVillage = createVillageUseCase.invoke(newVillage, request.password)
+        // レスポンスを作成
+        val createVillageResponse = createdVillage.let { res ->
             CreateVillageResponse.newBuilder()
                 .setId(res.id.value.toString())
                 .setName(res.name)
@@ -63,7 +66,7 @@ class VillageGrpcService(
                 .build()
         }
         responseObserver.let { r ->
-            r.onNext(insertedVillage)
+            r.onNext(createVillageResponse)
             r.onCompleted()
         }
     }
@@ -77,24 +80,26 @@ class VillageGrpcService(
      * @return 村一覧
      */
     override fun listVillages(request: ListVillagesRequest, responseObserver: StreamObserver<ListVillagesResponse>) {
-        val response = ListVillagesResponse.newBuilder().addAllVillages(
-            listVillagesUseCase.invoke().map { res ->
-                VillageResponse.newBuilder()
-                    .setId(res.id.value.toString())
-                    .setName(res.name)
-                    .setUserNumber(res.userNumber)
-                    .setCitizenCount(res.citizenCount)
-                    .setWerewolfCount(res.werewolfCount)
-                    .setFortuneTellerCount(res.fortuneTellerCount)
-                    .setKnightCount(res.knightCount)
-                    .setPsychicCount(res.psychicCount)
-                    .setMadmanCount(res.madmanCount)
-                    .setIsInitialActionActive(res.isInitialActionActive)
-                    .build()
-            },
-        ).build()
+        // 村一覧を取得
+        val villages = listVillagesUseCase.invoke()
+        // レスポンスを作成
+        val villageResponseList = villages.map { res ->
+            VillageResponse.newBuilder()
+                .setId(res.id.value.toString())
+                .setName(res.name)
+                .setUserNumber(res.userNumber)
+                .setCitizenCount(res.citizenCount)
+                .setWerewolfCount(res.werewolfCount)
+                .setFortuneTellerCount(res.fortuneTellerCount)
+                .setKnightCount(res.knightCount)
+                .setPsychicCount(res.psychicCount)
+                .setMadmanCount(res.madmanCount)
+                .setIsInitialActionActive(res.isInitialActionActive)
+                .build()
+        }
+        val listVillagesResponse = ListVillagesResponse.newBuilder().addAllVillages(villageResponseList).build()
         responseObserver.let { r ->
-            r.onNext(response)
+            r.onNext(listVillagesResponse)
             r.onCompleted()
         }
     }
