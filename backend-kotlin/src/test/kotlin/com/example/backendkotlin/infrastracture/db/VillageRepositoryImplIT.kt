@@ -5,36 +5,42 @@ import com.example.backendkotlin.domain.VillageId
 import com.example.backendkotlin.infrastructure.db.VillageRepositoryImpl
 import com.example.backendkotlin.infrastructure.db.table.VillageTable
 import io.kotest.assertions.throwables.shouldNotThrowAny
-import io.kotest.assertions.throwables.shouldThrow
+import io.kotest.assertions.throwables.shouldThrowExactly
+import io.kotest.core.Tuple2
+import io.kotest.core.test.TestCase
+import io.kotest.core.test.TestResult
 import io.kotest.matchers.collections.shouldBeEmpty
 import io.kotest.matchers.shouldBe
+import org.jetbrains.exposed.exceptions.ExposedSQLException
 import org.jetbrains.exposed.sql.deleteAll
 import org.jetbrains.exposed.sql.insert
 import org.jetbrains.exposed.sql.transactions.transaction
+import org.springframework.boot.test.context.SpringBootTest
 import java.util.UUID
 
-class VillageRepositoryImplIT() : DescribeSpecUsingPostgreSQLTestContainer() {
-    private val villageRepository = VillageRepositoryImpl()
+@SpringBootTest
+class VillageRepositoryImplIT(
+    private val villageRepository: VillageRepositoryImpl,
+) : DescribeSpecUsingPostgreSQLTestContainer() {
+
+    override fun afterTest(f: suspend (Tuple2<TestCase, TestResult>) -> Unit) {
+        // 全てのテスト後にVillageTableのデータを初期化する
+        super.afterTest(f)
+        transaction {
+            VillageTable.deleteAll()
+        }
+    }
 
     init {
-        // 全てのテスト後にVillageTableのデータを初期化する
-        afterTest {
-            transaction {
-                VillageTable.deleteAll()
-            }
-        }
-
-        describe("SelectAllVillages") {
-            context("村が1つも存在しない場合") {
-                it("空のリストが返却される") {
+        this.describe("SelectAllVillages") {
+            context("正常系") {
+                it("村が1つもない場合、空のリストが返却される") {
                     // when
                     val villages = villageRepository.selectAllVillages()
 
                     // then
                     villages.shouldBeEmpty()
                 }
-            }
-            context("村が1つ存在する場合") {
                 it("村が1つ返却される") {
                     // given
                     val village = Village(
@@ -83,8 +89,6 @@ class VillageRepositoryImplIT() : DescribeSpecUsingPostgreSQLTestContainer() {
                     villages[0].madmanCount.shouldBe(village.madmanCount)
                     villages[0].isInitialActionActive.shouldBe(village.isInitialActionActive)
                 }
-            }
-            context("村が複数ある場合") {
                 it("村が全て返却される") {
                     // given
                     val village1 = Village(
@@ -149,52 +153,55 @@ class VillageRepositoryImplIT() : DescribeSpecUsingPostgreSQLTestContainer() {
                     villages.size.shouldBe(2)
                 }
             }
-            describe("CreateVillage") {
-                context("正常系") {
-                    it("村が作成される") {
-                        // given
-                        val village = Village(
-                            id = VillageId(UUID.randomUUID()),
-                            name = "村1",
-                            citizenCount = 10,
-                            werewolfCount = 2,
-                            fortuneTellerCount = 1,
-                            knightCount = 1,
-                            psychicCount = 1,
-                            madmanCount = 1,
-                            isInitialActionActive = false,
-                        )
-                        val passwordHash = "passwordHash"
-                        val salt = "salt"
+        }
+        this.describe("CreateVillage") {
+            context("正常系") {
+                it("村が作成される") {
+                    // given
+                    val village = Village(
+                        id = VillageId(UUID.randomUUID()),
+                        name = "村1",
+                        citizenCount = 10,
+                        werewolfCount = 2,
+                        fortuneTellerCount = 1,
+                        knightCount = 1,
+                        psychicCount = 1,
+                        madmanCount = 1,
+                        isInitialActionActive = false,
+                    )
+                    val passwordHash = "passwordHash"
+                    val salt = "salt"
 
-                        // when, then
-                        shouldNotThrowAny { villageRepository.createVillage(village, passwordHash, salt) }
-                    }
+                    // when, then
+                    shouldNotThrowAny { villageRepository.createVillage(village, passwordHash, salt) }
                 }
-                context("異常系") {
-                    it("同じIDの村が作成された場合は村が作成されずに例外がthrowされる") {
-                        // given
-                        val sameId = VillageId(UUID.randomUUID())
-                        val village = Village(
-                            id = sameId,
-                            name = "村1",
-                            citizenCount = 10,
-                            werewolfCount = 2,
-                            fortuneTellerCount = 1,
-                            knightCount = 1,
-                            psychicCount = 1,
-                            madmanCount = 1,
-                            isInitialActionActive = false,
+            }
+            context("異常系") {
+                it("同じIDの村が作成された場合は村が作成されずに例外がthrowされる") {
+                    // given
+                    val sameId = VillageId(UUID.randomUUID())
+                    val village = Village(
+                        id = sameId,
+                        name = "村1",
+                        citizenCount = 10,
+                        werewolfCount = 2,
+                        fortuneTellerCount = 1,
+                        knightCount = 1,
+                        psychicCount = 1,
+                        madmanCount = 1,
+                        isInitialActionActive = false,
+                    )
+                    val salt = "salt"
+                    val passwordHash = "passwordHash"
+
+                    // when, then
+                    shouldNotThrowAny { villageRepository.createVillage(village, passwordHash, salt) }
+                    shouldThrowExactly<ExposedSQLException> {
+                        villageRepository.createVillage(
+                            village,
+                            passwordHash,
+                            salt,
                         )
-                        val salt = "salt"
-                        val passwordHash = "passwordHash"
-
-                        // when
-                        shouldNotThrowAny { villageRepository.createVillage(village, passwordHash, salt) }
-                        val exception = shouldThrow<RuntimeException> { villageRepository.createVillage(village, passwordHash, salt) }
-
-                        // then
-                        exception.message.shouldBe("Failed to create village")
                     }
                 }
             }
