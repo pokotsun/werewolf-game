@@ -3,18 +3,41 @@ package com.example.backendkotlin.usecase
 import com.example.backendkotlin.domain.Village
 import com.example.backendkotlin.domain.VillageId
 import com.example.backendkotlin.domain.VillageRepository
+import com.ninjasquad.springmockk.MockkBean
 import io.kotest.assertions.throwables.shouldThrowExactly
+import io.kotest.core.Tuple2
+import io.kotest.core.extensions.Extension
 import io.kotest.core.spec.style.DescribeSpec
+import io.kotest.core.test.TestCase
+import io.kotest.core.test.TestResult
+import io.kotest.extensions.spring.SpringExtension
 import io.kotest.matchers.shouldBe
+import io.mockk.clearAllMocks
+import io.mockk.confirmVerified
 import io.mockk.every
-import io.mockk.mockk
+import io.mockk.impl.annotations.InjectMockKs
 import io.mockk.mockkStatic
+import io.mockk.unmockkStatic
 import org.springframework.security.crypto.bcrypt.BCrypt
 import java.util.UUID
 
-class CreateVillageUseCaseUT : DescribeSpec() {
-    private val villageRepository = mockk<VillageRepository>()
-    private val target = CreateVillageUseCase(villageRepository)
+/**
+ * CreateVillageUseCaseのテストクラス
+ */
+class CreateVillageUseCaseUT(
+    @MockkBean
+    private val villageRepository: VillageRepository,
+) : DescribeSpec() {
+    @InjectMockKs
+    private lateinit var target: CreateVillageUseCase
+
+    override fun extensions(): List<Extension> = listOf(SpringExtension)
+
+    override fun afterTest(f: suspend (Tuple2<TestCase, TestResult>) -> Unit) {
+        // テスト後にMockの挙動を初期化する
+        confirmVerified(villageRepository)
+        clearAllMocks()
+    }
 
     init {
         this.describe("invokeメソッドのテスト") {
@@ -46,6 +69,9 @@ class CreateVillageUseCaseUT : DescribeSpec() {
 
                     // then
                     result shouldBe village
+
+                    // clear mock
+                    unmockkStatic(BCrypt::class)
                 }
             }
             context("異常系") {
@@ -75,6 +101,9 @@ class CreateVillageUseCaseUT : DescribeSpec() {
                         target.invoke(village, password)
                     }
                     exception.message shouldBe "Password encryption failed"
+
+                    // clear mock
+                    unmockkStatic(BCrypt::class)
                 }
             }
         }
