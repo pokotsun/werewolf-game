@@ -3,18 +3,38 @@ package com.example.backendkotlin.usecase
 import com.example.backendkotlin.domain.Village
 import com.example.backendkotlin.domain.VillageId
 import com.example.backendkotlin.domain.VillageRepository
+import com.ninjasquad.springmockk.MockkBean
+import io.kotest.core.Tuple2
 import io.kotest.core.spec.style.DescribeSpec
+import io.kotest.core.test.TestCase
+import io.kotest.core.test.TestResult
+import io.kotest.extensions.spring.SpringExtension
 import io.kotest.matchers.shouldBe
+import io.mockk.clearAllMocks
+import io.mockk.confirmVerified
 import io.mockk.every
-import io.mockk.mockk
+import io.mockk.impl.annotations.InjectMockKs
+import io.mockk.verify
 import java.util.UUID
 
 /**
  * ListVillagesUseCaseのテストクラス
  */
-class ListVillagesUseCaseUT : DescribeSpec() {
-    private val villageRepository = mockk<VillageRepository>()
-    private val target = ListVillagesUseCase(villageRepository)
+class ListVillagesUseCaseUT(
+    @MockkBean
+    private val villageRepository: VillageRepository,
+) : DescribeSpec() {
+    @InjectMockKs
+    private lateinit var target: ListVillagesUseCase
+
+    override fun extensions() = listOf(SpringExtension)
+
+    override fun afterTest(f: suspend (Tuple2<TestCase, TestResult>) -> Unit) {
+        // テスト後にMockの挙動を初期化する
+        confirmVerified(villageRepository)
+        clearAllMocks()
+    }
+
     init {
         this.describe("invokeメソッドのテスト") {
             context("正常系") {
@@ -53,6 +73,7 @@ class ListVillagesUseCaseUT : DescribeSpec() {
 
                     // then
                     result shouldBe expected
+                    verify(exactly = 1) { villageRepository.selectAllVillages() }
                 }
             }
         }
