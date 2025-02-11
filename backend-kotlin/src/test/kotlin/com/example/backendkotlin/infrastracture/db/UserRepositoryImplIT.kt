@@ -6,7 +6,6 @@ import com.example.backendkotlin.infrastructure.db.UserRepositoryImpl
 import com.example.backendkotlin.infrastructure.db.table.UserTable
 import io.kotest.assertions.throwables.shouldNotThrowAny
 import io.kotest.assertions.throwables.shouldThrow
-import io.kotest.core.Tuple2
 import io.kotest.core.test.TestCase
 import io.kotest.core.test.TestResult
 import io.kotest.matchers.shouldBe
@@ -23,7 +22,7 @@ import java.util.*
  */
 @SpringBootTest
 class UserRepositoryImplIT(
-    private val userRepository: UserRepositoryImpl
+    private val userRepository: UserRepositoryImpl,
 ) : DescribeSpecUsingPostgreSQLTestContainer() {
 
     // 全てのテスト後にUserTableのデータを初期化する

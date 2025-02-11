@@ -3,7 +3,6 @@ package com.example.backendkotlin.infrastructure.db
 import com.example.backendkotlin.domain.User
 import com.example.backendkotlin.domain.UserRepository
 import com.example.backendkotlin.infrastructure.db.table.UserTable
-import org.jetbrains.exposed.exceptions.ExposedSQLException
 import org.jetbrains.exposed.sql.insert
 import org.jetbrains.exposed.sql.transactions.transaction
 import org.springframework.stereotype.Repository

@@ -25,10 +25,6 @@ import java.util.UUID
 class VillageRepositoryImplIT(
     private val villageRepository: VillageRepositoryImpl,
 ) : DescribeSpecUsingPostgreSQLTestContainer() {
-    private companion object {
-        const val GAME_MASTER_USER_ID_STRING = "00000000-0000-0000-0000-000000000000"
-    }
-
     // テスト前にGameMaster用のユーザーデータをUserTableに挿入する
     override suspend fun beforeSpec(spec: Spec) {
         transaction {
@@ -53,7 +49,6 @@ class VillageRepositoryImplIT(
     }
 
     init {
-
         this.describe("SelectAllVillages") {
             context("正常系") {
                 it("村が1つもない場合、空のリストが返却される") {
@@ -247,5 +242,9 @@ class VillageRepositoryImplIT(
                 }
             }
         }
+    }
+
+    private companion object {
+        const val GAME_MASTER_USER_ID_STRING = "00000000-0000-0000-0000-000000000000"
     }
 }
