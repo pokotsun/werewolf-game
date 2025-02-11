@@ -66,10 +66,10 @@ class ListVillagesUseCaseUT(
                     every { villageRepository.selectAllVillages() } returns expected
 
                     // when
-                    val result = target.invoke()
+                    val actual = target.invoke()
 
                     // then
-                    result shouldBe expected
+                    actual shouldBe expected
                     verify(exactly = 1) { villageRepository.selectAllVillages() }
                 }
             }

@@ -41,7 +41,7 @@ class CreateVillageUseCaseUT(
             context("正常系") {
                 it("村を作成する") {
                     // given
-                    val village = Village(
+                    val expected = Village(
                         id = VillageId(UUID.randomUUID()),
                         name = "村1",
                         citizenCount = 10,
@@ -59,13 +59,13 @@ class CreateVillageUseCaseUT(
                     every { BCrypt.gensalt() } returns "salt"
                     every { BCrypt.hashpw(password, "salt") } returns "hashedPassword"
                     every { BCrypt.checkpw(password, "hashedPassword") } returns true
-                    every { villageRepository.createVillage(village, "hashedPassword", "salt") } returns village
+                    every { villageRepository.createVillage(expected, "hashedPassword", "salt") } returns expected
 
                     // when
-                    val result = target.invoke(village, password)
+                    val actual = target.invoke(expected, password)
 
                     // then
-                    result shouldBe village
+                    actual shouldBe expected
                 }
             }
             context("異常系") {
@@ -83,18 +83,21 @@ class CreateVillageUseCaseUT(
                         isInitialActionActive = true,
                     )
                     val password = "password"
+                    val salt = "salt"
+                    val hashedPassword = "hashedPassword"
+                    val expectedExceptionMessage = "Password encryption failed"
 
                     // and
                     mockkStatic(BCrypt::class)
-                    every { BCrypt.gensalt() } returns "salt"
-                    every { BCrypt.hashpw(password, "salt") } returns "hashedPassword"
-                    every { BCrypt.checkpw(password, "hashedPassword") } returns false
+                    every { BCrypt.gensalt() } returns salt
+                    every { BCrypt.hashpw(password, salt) } returns hashedPassword
+                    every { BCrypt.checkpw(password, hashedPassword) } returns false
 
                     // when, then
                     val exception = shouldThrowExactly<RuntimeException> {
                         target.invoke(village, password)
                     }
-                    exception.message shouldBe "Password encryption failed"
+                    exception.message shouldBe expectedExceptionMessage
                 }
             }
         }
