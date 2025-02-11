@@ -31,7 +31,6 @@ class VillageRepositoryImplIT(
 
     // テスト前にGameMaster用のユーザーデータをUserTableに挿入する
     override suspend fun beforeSpec(spec: Spec) {
-        super.beforeSpec(spec)
         transaction {
             val gameMaster = User(
                 id = UserId(UUID.fromString(GAME_MASTER_USER_ID_STRING)),
@@ -47,7 +46,6 @@ class VillageRepositoryImplIT(
     }
 
     override suspend fun afterTest(testCase: TestCase, result: TestResult) {
-        super.afterTest(testCase, result)
         // 毎テスト終了後に全レコードを削除
         transaction {
             VillageTable.deleteAll()

@@ -31,7 +31,6 @@ class RUserRepositoryImplIT(
 ) : DescribeSpecUsingPostgreSQLTestContainer() {
     // 全てのテスト後にUserTable, VillageTable, RUserVillageTableのデータを初期化する
     override suspend fun afterTest(testCase: TestCase, result: TestResult) {
-        super.afterTest(testCase, result)
         transaction {
             UserTable.deleteAll()
             VillageTable.deleteAll()
