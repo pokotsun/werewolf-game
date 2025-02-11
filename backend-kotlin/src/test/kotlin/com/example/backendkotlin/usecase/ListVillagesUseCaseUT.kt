@@ -8,7 +8,6 @@ import io.kotest.core.Tuple2
 import io.kotest.core.spec.style.DescribeSpec
 import io.kotest.core.test.TestCase
 import io.kotest.core.test.TestResult
-import io.kotest.extensions.spring.SpringExtension
 import io.kotest.matchers.shouldBe
 import io.mockk.clearAllMocks
 import io.mockk.confirmVerified
@@ -26,8 +25,6 @@ class ListVillagesUseCaseUT(
 ) : DescribeSpec() {
     @InjectMockKs
     private lateinit var target: ListVillagesUseCase
-
-    override fun extensions() = listOf(SpringExtension)
 
     override fun afterTest(f: suspend (Tuple2<TestCase, TestResult>) -> Unit) {
         // テスト後にMockの挙動を初期化する

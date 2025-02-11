@@ -6,11 +6,9 @@ import com.example.backendkotlin.domain.VillageRepository
 import com.ninjasquad.springmockk.MockkBean
 import io.kotest.assertions.throwables.shouldThrowExactly
 import io.kotest.core.Tuple2
-import io.kotest.core.extensions.Extension
 import io.kotest.core.spec.style.DescribeSpec
 import io.kotest.core.test.TestCase
 import io.kotest.core.test.TestResult
-import io.kotest.extensions.spring.SpringExtension
 import io.kotest.matchers.shouldBe
 import io.mockk.clearAllMocks
 import io.mockk.confirmVerified
@@ -31,12 +29,11 @@ class CreateVillageUseCaseUT(
     @InjectMockKs
     private lateinit var target: CreateVillageUseCase
 
-    override fun extensions(): List<Extension> = listOf(SpringExtension)
-
     override fun afterTest(f: suspend (Tuple2<TestCase, TestResult>) -> Unit) {
         // テスト後にMockの挙動を初期化する
         confirmVerified(villageRepository)
         clearAllMocks()
+        unmockkStatic(BCrypt::class)
     }
 
     init {
@@ -69,9 +66,6 @@ class CreateVillageUseCaseUT(
 
                     // then
                     result shouldBe village
-
-                    // clear mock
-                    unmockkStatic(BCrypt::class)
                 }
             }
             context("異常系") {
@@ -101,9 +95,6 @@ class CreateVillageUseCaseUT(
                         target.invoke(village, password)
                     }
                     exception.message shouldBe "Password encryption failed"
-
-                    // clear mock
-                    unmockkStatic(BCrypt::class)
                 }
             }
         }
