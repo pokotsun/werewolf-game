@@ -81,6 +81,7 @@ class CreateVillageUseCaseUT(
                     every { BCrypt.gensalt() } returns salt
                     every { BCrypt.hashpw(password, salt) } returns hashedPassword
                     every { BCrypt.checkpw(password, hashedPassword) } returns true
+                    every { userRepository.createUser(gameMaster) } returns gameMaster
                     every { villageRepository.createVillage(village, hashedPassword, salt) } returns expected
                     every { rUserVillageRepository.save(gameMaster.id, village.id) } returns Pair(gameMaster.id, expected.id)
 
@@ -117,7 +118,7 @@ class CreateVillageUseCaseUT(
                     val password = "password"
                     val salt = "salt"
                     val hashedPassword = "hashedPassword"
-                    val expectedExceptionMessage = "Password encryption failed"
+                    val expectedExceptionMessage = "Game master has created, but id is not matched"
 
                     // and
                     // idの異なるゲームマスターが作成されたとする
@@ -130,7 +131,7 @@ class CreateVillageUseCaseUT(
                     mockkStatic(BCrypt::class)
                     every { BCrypt.gensalt() } returns salt
                     every { BCrypt.hashpw(password, salt) } returns hashedPassword
-                    every { BCrypt.checkpw(password, hashedPassword) } returns false
+                    every { BCrypt.checkpw(password, hashedPassword) } returns true
                     every { villageRepository.createVillage(village, hashedPassword, salt) } returns village
                     every { rUserVillageRepository.save(createdGameMaster.id, village.id) } returns Pair(createdGameMaster.id, village.id)
 
