@@ -6,10 +6,14 @@ import com.example.backendkotlin.infrastructure.db.UserRepositoryImpl
 import com.example.backendkotlin.infrastructure.db.table.UserTable
 import io.kotest.assertions.throwables.shouldNotThrowAny
 import io.kotest.assertions.throwables.shouldThrow
+import io.kotest.core.Tuple2
+import io.kotest.core.test.TestCase
+import io.kotest.core.test.TestResult
 import io.kotest.matchers.shouldBe
 import org.jetbrains.exposed.exceptions.ExposedSQLException
 import org.jetbrains.exposed.sql.deleteAll
 import org.jetbrains.exposed.sql.transactions.transaction
+import org.springframework.boot.test.context.SpringBootTest
 import java.util.*
 
 /**
@@ -17,18 +21,20 @@ import java.util.*
  *
  * TestContainerを利用してDBの接続を行い、UserRepositoryImplのテストを行う
  */
-class UserRepositoryImplIT() : DescribeSpecUsingPostgreSQLTestContainer() {
-    private val userRepository = UserRepositoryImpl()
+@SpringBootTest
+class UserRepositoryImplIT(
+    private val userRepository: UserRepositoryImpl
+) : DescribeSpecUsingPostgreSQLTestContainer() {
 
     // 全てのテスト後にUserTableのデータを初期化する
-    init {
-        afterTest {
-            transaction {
-                UserTable.deleteAll()
-            }
+    override suspend fun afterTest(testCase: TestCase, result: TestResult) {
+        transaction {
+            UserTable.deleteAll()
         }
+    }
 
-        describe("createUser") {
+    init {
+        this.describe("createUser") {
             context("正常系") {
                 it("ユーザが作成される") {
                     // given
