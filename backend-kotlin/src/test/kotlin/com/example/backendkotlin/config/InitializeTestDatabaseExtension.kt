@@ -3,7 +3,6 @@ package com.example.backendkotlin.config
 import com.example.backendkotlin.infrastructure.db.table.RUserVillageTable
 import com.example.backendkotlin.infrastructure.db.table.UserTable
 import com.example.backendkotlin.infrastructure.db.table.VillageTable
-import io.kotest.core.annotation.AutoScan
 import io.kotest.core.listeners.BeforeProjectListener
 import org.jetbrains.exposed.sql.Database
 import org.jetbrains.exposed.sql.SchemaUtils
@@ -12,10 +11,9 @@ import org.jetbrains.exposed.sql.transactions.transaction
 import org.testcontainers.containers.PostgreSQLContainer
 
 /**
- * プロジェクト実行前に共通で実行されるべき処理をまとめたクラス
+ * DBの初期設定をまとめたクラス
  */
-@AutoScan
-object WerewolfGameProjectListener : BeforeProjectListener {
+object InitializeTestDatabaseExtension : BeforeProjectListener {
     private const val POSTGRESQL_IMAGE = "postgres:14.11"
     private val testContainer = PostgreSQLContainer<Nothing>(POSTGRESQL_IMAGE).apply {
         withDatabaseName("werewolf")
