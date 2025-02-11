@@ -40,26 +40,44 @@ public interface CreateVillageResponseOrBuilder extends
   int getUserNumber();
 
   /**
-   * <code>string created_at = 4;</code>
-   * @return The createdAt.
+   * <code>int32 citizen_count = 4;</code>
+   * @return The citizenCount.
    */
-  java.lang.String getCreatedAt();
-  /**
-   * <code>string created_at = 4;</code>
-   * @return The bytes for createdAt.
-   */
-  com.google.protobuf.ByteString
-      getCreatedAtBytes();
+  int getCitizenCount();
 
   /**
-   * <code>string updated_at = 5;</code>
-   * @return The updatedAt.
+   * <code>int32 werewolf_count = 5;</code>
+   * @return The werewolfCount.
    */
-  java.lang.String getUpdatedAt();
+  int getWerewolfCount();
+
   /**
-   * <code>string updated_at = 5;</code>
-   * @return The bytes for updatedAt.
+   * <code>int32 fortune_teller_count = 6;</code>
+   * @return The fortuneTellerCount.
    */
-  com.google.protobuf.ByteString
-      getUpdatedAtBytes();
+  int getFortuneTellerCount();
+
+  /**
+   * <code>int32 knight_count = 7;</code>
+   * @return The knightCount.
+   */
+  int getKnightCount();
+
+  /**
+   * <code>int32 psychic_count = 8;</code>
+   * @return The psychicCount.
+   */
+  int getPsychicCount();
+
+  /**
+   * <code>int32 madman_count = 9;</code>
+   * @return The madmanCount.
+   */
+  int getMadmanCount();
+
+  /**
+   * <code>bool is_initial_action_active = 10;</code>
+   * @return The isInitialActionActive.
+   */
+  boolean getIsInitialActionActive();
 }

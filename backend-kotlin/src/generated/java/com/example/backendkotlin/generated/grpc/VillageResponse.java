@@ -6,16 +6,12 @@
 package com.example.backendkotlin.generated.grpc;
 
 /**
- * <pre>
- * VillageRequest メッセージ
- * </pre>
- *
- * Protobuf type {@code village.CreateVillageRequest}
+ * Protobuf type {@code village.VillageResponse}
  */
-public final class CreateVillageRequest extends
+public final class VillageResponse extends
     com.google.protobuf.GeneratedMessage implements
-    // @@protoc_insertion_point(message_implements:village.CreateVillageRequest)
-    CreateVillageRequestOrBuilder {
+    // @@protoc_insertion_point(message_implements:village.VillageResponse)
+    VillageResponseOrBuilder {
 private static final long serialVersionUID = 0L;
   static {
     com.google.protobuf.RuntimeVersion.validateProtobufGencodeVersion(
@@ -24,35 +20,74 @@ private static final long serialVersionUID = 0L;
       /* minor= */ 29,
       /* patch= */ 3,
       /* suffix= */ "",
-      CreateVillageRequest.class.getName());
+      VillageResponse.class.getName());
   }
-  // Use CreateVillageRequest.newBuilder() to construct.
-  private CreateVillageRequest(com.google.protobuf.GeneratedMessage.Builder<?> builder) {
+  // Use VillageResponse.newBuilder() to construct.
+  private VillageResponse(com.google.protobuf.GeneratedMessage.Builder<?> builder) {
     super(builder);
   }
-  private CreateVillageRequest() {
+  private VillageResponse() {
+    id_ = "";
     name_ = "";
-    password_ = "";
   }
 
   public static final com.google.protobuf.Descriptors.Descriptor
       getDescriptor() {
-    return com.example.backendkotlin.generated.grpc.VillageServiceProto.internal_static_village_CreateVillageRequest_descriptor;
+    return com.example.backendkotlin.generated.grpc.VillageServiceProto.internal_static_village_VillageResponse_descriptor;
   }
 
   @java.lang.Override
   protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
       internalGetFieldAccessorTable() {
-    return com.example.backendkotlin.generated.grpc.VillageServiceProto.internal_static_village_CreateVillageRequest_fieldAccessorTable
+    return com.example.backendkotlin.generated.grpc.VillageServiceProto.internal_static_village_VillageResponse_fieldAccessorTable
         .ensureFieldAccessorsInitialized(
-            com.example.backendkotlin.generated.grpc.CreateVillageRequest.class, com.example.backendkotlin.generated.grpc.CreateVillageRequest.Builder.class);
+            com.example.backendkotlin.generated.grpc.VillageResponse.class, com.example.backendkotlin.generated.grpc.VillageResponse.Builder.class);
   }
 
-  public static final int NAME_FIELD_NUMBER = 1;
+  public static final int ID_FIELD_NUMBER = 1;
+  @SuppressWarnings("serial")
+  private volatile java.lang.Object id_ = "";
+  /**
+   * <code>string id = 1;</code>
+   * @return The id.
+   */
+  @java.lang.Override
+  public java.lang.String getId() {
+    java.lang.Object ref = id_;
+    if (ref instanceof java.lang.String) {
+      return (java.lang.String) ref;
+    } else {
+      com.google.protobuf.ByteString bs = 
+          (com.google.protobuf.ByteString) ref;
+      java.lang.String s = bs.toStringUtf8();
+      id_ = s;
+      return s;
+    }
+  }
+  /**
+   * <code>string id = 1;</code>
+   * @return The bytes for id.
+   */
+  @java.lang.Override
+  public com.google.protobuf.ByteString
+      getIdBytes() {
+    java.lang.Object ref = id_;
+    if (ref instanceof java.lang.String) {
+      com.google.protobuf.ByteString b = 
+          com.google.protobuf.ByteString.copyFromUtf8(
+              (java.lang.String) ref);
+      id_ = b;
+      return b;
+    } else {
+      return (com.google.protobuf.ByteString) ref;
+    }
+  }
+
+  public static final int NAME_FIELD_NUMBER = 2;
   @SuppressWarnings("serial")
   private volatile java.lang.Object name_ = "";
   /**
-   * <code>string name = 1;</code>
+   * <code>string name = 2;</code>
    * @return The name.
    */
   @java.lang.Override
@@ -69,7 +104,7 @@ private static final long serialVersionUID = 0L;
     }
   }
   /**
-   * <code>string name = 1;</code>
+   * <code>string name = 2;</code>
    * @return The bytes for name.
    */
   @java.lang.Override
@@ -87,10 +122,21 @@ private static final long serialVersionUID = 0L;
     }
   }
 
-  public static final int CITIZEN_COUNT_FIELD_NUMBER = 2;
+  public static final int USER_NUMBER_FIELD_NUMBER = 3;
+  private int userNumber_ = 0;
+  /**
+   * <code>int32 user_number = 3;</code>
+   * @return The userNumber.
+   */
+  @java.lang.Override
+  public int getUserNumber() {
+    return userNumber_;
+  }
+
+  public static final int CITIZEN_COUNT_FIELD_NUMBER = 4;
   private int citizenCount_ = 0;
   /**
-   * <code>int32 citizen_count = 2;</code>
+   * <code>int32 citizen_count = 4;</code>
    * @return The citizenCount.
    */
   @java.lang.Override
@@ -98,10 +144,10 @@ private static final long serialVersionUID = 0L;
     return citizenCount_;
   }
 
-  public static final int WEREWOLF_COUNT_FIELD_NUMBER = 3;
+  public static final int WEREWOLF_COUNT_FIELD_NUMBER = 5;
   private int werewolfCount_ = 0;
   /**
-   * <code>int32 werewolf_count = 3;</code>
+   * <code>int32 werewolf_count = 5;</code>
    * @return The werewolfCount.
    */
   @java.lang.Override
@@ -109,10 +155,10 @@ private static final long serialVersionUID = 0L;
     return werewolfCount_;
   }
 
-  public static final int FORTUNE_TELLER_COUNT_FIELD_NUMBER = 4;
+  public static final int FORTUNE_TELLER_COUNT_FIELD_NUMBER = 6;
   private int fortuneTellerCount_ = 0;
   /**
-   * <code>int32 fortune_teller_count = 4;</code>
+   * <code>int32 fortune_teller_count = 6;</code>
    * @return The fortuneTellerCount.
    */
   @java.lang.Override
@@ -120,10 +166,10 @@ private static final long serialVersionUID = 0L;
     return fortuneTellerCount_;
   }
 
-  public static final int KNIGHT_COUNT_FIELD_NUMBER = 5;
+  public static final int KNIGHT_COUNT_FIELD_NUMBER = 7;
   private int knightCount_ = 0;
   /**
-   * <code>int32 knight_count = 5;</code>
+   * <code>int32 knight_count = 7;</code>
    * @return The knightCount.
    */
   @java.lang.Override
@@ -131,10 +177,10 @@ private static final long serialVersionUID = 0L;
     return knightCount_;
   }
 
-  public static final int PSYCHIC_COUNT_FIELD_NUMBER = 6;
+  public static final int PSYCHIC_COUNT_FIELD_NUMBER = 8;
   private int psychicCount_ = 0;
   /**
-   * <code>int32 psychic_count = 6;</code>
+   * <code>int32 psychic_count = 8;</code>
    * @return The psychicCount.
    */
   @java.lang.Override
@@ -142,10 +188,10 @@ private static final long serialVersionUID = 0L;
     return psychicCount_;
   }
 
-  public static final int MADMAN_COUNT_FIELD_NUMBER = 7;
+  public static final int MADMAN_COUNT_FIELD_NUMBER = 9;
   private int madmanCount_ = 0;
   /**
-   * <code>int32 madman_count = 7;</code>
+   * <code>int32 madman_count = 9;</code>
    * @return The madmanCount.
    */
   @java.lang.Override
@@ -153,54 +199,15 @@ private static final long serialVersionUID = 0L;
     return madmanCount_;
   }
 
-  public static final int IS_INITIAL_ACTION_ACTIVE_FIELD_NUMBER = 8;
+  public static final int IS_INITIAL_ACTION_ACTIVE_FIELD_NUMBER = 10;
   private boolean isInitialActionActive_ = false;
   /**
-   * <code>bool is_initial_action_active = 8;</code>
+   * <code>bool is_initial_action_active = 10;</code>
    * @return The isInitialActionActive.
    */
   @java.lang.Override
   public boolean getIsInitialActionActive() {
     return isInitialActionActive_;
-  }
-
-  public static final int PASSWORD_FIELD_NUMBER = 9;
-  @SuppressWarnings("serial")
-  private volatile java.lang.Object password_ = "";
-  /**
-   * <code>string password = 9;</code>
-   * @return The password.
-   */
-  @java.lang.Override
-  public java.lang.String getPassword() {
-    java.lang.Object ref = password_;
-    if (ref instanceof java.lang.String) {
-      return (java.lang.String) ref;
-    } else {
-      com.google.protobuf.ByteString bs = 
-          (com.google.protobuf.ByteString) ref;
-      java.lang.String s = bs.toStringUtf8();
-      password_ = s;
-      return s;
-    }
-  }
-  /**
-   * <code>string password = 9;</code>
-   * @return The bytes for password.
-   */
-  @java.lang.Override
-  public com.google.protobuf.ByteString
-      getPasswordBytes() {
-    java.lang.Object ref = password_;
-    if (ref instanceof java.lang.String) {
-      com.google.protobuf.ByteString b = 
-          com.google.protobuf.ByteString.copyFromUtf8(
-              (java.lang.String) ref);
-      password_ = b;
-      return b;
-    } else {
-      return (com.google.protobuf.ByteString) ref;
-    }
   }
 
   private byte memoizedIsInitialized = -1;
@@ -217,32 +224,35 @@ private static final long serialVersionUID = 0L;
   @java.lang.Override
   public void writeTo(com.google.protobuf.CodedOutputStream output)
                       throws java.io.IOException {
+    if (!com.google.protobuf.GeneratedMessage.isStringEmpty(id_)) {
+      com.google.protobuf.GeneratedMessage.writeString(output, 1, id_);
+    }
     if (!com.google.protobuf.GeneratedMessage.isStringEmpty(name_)) {
-      com.google.protobuf.GeneratedMessage.writeString(output, 1, name_);
+      com.google.protobuf.GeneratedMessage.writeString(output, 2, name_);
+    }
+    if (userNumber_ != 0) {
+      output.writeInt32(3, userNumber_);
     }
     if (citizenCount_ != 0) {
-      output.writeInt32(2, citizenCount_);
+      output.writeInt32(4, citizenCount_);
     }
     if (werewolfCount_ != 0) {
-      output.writeInt32(3, werewolfCount_);
+      output.writeInt32(5, werewolfCount_);
     }
     if (fortuneTellerCount_ != 0) {
-      output.writeInt32(4, fortuneTellerCount_);
+      output.writeInt32(6, fortuneTellerCount_);
     }
     if (knightCount_ != 0) {
-      output.writeInt32(5, knightCount_);
+      output.writeInt32(7, knightCount_);
     }
     if (psychicCount_ != 0) {
-      output.writeInt32(6, psychicCount_);
+      output.writeInt32(8, psychicCount_);
     }
     if (madmanCount_ != 0) {
-      output.writeInt32(7, madmanCount_);
+      output.writeInt32(9, madmanCount_);
     }
     if (isInitialActionActive_ != false) {
-      output.writeBool(8, isInitialActionActive_);
-    }
-    if (!com.google.protobuf.GeneratedMessage.isStringEmpty(password_)) {
-      com.google.protobuf.GeneratedMessage.writeString(output, 9, password_);
+      output.writeBool(10, isInitialActionActive_);
     }
     getUnknownFields().writeTo(output);
   }
@@ -253,39 +263,43 @@ private static final long serialVersionUID = 0L;
     if (size != -1) return size;
 
     size = 0;
+    if (!com.google.protobuf.GeneratedMessage.isStringEmpty(id_)) {
+      size += com.google.protobuf.GeneratedMessage.computeStringSize(1, id_);
+    }
     if (!com.google.protobuf.GeneratedMessage.isStringEmpty(name_)) {
-      size += com.google.protobuf.GeneratedMessage.computeStringSize(1, name_);
+      size += com.google.protobuf.GeneratedMessage.computeStringSize(2, name_);
+    }
+    if (userNumber_ != 0) {
+      size += com.google.protobuf.CodedOutputStream
+        .computeInt32Size(3, userNumber_);
     }
     if (citizenCount_ != 0) {
       size += com.google.protobuf.CodedOutputStream
-        .computeInt32Size(2, citizenCount_);
+        .computeInt32Size(4, citizenCount_);
     }
     if (werewolfCount_ != 0) {
       size += com.google.protobuf.CodedOutputStream
-        .computeInt32Size(3, werewolfCount_);
+        .computeInt32Size(5, werewolfCount_);
     }
     if (fortuneTellerCount_ != 0) {
       size += com.google.protobuf.CodedOutputStream
-        .computeInt32Size(4, fortuneTellerCount_);
+        .computeInt32Size(6, fortuneTellerCount_);
     }
     if (knightCount_ != 0) {
       size += com.google.protobuf.CodedOutputStream
-        .computeInt32Size(5, knightCount_);
+        .computeInt32Size(7, knightCount_);
     }
     if (psychicCount_ != 0) {
       size += com.google.protobuf.CodedOutputStream
-        .computeInt32Size(6, psychicCount_);
+        .computeInt32Size(8, psychicCount_);
     }
     if (madmanCount_ != 0) {
       size += com.google.protobuf.CodedOutputStream
-        .computeInt32Size(7, madmanCount_);
+        .computeInt32Size(9, madmanCount_);
     }
     if (isInitialActionActive_ != false) {
       size += com.google.protobuf.CodedOutputStream
-        .computeBoolSize(8, isInitialActionActive_);
-    }
-    if (!com.google.protobuf.GeneratedMessage.isStringEmpty(password_)) {
-      size += com.google.protobuf.GeneratedMessage.computeStringSize(9, password_);
+        .computeBoolSize(10, isInitialActionActive_);
     }
     size += getUnknownFields().getSerializedSize();
     memoizedSize = size;
@@ -297,13 +311,17 @@ private static final long serialVersionUID = 0L;
     if (obj == this) {
      return true;
     }
-    if (!(obj instanceof com.example.backendkotlin.generated.grpc.CreateVillageRequest)) {
+    if (!(obj instanceof com.example.backendkotlin.generated.grpc.VillageResponse)) {
       return super.equals(obj);
     }
-    com.example.backendkotlin.generated.grpc.CreateVillageRequest other = (com.example.backendkotlin.generated.grpc.CreateVillageRequest) obj;
+    com.example.backendkotlin.generated.grpc.VillageResponse other = (com.example.backendkotlin.generated.grpc.VillageResponse) obj;
 
+    if (!getId()
+        .equals(other.getId())) return false;
     if (!getName()
         .equals(other.getName())) return false;
+    if (getUserNumber()
+        != other.getUserNumber()) return false;
     if (getCitizenCount()
         != other.getCitizenCount()) return false;
     if (getWerewolfCount()
@@ -318,8 +336,6 @@ private static final long serialVersionUID = 0L;
         != other.getMadmanCount()) return false;
     if (getIsInitialActionActive()
         != other.getIsInitialActionActive()) return false;
-    if (!getPassword()
-        .equals(other.getPassword())) return false;
     if (!getUnknownFields().equals(other.getUnknownFields())) return false;
     return true;
   }
@@ -331,8 +347,12 @@ private static final long serialVersionUID = 0L;
     }
     int hash = 41;
     hash = (19 * hash) + getDescriptor().hashCode();
+    hash = (37 * hash) + ID_FIELD_NUMBER;
+    hash = (53 * hash) + getId().hashCode();
     hash = (37 * hash) + NAME_FIELD_NUMBER;
     hash = (53 * hash) + getName().hashCode();
+    hash = (37 * hash) + USER_NUMBER_FIELD_NUMBER;
+    hash = (53 * hash) + getUserNumber();
     hash = (37 * hash) + CITIZEN_COUNT_FIELD_NUMBER;
     hash = (53 * hash) + getCitizenCount();
     hash = (37 * hash) + WEREWOLF_COUNT_FIELD_NUMBER;
@@ -348,51 +368,49 @@ private static final long serialVersionUID = 0L;
     hash = (37 * hash) + IS_INITIAL_ACTION_ACTIVE_FIELD_NUMBER;
     hash = (53 * hash) + com.google.protobuf.Internal.hashBoolean(
         getIsInitialActionActive());
-    hash = (37 * hash) + PASSWORD_FIELD_NUMBER;
-    hash = (53 * hash) + getPassword().hashCode();
     hash = (29 * hash) + getUnknownFields().hashCode();
     memoizedHashCode = hash;
     return hash;
   }
 
-  public static com.example.backendkotlin.generated.grpc.CreateVillageRequest parseFrom(
+  public static com.example.backendkotlin.generated.grpc.VillageResponse parseFrom(
       java.nio.ByteBuffer data)
       throws com.google.protobuf.InvalidProtocolBufferException {
     return PARSER.parseFrom(data);
   }
-  public static com.example.backendkotlin.generated.grpc.CreateVillageRequest parseFrom(
+  public static com.example.backendkotlin.generated.grpc.VillageResponse parseFrom(
       java.nio.ByteBuffer data,
       com.google.protobuf.ExtensionRegistryLite extensionRegistry)
       throws com.google.protobuf.InvalidProtocolBufferException {
     return PARSER.parseFrom(data, extensionRegistry);
   }
-  public static com.example.backendkotlin.generated.grpc.CreateVillageRequest parseFrom(
+  public static com.example.backendkotlin.generated.grpc.VillageResponse parseFrom(
       com.google.protobuf.ByteString data)
       throws com.google.protobuf.InvalidProtocolBufferException {
     return PARSER.parseFrom(data);
   }
-  public static com.example.backendkotlin.generated.grpc.CreateVillageRequest parseFrom(
+  public static com.example.backendkotlin.generated.grpc.VillageResponse parseFrom(
       com.google.protobuf.ByteString data,
       com.google.protobuf.ExtensionRegistryLite extensionRegistry)
       throws com.google.protobuf.InvalidProtocolBufferException {
     return PARSER.parseFrom(data, extensionRegistry);
   }
-  public static com.example.backendkotlin.generated.grpc.CreateVillageRequest parseFrom(byte[] data)
+  public static com.example.backendkotlin.generated.grpc.VillageResponse parseFrom(byte[] data)
       throws com.google.protobuf.InvalidProtocolBufferException {
     return PARSER.parseFrom(data);
   }
-  public static com.example.backendkotlin.generated.grpc.CreateVillageRequest parseFrom(
+  public static com.example.backendkotlin.generated.grpc.VillageResponse parseFrom(
       byte[] data,
       com.google.protobuf.ExtensionRegistryLite extensionRegistry)
       throws com.google.protobuf.InvalidProtocolBufferException {
     return PARSER.parseFrom(data, extensionRegistry);
   }
-  public static com.example.backendkotlin.generated.grpc.CreateVillageRequest parseFrom(java.io.InputStream input)
+  public static com.example.backendkotlin.generated.grpc.VillageResponse parseFrom(java.io.InputStream input)
       throws java.io.IOException {
     return com.google.protobuf.GeneratedMessage
         .parseWithIOException(PARSER, input);
   }
-  public static com.example.backendkotlin.generated.grpc.CreateVillageRequest parseFrom(
+  public static com.example.backendkotlin.generated.grpc.VillageResponse parseFrom(
       java.io.InputStream input,
       com.google.protobuf.ExtensionRegistryLite extensionRegistry)
       throws java.io.IOException {
@@ -400,26 +418,26 @@ private static final long serialVersionUID = 0L;
         .parseWithIOException(PARSER, input, extensionRegistry);
   }
 
-  public static com.example.backendkotlin.generated.grpc.CreateVillageRequest parseDelimitedFrom(java.io.InputStream input)
+  public static com.example.backendkotlin.generated.grpc.VillageResponse parseDelimitedFrom(java.io.InputStream input)
       throws java.io.IOException {
     return com.google.protobuf.GeneratedMessage
         .parseDelimitedWithIOException(PARSER, input);
   }
 
-  public static com.example.backendkotlin.generated.grpc.CreateVillageRequest parseDelimitedFrom(
+  public static com.example.backendkotlin.generated.grpc.VillageResponse parseDelimitedFrom(
       java.io.InputStream input,
       com.google.protobuf.ExtensionRegistryLite extensionRegistry)
       throws java.io.IOException {
     return com.google.protobuf.GeneratedMessage
         .parseDelimitedWithIOException(PARSER, input, extensionRegistry);
   }
-  public static com.example.backendkotlin.generated.grpc.CreateVillageRequest parseFrom(
+  public static com.example.backendkotlin.generated.grpc.VillageResponse parseFrom(
       com.google.protobuf.CodedInputStream input)
       throws java.io.IOException {
     return com.google.protobuf.GeneratedMessage
         .parseWithIOException(PARSER, input);
   }
-  public static com.example.backendkotlin.generated.grpc.CreateVillageRequest parseFrom(
+  public static com.example.backendkotlin.generated.grpc.VillageResponse parseFrom(
       com.google.protobuf.CodedInputStream input,
       com.google.protobuf.ExtensionRegistryLite extensionRegistry)
       throws java.io.IOException {
@@ -432,7 +450,7 @@ private static final long serialVersionUID = 0L;
   public static Builder newBuilder() {
     return DEFAULT_INSTANCE.toBuilder();
   }
-  public static Builder newBuilder(com.example.backendkotlin.generated.grpc.CreateVillageRequest prototype) {
+  public static Builder newBuilder(com.example.backendkotlin.generated.grpc.VillageResponse prototype) {
     return DEFAULT_INSTANCE.toBuilder().mergeFrom(prototype);
   }
   @java.lang.Override
@@ -448,30 +466,26 @@ private static final long serialVersionUID = 0L;
     return builder;
   }
   /**
-   * <pre>
-   * VillageRequest メッセージ
-   * </pre>
-   *
-   * Protobuf type {@code village.CreateVillageRequest}
+   * Protobuf type {@code village.VillageResponse}
    */
   public static final class Builder extends
       com.google.protobuf.GeneratedMessage.Builder<Builder> implements
-      // @@protoc_insertion_point(builder_implements:village.CreateVillageRequest)
-      com.example.backendkotlin.generated.grpc.CreateVillageRequestOrBuilder {
+      // @@protoc_insertion_point(builder_implements:village.VillageResponse)
+      com.example.backendkotlin.generated.grpc.VillageResponseOrBuilder {
     public static final com.google.protobuf.Descriptors.Descriptor
         getDescriptor() {
-      return com.example.backendkotlin.generated.grpc.VillageServiceProto.internal_static_village_CreateVillageRequest_descriptor;
+      return com.example.backendkotlin.generated.grpc.VillageServiceProto.internal_static_village_VillageResponse_descriptor;
     }
 
     @java.lang.Override
     protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
         internalGetFieldAccessorTable() {
-      return com.example.backendkotlin.generated.grpc.VillageServiceProto.internal_static_village_CreateVillageRequest_fieldAccessorTable
+      return com.example.backendkotlin.generated.grpc.VillageServiceProto.internal_static_village_VillageResponse_fieldAccessorTable
           .ensureFieldAccessorsInitialized(
-              com.example.backendkotlin.generated.grpc.CreateVillageRequest.class, com.example.backendkotlin.generated.grpc.CreateVillageRequest.Builder.class);
+              com.example.backendkotlin.generated.grpc.VillageResponse.class, com.example.backendkotlin.generated.grpc.VillageResponse.Builder.class);
     }
 
-    // Construct using com.example.backendkotlin.generated.grpc.CreateVillageRequest.newBuilder()
+    // Construct using com.example.backendkotlin.generated.grpc.VillageResponse.newBuilder()
     private Builder() {
 
     }
@@ -485,7 +499,9 @@ private static final long serialVersionUID = 0L;
     public Builder clear() {
       super.clear();
       bitField0_ = 0;
+      id_ = "";
       name_ = "";
+      userNumber_ = 0;
       citizenCount_ = 0;
       werewolfCount_ = 0;
       fortuneTellerCount_ = 0;
@@ -493,24 +509,23 @@ private static final long serialVersionUID = 0L;
       psychicCount_ = 0;
       madmanCount_ = 0;
       isInitialActionActive_ = false;
-      password_ = "";
       return this;
     }
 
     @java.lang.Override
     public com.google.protobuf.Descriptors.Descriptor
         getDescriptorForType() {
-      return com.example.backendkotlin.generated.grpc.VillageServiceProto.internal_static_village_CreateVillageRequest_descriptor;
+      return com.example.backendkotlin.generated.grpc.VillageServiceProto.internal_static_village_VillageResponse_descriptor;
     }
 
     @java.lang.Override
-    public com.example.backendkotlin.generated.grpc.CreateVillageRequest getDefaultInstanceForType() {
-      return com.example.backendkotlin.generated.grpc.CreateVillageRequest.getDefaultInstance();
+    public com.example.backendkotlin.generated.grpc.VillageResponse getDefaultInstanceForType() {
+      return com.example.backendkotlin.generated.grpc.VillageResponse.getDefaultInstance();
     }
 
     @java.lang.Override
-    public com.example.backendkotlin.generated.grpc.CreateVillageRequest build() {
-      com.example.backendkotlin.generated.grpc.CreateVillageRequest result = buildPartial();
+    public com.example.backendkotlin.generated.grpc.VillageResponse build() {
+      com.example.backendkotlin.generated.grpc.VillageResponse result = buildPartial();
       if (!result.isInitialized()) {
         throw newUninitializedMessageException(result);
       }
@@ -518,60 +533,71 @@ private static final long serialVersionUID = 0L;
     }
 
     @java.lang.Override
-    public com.example.backendkotlin.generated.grpc.CreateVillageRequest buildPartial() {
-      com.example.backendkotlin.generated.grpc.CreateVillageRequest result = new com.example.backendkotlin.generated.grpc.CreateVillageRequest(this);
+    public com.example.backendkotlin.generated.grpc.VillageResponse buildPartial() {
+      com.example.backendkotlin.generated.grpc.VillageResponse result = new com.example.backendkotlin.generated.grpc.VillageResponse(this);
       if (bitField0_ != 0) { buildPartial0(result); }
       onBuilt();
       return result;
     }
 
-    private void buildPartial0(com.example.backendkotlin.generated.grpc.CreateVillageRequest result) {
+    private void buildPartial0(com.example.backendkotlin.generated.grpc.VillageResponse result) {
       int from_bitField0_ = bitField0_;
       if (((from_bitField0_ & 0x00000001) != 0)) {
-        result.name_ = name_;
+        result.id_ = id_;
       }
       if (((from_bitField0_ & 0x00000002) != 0)) {
-        result.citizenCount_ = citizenCount_;
+        result.name_ = name_;
       }
       if (((from_bitField0_ & 0x00000004) != 0)) {
-        result.werewolfCount_ = werewolfCount_;
+        result.userNumber_ = userNumber_;
       }
       if (((from_bitField0_ & 0x00000008) != 0)) {
-        result.fortuneTellerCount_ = fortuneTellerCount_;
+        result.citizenCount_ = citizenCount_;
       }
       if (((from_bitField0_ & 0x00000010) != 0)) {
-        result.knightCount_ = knightCount_;
+        result.werewolfCount_ = werewolfCount_;
       }
       if (((from_bitField0_ & 0x00000020) != 0)) {
-        result.psychicCount_ = psychicCount_;
+        result.fortuneTellerCount_ = fortuneTellerCount_;
       }
       if (((from_bitField0_ & 0x00000040) != 0)) {
-        result.madmanCount_ = madmanCount_;
+        result.knightCount_ = knightCount_;
       }
       if (((from_bitField0_ & 0x00000080) != 0)) {
-        result.isInitialActionActive_ = isInitialActionActive_;
+        result.psychicCount_ = psychicCount_;
       }
       if (((from_bitField0_ & 0x00000100) != 0)) {
-        result.password_ = password_;
+        result.madmanCount_ = madmanCount_;
+      }
+      if (((from_bitField0_ & 0x00000200) != 0)) {
+        result.isInitialActionActive_ = isInitialActionActive_;
       }
     }
 
     @java.lang.Override
     public Builder mergeFrom(com.google.protobuf.Message other) {
-      if (other instanceof com.example.backendkotlin.generated.grpc.CreateVillageRequest) {
-        return mergeFrom((com.example.backendkotlin.generated.grpc.CreateVillageRequest)other);
+      if (other instanceof com.example.backendkotlin.generated.grpc.VillageResponse) {
+        return mergeFrom((com.example.backendkotlin.generated.grpc.VillageResponse)other);
       } else {
         super.mergeFrom(other);
         return this;
       }
     }
 
-    public Builder mergeFrom(com.example.backendkotlin.generated.grpc.CreateVillageRequest other) {
-      if (other == com.example.backendkotlin.generated.grpc.CreateVillageRequest.getDefaultInstance()) return this;
-      if (!other.getName().isEmpty()) {
-        name_ = other.name_;
+    public Builder mergeFrom(com.example.backendkotlin.generated.grpc.VillageResponse other) {
+      if (other == com.example.backendkotlin.generated.grpc.VillageResponse.getDefaultInstance()) return this;
+      if (!other.getId().isEmpty()) {
+        id_ = other.id_;
         bitField0_ |= 0x00000001;
         onChanged();
+      }
+      if (!other.getName().isEmpty()) {
+        name_ = other.name_;
+        bitField0_ |= 0x00000002;
+        onChanged();
+      }
+      if (other.getUserNumber() != 0) {
+        setUserNumber(other.getUserNumber());
       }
       if (other.getCitizenCount() != 0) {
         setCitizenCount(other.getCitizenCount());
@@ -593,11 +619,6 @@ private static final long serialVersionUID = 0L;
       }
       if (other.getIsInitialActionActive() != false) {
         setIsInitialActionActive(other.getIsInitialActionActive());
-      }
-      if (!other.getPassword().isEmpty()) {
-        password_ = other.password_;
-        bitField0_ |= 0x00000100;
-        onChanged();
       }
       this.mergeUnknownFields(other.getUnknownFields());
       onChanged();
@@ -626,50 +647,55 @@ private static final long serialVersionUID = 0L;
               done = true;
               break;
             case 10: {
-              name_ = input.readStringRequireUtf8();
+              id_ = input.readStringRequireUtf8();
               bitField0_ |= 0x00000001;
               break;
             } // case 10
-            case 16: {
-              citizenCount_ = input.readInt32();
+            case 18: {
+              name_ = input.readStringRequireUtf8();
               bitField0_ |= 0x00000002;
               break;
-            } // case 16
+            } // case 18
             case 24: {
-              werewolfCount_ = input.readInt32();
+              userNumber_ = input.readInt32();
               bitField0_ |= 0x00000004;
               break;
             } // case 24
             case 32: {
-              fortuneTellerCount_ = input.readInt32();
+              citizenCount_ = input.readInt32();
               bitField0_ |= 0x00000008;
               break;
             } // case 32
             case 40: {
-              knightCount_ = input.readInt32();
+              werewolfCount_ = input.readInt32();
               bitField0_ |= 0x00000010;
               break;
             } // case 40
             case 48: {
-              psychicCount_ = input.readInt32();
+              fortuneTellerCount_ = input.readInt32();
               bitField0_ |= 0x00000020;
               break;
             } // case 48
             case 56: {
-              madmanCount_ = input.readInt32();
+              knightCount_ = input.readInt32();
               bitField0_ |= 0x00000040;
               break;
             } // case 56
             case 64: {
-              isInitialActionActive_ = input.readBool();
+              psychicCount_ = input.readInt32();
               bitField0_ |= 0x00000080;
               break;
             } // case 64
-            case 74: {
-              password_ = input.readStringRequireUtf8();
+            case 72: {
+              madmanCount_ = input.readInt32();
               bitField0_ |= 0x00000100;
               break;
-            } // case 74
+            } // case 72
+            case 80: {
+              isInitialActionActive_ = input.readBool();
+              bitField0_ |= 0x00000200;
+              break;
+            } // case 80
             default: {
               if (!super.parseUnknownField(input, extensionRegistry, tag)) {
                 done = true; // was an endgroup tag
@@ -687,9 +713,81 @@ private static final long serialVersionUID = 0L;
     }
     private int bitField0_;
 
+    private java.lang.Object id_ = "";
+    /**
+     * <code>string id = 1;</code>
+     * @return The id.
+     */
+    public java.lang.String getId() {
+      java.lang.Object ref = id_;
+      if (!(ref instanceof java.lang.String)) {
+        com.google.protobuf.ByteString bs =
+            (com.google.protobuf.ByteString) ref;
+        java.lang.String s = bs.toStringUtf8();
+        id_ = s;
+        return s;
+      } else {
+        return (java.lang.String) ref;
+      }
+    }
+    /**
+     * <code>string id = 1;</code>
+     * @return The bytes for id.
+     */
+    public com.google.protobuf.ByteString
+        getIdBytes() {
+      java.lang.Object ref = id_;
+      if (ref instanceof String) {
+        com.google.protobuf.ByteString b = 
+            com.google.protobuf.ByteString.copyFromUtf8(
+                (java.lang.String) ref);
+        id_ = b;
+        return b;
+      } else {
+        return (com.google.protobuf.ByteString) ref;
+      }
+    }
+    /**
+     * <code>string id = 1;</code>
+     * @param value The id to set.
+     * @return This builder for chaining.
+     */
+    public Builder setId(
+        java.lang.String value) {
+      if (value == null) { throw new NullPointerException(); }
+      id_ = value;
+      bitField0_ |= 0x00000001;
+      onChanged();
+      return this;
+    }
+    /**
+     * <code>string id = 1;</code>
+     * @return This builder for chaining.
+     */
+    public Builder clearId() {
+      id_ = getDefaultInstance().getId();
+      bitField0_ = (bitField0_ & ~0x00000001);
+      onChanged();
+      return this;
+    }
+    /**
+     * <code>string id = 1;</code>
+     * @param value The bytes for id to set.
+     * @return This builder for chaining.
+     */
+    public Builder setIdBytes(
+        com.google.protobuf.ByteString value) {
+      if (value == null) { throw new NullPointerException(); }
+      checkByteStringIsUtf8(value);
+      id_ = value;
+      bitField0_ |= 0x00000001;
+      onChanged();
+      return this;
+    }
+
     private java.lang.Object name_ = "";
     /**
-     * <code>string name = 1;</code>
+     * <code>string name = 2;</code>
      * @return The name.
      */
     public java.lang.String getName() {
@@ -705,7 +803,7 @@ private static final long serialVersionUID = 0L;
       }
     }
     /**
-     * <code>string name = 1;</code>
+     * <code>string name = 2;</code>
      * @return The bytes for name.
      */
     public com.google.protobuf.ByteString
@@ -722,7 +820,7 @@ private static final long serialVersionUID = 0L;
       }
     }
     /**
-     * <code>string name = 1;</code>
+     * <code>string name = 2;</code>
      * @param value The name to set.
      * @return This builder for chaining.
      */
@@ -730,22 +828,22 @@ private static final long serialVersionUID = 0L;
         java.lang.String value) {
       if (value == null) { throw new NullPointerException(); }
       name_ = value;
-      bitField0_ |= 0x00000001;
+      bitField0_ |= 0x00000002;
       onChanged();
       return this;
     }
     /**
-     * <code>string name = 1;</code>
+     * <code>string name = 2;</code>
      * @return This builder for chaining.
      */
     public Builder clearName() {
       name_ = getDefaultInstance().getName();
-      bitField0_ = (bitField0_ & ~0x00000001);
+      bitField0_ = (bitField0_ & ~0x00000002);
       onChanged();
       return this;
     }
     /**
-     * <code>string name = 1;</code>
+     * <code>string name = 2;</code>
      * @param value The bytes for name to set.
      * @return This builder for chaining.
      */
@@ -754,14 +852,46 @@ private static final long serialVersionUID = 0L;
       if (value == null) { throw new NullPointerException(); }
       checkByteStringIsUtf8(value);
       name_ = value;
-      bitField0_ |= 0x00000001;
+      bitField0_ |= 0x00000002;
+      onChanged();
+      return this;
+    }
+
+    private int userNumber_ ;
+    /**
+     * <code>int32 user_number = 3;</code>
+     * @return The userNumber.
+     */
+    @java.lang.Override
+    public int getUserNumber() {
+      return userNumber_;
+    }
+    /**
+     * <code>int32 user_number = 3;</code>
+     * @param value The userNumber to set.
+     * @return This builder for chaining.
+     */
+    public Builder setUserNumber(int value) {
+
+      userNumber_ = value;
+      bitField0_ |= 0x00000004;
+      onChanged();
+      return this;
+    }
+    /**
+     * <code>int32 user_number = 3;</code>
+     * @return This builder for chaining.
+     */
+    public Builder clearUserNumber() {
+      bitField0_ = (bitField0_ & ~0x00000004);
+      userNumber_ = 0;
       onChanged();
       return this;
     }
 
     private int citizenCount_ ;
     /**
-     * <code>int32 citizen_count = 2;</code>
+     * <code>int32 citizen_count = 4;</code>
      * @return The citizenCount.
      */
     @java.lang.Override
@@ -769,23 +899,23 @@ private static final long serialVersionUID = 0L;
       return citizenCount_;
     }
     /**
-     * <code>int32 citizen_count = 2;</code>
+     * <code>int32 citizen_count = 4;</code>
      * @param value The citizenCount to set.
      * @return This builder for chaining.
      */
     public Builder setCitizenCount(int value) {
 
       citizenCount_ = value;
-      bitField0_ |= 0x00000002;
+      bitField0_ |= 0x00000008;
       onChanged();
       return this;
     }
     /**
-     * <code>int32 citizen_count = 2;</code>
+     * <code>int32 citizen_count = 4;</code>
      * @return This builder for chaining.
      */
     public Builder clearCitizenCount() {
-      bitField0_ = (bitField0_ & ~0x00000002);
+      bitField0_ = (bitField0_ & ~0x00000008);
       citizenCount_ = 0;
       onChanged();
       return this;
@@ -793,7 +923,7 @@ private static final long serialVersionUID = 0L;
 
     private int werewolfCount_ ;
     /**
-     * <code>int32 werewolf_count = 3;</code>
+     * <code>int32 werewolf_count = 5;</code>
      * @return The werewolfCount.
      */
     @java.lang.Override
@@ -801,23 +931,23 @@ private static final long serialVersionUID = 0L;
       return werewolfCount_;
     }
     /**
-     * <code>int32 werewolf_count = 3;</code>
+     * <code>int32 werewolf_count = 5;</code>
      * @param value The werewolfCount to set.
      * @return This builder for chaining.
      */
     public Builder setWerewolfCount(int value) {
 
       werewolfCount_ = value;
-      bitField0_ |= 0x00000004;
+      bitField0_ |= 0x00000010;
       onChanged();
       return this;
     }
     /**
-     * <code>int32 werewolf_count = 3;</code>
+     * <code>int32 werewolf_count = 5;</code>
      * @return This builder for chaining.
      */
     public Builder clearWerewolfCount() {
-      bitField0_ = (bitField0_ & ~0x00000004);
+      bitField0_ = (bitField0_ & ~0x00000010);
       werewolfCount_ = 0;
       onChanged();
       return this;
@@ -825,7 +955,7 @@ private static final long serialVersionUID = 0L;
 
     private int fortuneTellerCount_ ;
     /**
-     * <code>int32 fortune_teller_count = 4;</code>
+     * <code>int32 fortune_teller_count = 6;</code>
      * @return The fortuneTellerCount.
      */
     @java.lang.Override
@@ -833,23 +963,23 @@ private static final long serialVersionUID = 0L;
       return fortuneTellerCount_;
     }
     /**
-     * <code>int32 fortune_teller_count = 4;</code>
+     * <code>int32 fortune_teller_count = 6;</code>
      * @param value The fortuneTellerCount to set.
      * @return This builder for chaining.
      */
     public Builder setFortuneTellerCount(int value) {
 
       fortuneTellerCount_ = value;
-      bitField0_ |= 0x00000008;
+      bitField0_ |= 0x00000020;
       onChanged();
       return this;
     }
     /**
-     * <code>int32 fortune_teller_count = 4;</code>
+     * <code>int32 fortune_teller_count = 6;</code>
      * @return This builder for chaining.
      */
     public Builder clearFortuneTellerCount() {
-      bitField0_ = (bitField0_ & ~0x00000008);
+      bitField0_ = (bitField0_ & ~0x00000020);
       fortuneTellerCount_ = 0;
       onChanged();
       return this;
@@ -857,7 +987,7 @@ private static final long serialVersionUID = 0L;
 
     private int knightCount_ ;
     /**
-     * <code>int32 knight_count = 5;</code>
+     * <code>int32 knight_count = 7;</code>
      * @return The knightCount.
      */
     @java.lang.Override
@@ -865,23 +995,23 @@ private static final long serialVersionUID = 0L;
       return knightCount_;
     }
     /**
-     * <code>int32 knight_count = 5;</code>
+     * <code>int32 knight_count = 7;</code>
      * @param value The knightCount to set.
      * @return This builder for chaining.
      */
     public Builder setKnightCount(int value) {
 
       knightCount_ = value;
-      bitField0_ |= 0x00000010;
+      bitField0_ |= 0x00000040;
       onChanged();
       return this;
     }
     /**
-     * <code>int32 knight_count = 5;</code>
+     * <code>int32 knight_count = 7;</code>
      * @return This builder for chaining.
      */
     public Builder clearKnightCount() {
-      bitField0_ = (bitField0_ & ~0x00000010);
+      bitField0_ = (bitField0_ & ~0x00000040);
       knightCount_ = 0;
       onChanged();
       return this;
@@ -889,7 +1019,7 @@ private static final long serialVersionUID = 0L;
 
     private int psychicCount_ ;
     /**
-     * <code>int32 psychic_count = 6;</code>
+     * <code>int32 psychic_count = 8;</code>
      * @return The psychicCount.
      */
     @java.lang.Override
@@ -897,23 +1027,23 @@ private static final long serialVersionUID = 0L;
       return psychicCount_;
     }
     /**
-     * <code>int32 psychic_count = 6;</code>
+     * <code>int32 psychic_count = 8;</code>
      * @param value The psychicCount to set.
      * @return This builder for chaining.
      */
     public Builder setPsychicCount(int value) {
 
       psychicCount_ = value;
-      bitField0_ |= 0x00000020;
+      bitField0_ |= 0x00000080;
       onChanged();
       return this;
     }
     /**
-     * <code>int32 psychic_count = 6;</code>
+     * <code>int32 psychic_count = 8;</code>
      * @return This builder for chaining.
      */
     public Builder clearPsychicCount() {
-      bitField0_ = (bitField0_ & ~0x00000020);
+      bitField0_ = (bitField0_ & ~0x00000080);
       psychicCount_ = 0;
       onChanged();
       return this;
@@ -921,7 +1051,7 @@ private static final long serialVersionUID = 0L;
 
     private int madmanCount_ ;
     /**
-     * <code>int32 madman_count = 7;</code>
+     * <code>int32 madman_count = 9;</code>
      * @return The madmanCount.
      */
     @java.lang.Override
@@ -929,23 +1059,23 @@ private static final long serialVersionUID = 0L;
       return madmanCount_;
     }
     /**
-     * <code>int32 madman_count = 7;</code>
+     * <code>int32 madman_count = 9;</code>
      * @param value The madmanCount to set.
      * @return This builder for chaining.
      */
     public Builder setMadmanCount(int value) {
 
       madmanCount_ = value;
-      bitField0_ |= 0x00000040;
+      bitField0_ |= 0x00000100;
       onChanged();
       return this;
     }
     /**
-     * <code>int32 madman_count = 7;</code>
+     * <code>int32 madman_count = 9;</code>
      * @return This builder for chaining.
      */
     public Builder clearMadmanCount() {
-      bitField0_ = (bitField0_ & ~0x00000040);
+      bitField0_ = (bitField0_ & ~0x00000100);
       madmanCount_ = 0;
       onChanged();
       return this;
@@ -953,7 +1083,7 @@ private static final long serialVersionUID = 0L;
 
     private boolean isInitialActionActive_ ;
     /**
-     * <code>bool is_initial_action_active = 8;</code>
+     * <code>bool is_initial_action_active = 10;</code>
      * @return The isInitialActionActive.
      */
     @java.lang.Override
@@ -961,117 +1091,45 @@ private static final long serialVersionUID = 0L;
       return isInitialActionActive_;
     }
     /**
-     * <code>bool is_initial_action_active = 8;</code>
+     * <code>bool is_initial_action_active = 10;</code>
      * @param value The isInitialActionActive to set.
      * @return This builder for chaining.
      */
     public Builder setIsInitialActionActive(boolean value) {
 
       isInitialActionActive_ = value;
-      bitField0_ |= 0x00000080;
+      bitField0_ |= 0x00000200;
       onChanged();
       return this;
     }
     /**
-     * <code>bool is_initial_action_active = 8;</code>
+     * <code>bool is_initial_action_active = 10;</code>
      * @return This builder for chaining.
      */
     public Builder clearIsInitialActionActive() {
-      bitField0_ = (bitField0_ & ~0x00000080);
+      bitField0_ = (bitField0_ & ~0x00000200);
       isInitialActionActive_ = false;
       onChanged();
       return this;
     }
 
-    private java.lang.Object password_ = "";
-    /**
-     * <code>string password = 9;</code>
-     * @return The password.
-     */
-    public java.lang.String getPassword() {
-      java.lang.Object ref = password_;
-      if (!(ref instanceof java.lang.String)) {
-        com.google.protobuf.ByteString bs =
-            (com.google.protobuf.ByteString) ref;
-        java.lang.String s = bs.toStringUtf8();
-        password_ = s;
-        return s;
-      } else {
-        return (java.lang.String) ref;
-      }
-    }
-    /**
-     * <code>string password = 9;</code>
-     * @return The bytes for password.
-     */
-    public com.google.protobuf.ByteString
-        getPasswordBytes() {
-      java.lang.Object ref = password_;
-      if (ref instanceof String) {
-        com.google.protobuf.ByteString b = 
-            com.google.protobuf.ByteString.copyFromUtf8(
-                (java.lang.String) ref);
-        password_ = b;
-        return b;
-      } else {
-        return (com.google.protobuf.ByteString) ref;
-      }
-    }
-    /**
-     * <code>string password = 9;</code>
-     * @param value The password to set.
-     * @return This builder for chaining.
-     */
-    public Builder setPassword(
-        java.lang.String value) {
-      if (value == null) { throw new NullPointerException(); }
-      password_ = value;
-      bitField0_ |= 0x00000100;
-      onChanged();
-      return this;
-    }
-    /**
-     * <code>string password = 9;</code>
-     * @return This builder for chaining.
-     */
-    public Builder clearPassword() {
-      password_ = getDefaultInstance().getPassword();
-      bitField0_ = (bitField0_ & ~0x00000100);
-      onChanged();
-      return this;
-    }
-    /**
-     * <code>string password = 9;</code>
-     * @param value The bytes for password to set.
-     * @return This builder for chaining.
-     */
-    public Builder setPasswordBytes(
-        com.google.protobuf.ByteString value) {
-      if (value == null) { throw new NullPointerException(); }
-      checkByteStringIsUtf8(value);
-      password_ = value;
-      bitField0_ |= 0x00000100;
-      onChanged();
-      return this;
-    }
-
-    // @@protoc_insertion_point(builder_scope:village.CreateVillageRequest)
+    // @@protoc_insertion_point(builder_scope:village.VillageResponse)
   }
 
-  // @@protoc_insertion_point(class_scope:village.CreateVillageRequest)
-  private static final com.example.backendkotlin.generated.grpc.CreateVillageRequest DEFAULT_INSTANCE;
+  // @@protoc_insertion_point(class_scope:village.VillageResponse)
+  private static final com.example.backendkotlin.generated.grpc.VillageResponse DEFAULT_INSTANCE;
   static {
-    DEFAULT_INSTANCE = new com.example.backendkotlin.generated.grpc.CreateVillageRequest();
+    DEFAULT_INSTANCE = new com.example.backendkotlin.generated.grpc.VillageResponse();
   }
 
-  public static com.example.backendkotlin.generated.grpc.CreateVillageRequest getDefaultInstance() {
+  public static com.example.backendkotlin.generated.grpc.VillageResponse getDefaultInstance() {
     return DEFAULT_INSTANCE;
   }
 
-  private static final com.google.protobuf.Parser<CreateVillageRequest>
-      PARSER = new com.google.protobuf.AbstractParser<CreateVillageRequest>() {
+  private static final com.google.protobuf.Parser<VillageResponse>
+      PARSER = new com.google.protobuf.AbstractParser<VillageResponse>() {
     @java.lang.Override
-    public CreateVillageRequest parsePartialFrom(
+    public VillageResponse parsePartialFrom(
         com.google.protobuf.CodedInputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws com.google.protobuf.InvalidProtocolBufferException {
@@ -1090,17 +1148,17 @@ private static final long serialVersionUID = 0L;
     }
   };
 
-  public static com.google.protobuf.Parser<CreateVillageRequest> parser() {
+  public static com.google.protobuf.Parser<VillageResponse> parser() {
     return PARSER;
   }
 
   @java.lang.Override
-  public com.google.protobuf.Parser<CreateVillageRequest> getParserForType() {
+  public com.google.protobuf.Parser<VillageResponse> getParserForType() {
     return PARSER;
   }
 
   @java.lang.Override
-  public com.example.backendkotlin.generated.grpc.CreateVillageRequest getDefaultInstanceForType() {
+  public com.example.backendkotlin.generated.grpc.VillageResponse getDefaultInstanceForType() {
     return DEFAULT_INSTANCE;
   }
 

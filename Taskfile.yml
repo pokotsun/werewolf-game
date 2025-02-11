@@ -10,23 +10,16 @@ tasks:
       - mkdir -p ./backend-kotlin/src/generated/kotlin
   gen-grpc-client: 
     cmds:
-      - protoc --go_out=./werewolf-cli/pkg/grpc/ --go-grpc_out=./werewolf-cli/pkg/grpc/ proto/village.proto
+      - find proto -name "*.proto" | xargs -I {} protoc --go_out=./werewolf-cli/pkg/grpc/ --go-grpc_out=./werewolf-cli/pkg/grpc/ {}
   gen-grpc-server:
     cmds:
-      - protoc --java_out=./backend-kotlin/src/generated/java --grpc-java_out=./backend-kotlin/src/generated/java proto/village.proto
+      - find proto -name "*.proto" | xargs -I {} protoc --java_out=./backend-kotlin/src/generated/java --grpc-java_out=./backend-kotlin/src/generated/java {}
   gen-grpc:
     cmds:
       - task: clean
       - task: gen-grpc-client
       - task: gen-grpc-server
-  gen-sqlc:
-    dir: ./backend-kotlin
-    cmds:
-      - sqlc generate
   generate:
     cmds:
       - task: clean
       - task: gen-grpc
-      - task: gen-sqlc
-
-

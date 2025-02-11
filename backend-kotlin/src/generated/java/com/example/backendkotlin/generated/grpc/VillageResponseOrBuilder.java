@@ -5,73 +5,79 @@
 
 package com.example.backendkotlin.generated.grpc;
 
-public interface CreateVillageRequestOrBuilder extends
-    // @@protoc_insertion_point(interface_extends:village.CreateVillageRequest)
+public interface VillageResponseOrBuilder extends
+    // @@protoc_insertion_point(interface_extends:village.VillageResponse)
     com.google.protobuf.MessageOrBuilder {
 
   /**
-   * <code>string name = 1;</code>
+   * <code>string id = 1;</code>
+   * @return The id.
+   */
+  java.lang.String getId();
+  /**
+   * <code>string id = 1;</code>
+   * @return The bytes for id.
+   */
+  com.google.protobuf.ByteString
+      getIdBytes();
+
+  /**
+   * <code>string name = 2;</code>
    * @return The name.
    */
   java.lang.String getName();
   /**
-   * <code>string name = 1;</code>
+   * <code>string name = 2;</code>
    * @return The bytes for name.
    */
   com.google.protobuf.ByteString
       getNameBytes();
 
   /**
-   * <code>int32 citizen_count = 2;</code>
+   * <code>int32 user_number = 3;</code>
+   * @return The userNumber.
+   */
+  int getUserNumber();
+
+  /**
+   * <code>int32 citizen_count = 4;</code>
    * @return The citizenCount.
    */
   int getCitizenCount();
 
   /**
-   * <code>int32 werewolf_count = 3;</code>
+   * <code>int32 werewolf_count = 5;</code>
    * @return The werewolfCount.
    */
   int getWerewolfCount();
 
   /**
-   * <code>int32 fortune_teller_count = 4;</code>
+   * <code>int32 fortune_teller_count = 6;</code>
    * @return The fortuneTellerCount.
    */
   int getFortuneTellerCount();
 
   /**
-   * <code>int32 knight_count = 5;</code>
+   * <code>int32 knight_count = 7;</code>
    * @return The knightCount.
    */
   int getKnightCount();
 
   /**
-   * <code>int32 psychic_count = 6;</code>
+   * <code>int32 psychic_count = 8;</code>
    * @return The psychicCount.
    */
   int getPsychicCount();
 
   /**
-   * <code>int32 madman_count = 7;</code>
+   * <code>int32 madman_count = 9;</code>
    * @return The madmanCount.
    */
   int getMadmanCount();
 
   /**
-   * <code>bool is_initial_action_active = 8;</code>
+   * <code>bool is_initial_action_active = 10;</code>
    * @return The isInitialActionActive.
    */
   boolean getIsInitialActionActive();
-
-  /**
-   * <code>string password = 9;</code>
-   * @return The password.
-   */
-  java.lang.String getPassword();
-  /**
-   * <code>string password = 9;</code>
-   * @return The bytes for password.
-   */
-  com.google.protobuf.ByteString
-      getPasswordBytes();
 }

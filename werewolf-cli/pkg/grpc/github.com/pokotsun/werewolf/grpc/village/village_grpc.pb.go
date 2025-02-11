@@ -20,6 +20,7 @@ const _ = grpc.SupportPackageIsVersion9
 
 const (
 	VillageService_CreateVillage_FullMethodName = "/village.VillageService/CreateVillage"
+	VillageService_ListVillages_FullMethodName  = "/village.VillageService/ListVillages"
 )
 
 // VillageServiceClient is the client API for VillageService service.
@@ -29,6 +30,7 @@ const (
 // VillageService 定義
 type VillageServiceClient interface {
 	CreateVillage(ctx context.Context, in *CreateVillageRequest, opts ...grpc.CallOption) (*CreateVillageResponse, error)
+	ListVillages(ctx context.Context, in *ListVillagesRequest, opts ...grpc.CallOption) (*ListVillagesResponse, error)
 }
 
 type villageServiceClient struct {
@@ -49,6 +51,16 @@ func (c *villageServiceClient) CreateVillage(ctx context.Context, in *CreateVill
 	return out, nil
 }
 
+func (c *villageServiceClient) ListVillages(ctx context.Context, in *ListVillagesRequest, opts ...grpc.CallOption) (*ListVillagesResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(ListVillagesResponse)
+	err := c.cc.Invoke(ctx, VillageService_ListVillages_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // VillageServiceServer is the server API for VillageService service.
 // All implementations must embed UnimplementedVillageServiceServer
 // for forward compatibility.
@@ -56,6 +68,7 @@ func (c *villageServiceClient) CreateVillage(ctx context.Context, in *CreateVill
 // VillageService 定義
 type VillageServiceServer interface {
 	CreateVillage(context.Context, *CreateVillageRequest) (*CreateVillageResponse, error)
+	ListVillages(context.Context, *ListVillagesRequest) (*ListVillagesResponse, error)
 	mustEmbedUnimplementedVillageServiceServer()
 }
 
@@ -68,6 +81,9 @@ type UnimplementedVillageServiceServer struct{}
 
 func (UnimplementedVillageServiceServer) CreateVillage(context.Context, *CreateVillageRequest) (*CreateVillageResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method CreateVillage not implemented")
+}
+func (UnimplementedVillageServiceServer) ListVillages(context.Context, *ListVillagesRequest) (*ListVillagesResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method ListVillages not implemented")
 }
 func (UnimplementedVillageServiceServer) mustEmbedUnimplementedVillageServiceServer() {}
 func (UnimplementedVillageServiceServer) testEmbeddedByValue()                        {}
@@ -108,6 +124,24 @@ func _VillageService_CreateVillage_Handler(srv interface{}, ctx context.Context,
 	return interceptor(ctx, in, info, handler)
 }
 
+func _VillageService_ListVillages_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ListVillagesRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(VillageServiceServer).ListVillages(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: VillageService_ListVillages_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(VillageServiceServer).ListVillages(ctx, req.(*ListVillagesRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // VillageService_ServiceDesc is the grpc.ServiceDesc for VillageService service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -118,6 +152,10 @@ var VillageService_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "CreateVillage",
 			Handler:    _VillageService_CreateVillage_Handler,
+		},
+		{
+			MethodName: "ListVillages",
+			Handler:    _VillageService_ListVillages_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},
