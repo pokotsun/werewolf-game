@@ -6,7 +6,6 @@ import com.example.backendkotlin.infrastructure.db.UserRepositoryImpl
 import com.example.backendkotlin.infrastructure.db.table.UserTable
 import io.kotest.assertions.throwables.shouldNotThrowAny
 import io.kotest.assertions.throwables.shouldThrow
-import io.kotest.core.Tuple2
 import io.kotest.core.test.TestCase
 import io.kotest.core.test.TestResult
 import io.kotest.matchers.shouldBe
@@ -14,7 +13,6 @@ import org.jetbrains.exposed.exceptions.ExposedSQLException
 import org.jetbrains.exposed.sql.deleteAll
 import org.jetbrains.exposed.sql.transactions.transaction
 import org.springframework.boot.test.context.SpringBootTest
-import java.util.*
 
 /**
  * UserRepositoryImplの結合テスト
@@ -23,7 +21,7 @@ import java.util.*
  */
 @SpringBootTest
 class UserRepositoryImplIT(
-    private val userRepository: UserRepositoryImpl
+    private val userRepository: UserRepositoryImpl,
 ) : DescribeSpecUsingPostgreSQLTestContainer() {
 
     // 全てのテスト後にUserTableのデータを初期化する
@@ -39,7 +37,7 @@ class UserRepositoryImplIT(
                 it("ユーザが作成される") {
                     // given
                     val user = User(
-                        id = UserId(UUID.randomUUID()),
+                        id = UserId.generate(),
                         name = "ユーザ1",
                         isActive = true,
                     )
@@ -54,7 +52,7 @@ class UserRepositoryImplIT(
             context("異常系") {
                 it("同じIDのユーザーをリクエストすると例外が発生する") {
                     // given
-                    val sameUserId = UserId(UUID.randomUUID())
+                    val sameUserId = UserId.generate()
                     val user1 = User(
                         id = sameUserId,
                         name = "ユーザ1",

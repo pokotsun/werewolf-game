@@ -25,13 +25,8 @@ import java.util.UUID
 class VillageRepositoryImplIT(
     private val villageRepository: VillageRepositoryImpl,
 ) : DescribeSpecUsingPostgreSQLTestContainer() {
-    private companion object {
-        const val GAME_MASTER_USER_ID_STRING = "00000000-0000-0000-0000-000000000000"
-    }
-
     // テスト前にGameMaster用のユーザーデータをUserTableに挿入する
     override suspend fun beforeSpec(spec: Spec) {
-        super.beforeSpec(spec)
         transaction {
             val gameMaster = User(
                 id = UserId(UUID.fromString(GAME_MASTER_USER_ID_STRING)),
@@ -47,7 +42,6 @@ class VillageRepositoryImplIT(
     }
 
     override suspend fun afterTest(testCase: TestCase, result: TestResult) {
-        super.afterTest(testCase, result)
         // 毎テスト終了後に全レコードを削除
         transaction {
             VillageTable.deleteAll()
@@ -68,7 +62,7 @@ class VillageRepositoryImplIT(
                     // given
                     val expected = listOf(
                         Village(
-                            id = VillageId(UUID.randomUUID()),
+                            id = VillageId.generate(),
                             name = "村1",
                             citizenCount = 10,
                             werewolfCount = 2,
@@ -114,7 +108,7 @@ class VillageRepositoryImplIT(
                 it("村が全て返却される") {
                     // given
                     val village1 = Village(
-                        id = VillageId(UUID.randomUUID()),
+                        id = VillageId.generate(),
                         name = "村1",
                         citizenCount = 10,
                         werewolfCount = 2,
@@ -126,7 +120,7 @@ class VillageRepositoryImplIT(
                         gameMasterUserId = UserId(UUID.fromString(GAME_MASTER_USER_ID_STRING)),
                     )
                     val village2 = Village(
-                        id = VillageId(UUID.randomUUID()),
+                        id = VillageId.generate(),
                         name = "村2",
                         citizenCount = 10,
                         werewolfCount = 2,
@@ -175,7 +169,7 @@ class VillageRepositoryImplIT(
                     it("村が作成される") {
                         // given
                         val village = Village(
-                            id = VillageId(UUID.randomUUID()),
+                            id = VillageId.generate(),
                             name = "村1",
                             citizenCount = 10,
                             werewolfCount = 2,
@@ -198,7 +192,7 @@ class VillageRepositoryImplIT(
                 context("異常系") {
                     it("同じIDの村が作成された場合は村が作成されずに例外がthrowされる") {
                         // given
-                        val sameVillageId = VillageId(UUID.randomUUID())
+                        val sameVillageId = VillageId.generate()
                         val village = Village(
                             id = sameVillageId,
                             name = "村1",
@@ -228,7 +222,7 @@ class VillageRepositoryImplIT(
                         // given
                         val notExistGameMasterUserId = UserId(UUID.randomUUID())
                         val village = Village(
-                            id = VillageId(UUID.randomUUID()),
+                            id = VillageId.generate(),
                             name = "村1",
                             citizenCount = 10,
                             werewolfCount = 2,
@@ -248,5 +242,9 @@ class VillageRepositoryImplIT(
                 }
             }
         }
+    }
+
+    private companion object {
+        const val GAME_MASTER_USER_ID_STRING = "00000000-0000-0000-0000-000000000000"
     }
 }

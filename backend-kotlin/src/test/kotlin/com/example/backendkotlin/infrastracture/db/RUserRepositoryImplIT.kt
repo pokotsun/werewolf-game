@@ -18,7 +18,6 @@ import org.jetbrains.exposed.sql.deleteAll
 import org.jetbrains.exposed.sql.insert
 import org.jetbrains.exposed.sql.transactions.transaction
 import org.springframework.boot.test.context.SpringBootTest
-import java.util.*
 
 /**
  * RUserRepositoryImplの結合テスト
@@ -31,7 +30,6 @@ class RUserRepositoryImplIT(
 ) : DescribeSpecUsingPostgreSQLTestContainer() {
     // 全てのテスト後にUserTable, VillageTable, RUserVillageTableのデータを初期化する
     override suspend fun afterTest(testCase: TestCase, result: TestResult) {
-        super.afterTest(testCase, result)
         transaction {
             UserTable.deleteAll()
             VillageTable.deleteAll()
@@ -44,9 +42,9 @@ class RUserRepositoryImplIT(
             context("正常系") {
                 it("ユーザが村に参加する") {
                     // given
-                    val userId = UserId(UUID.randomUUID())
+                    val userId = UserId.generate()
                     val user = User(userId, "user", true)
-                    val villageId = VillageId(UUID.randomUUID())
+                    val villageId = VillageId.generate()
                     val village = Village(
                         id = villageId,
                         name = "village",
@@ -95,9 +93,9 @@ class RUserRepositoryImplIT(
             context("異常系") {
                 it("同じユーザが同じ村に参加すると例外が発生する") {
                     // given
-                    val userId = UserId(UUID.randomUUID())
+                    val userId = UserId.generate()
                     val user = User(userId, "user", true)
-                    val villageId = VillageId(UUID.randomUUID())
+                    val villageId = VillageId.generate()
                     val village = Village(
                         id = villageId,
                         name = "village",
@@ -146,9 +144,9 @@ class RUserRepositoryImplIT(
                 }
                 it("UserTableに存在しないユーザが村に参加すると例外が発生する") {
                     // given
-                    val userId = UserId(UUID.randomUUID())
+                    val userId = UserId.generate()
                     val user = User(userId, "user", true)
-                    val villageId = VillageId(UUID.randomUUID())
+                    val villageId = VillageId.generate()
                     val village = Village(
                         id = villageId,
                         name = "village",
@@ -163,7 +161,7 @@ class RUserRepositoryImplIT(
                     )
                     val saltInput = "salt"
                     val hashedPassword = "hashedPassword"
-                    val anotherUserId = UserId(UUID.randomUUID())
+                    val anotherUserId = UserId.generate()
 
                     // and
                     transaction {
@@ -195,9 +193,9 @@ class RUserRepositoryImplIT(
                 }
                 it("VillageTableに存在しない村にユーザが参加すると例外が発生する") {
                     // given
-                    val userId = UserId(UUID.randomUUID())
+                    val userId = UserId.generate()
                     val user = User(userId, "user", true)
-                    val villageId = VillageId(UUID.randomUUID())
+                    val villageId = VillageId.generate()
 
                     // and
                     transaction {

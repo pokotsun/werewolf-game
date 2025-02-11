@@ -15,7 +15,6 @@ import io.mockk.confirmVerified
 import io.mockk.every
 import io.mockk.impl.annotations.InjectMockKs
 import io.mockk.verify
-import java.util.UUID
 
 /**
  * ListVillagesUseCaseのテストクラス
@@ -38,10 +37,10 @@ class ListVillagesUseCaseUT(
             context("正常系") {
                 it("全ての村を取得する") {
                     // given
-                    val gameMasterUserId = UserId(UUID.randomUUID())
+                    val gameMasterUserId = UserId.generate()
                     val expected = listOf(
                         Village(
-                            id = VillageId(UUID.randomUUID()),
+                            id = VillageId.generate(),
                             name = "村1",
                             citizenCount = 10,
                             werewolfCount = 2,
@@ -53,7 +52,7 @@ class ListVillagesUseCaseUT(
                             gameMasterUserId = gameMasterUserId,
                         ),
                         Village(
-                            id = VillageId(UUID.randomUUID()),
+                            id = VillageId.generate(),
                             name = "村2",
                             citizenCount = 10,
                             werewolfCount = 2,
