@@ -17,16 +17,12 @@ class UserRepositoryImpl() : UserRepository {
      * {@inheritDoc}
      */
     override fun createUser(user: User): User {
-        try {
-            transaction {
-                UserTable.insert {
-                    it[id] = user.id.value
-                    it[name] = user.name
-                    it[isActive] = user.isActive
-                }
+        transaction {
+            UserTable.insert {
+                it[id] = user.id.value
+                it[name] = user.name
+                it[isActive] = user.isActive
             }
-        } catch (e: ExposedSQLException) {
-            throw RuntimeException("Failed to create user", e)
         }
         return user
     }

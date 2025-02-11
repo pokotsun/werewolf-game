@@ -7,6 +7,7 @@ import com.example.backendkotlin.infrastructure.db.table.UserTable
 import io.kotest.assertions.throwables.shouldNotThrowAny
 import io.kotest.assertions.throwables.shouldThrow
 import io.kotest.matchers.shouldBe
+import org.jetbrains.exposed.exceptions.ExposedSQLException
 import org.jetbrains.exposed.sql.deleteAll
 import org.jetbrains.exposed.sql.transactions.transaction
 import java.util.*
@@ -61,12 +62,9 @@ class UserRepositoryImplIT() : DescribeSpecUsingPostgreSQLTestContainer() {
 
                     // when
                     shouldNotThrowAny { userRepository.createUser(user1) }
-                    val exception = shouldThrow<RuntimeException> {
+                    shouldThrow<ExposedSQLException> {
                         userRepository.createUser(user2)
                     }
-
-                    // then
-                    exception.message shouldBe "Failed to create user"
                 }
             }
         }
