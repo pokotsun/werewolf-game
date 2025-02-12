@@ -13,7 +13,6 @@ import org.jetbrains.exposed.exceptions.ExposedSQLException
 import org.jetbrains.exposed.sql.deleteAll
 import org.jetbrains.exposed.sql.transactions.transaction
 import org.springframework.boot.test.context.SpringBootTest
-import java.util.*
 
 /**
  * UserRepositoryImplの結合テスト
@@ -38,7 +37,7 @@ class UserRepositoryImplIT(
                 it("ユーザが作成される") {
                     // given
                     val user = User(
-                        id = UserId(UUID.randomUUID()),
+                        id = UserId.generate(),
                         name = "ユーザ1",
                         isActive = true,
                     )
@@ -53,7 +52,7 @@ class UserRepositoryImplIT(
             context("異常系") {
                 it("同じIDのユーザーをリクエストすると例外が発生する") {
                     // given
-                    val sameUserId = UserId(UUID.randomUUID())
+                    val sameUserId = UserId.generate()
                     val user1 = User(
                         id = sameUserId,
                         name = "ユーザ1",

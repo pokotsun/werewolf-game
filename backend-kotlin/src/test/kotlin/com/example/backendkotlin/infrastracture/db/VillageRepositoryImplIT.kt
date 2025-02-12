@@ -62,7 +62,7 @@ class VillageRepositoryImplIT(
                     // given
                     val expected = listOf(
                         Village(
-                            id = VillageId(UUID.randomUUID()),
+                            id = VillageId.generate(),
                             name = "村1",
                             citizenCount = 10,
                             werewolfCount = 2,
@@ -108,7 +108,7 @@ class VillageRepositoryImplIT(
                 it("村が全て返却される") {
                     // given
                     val village1 = Village(
-                        id = VillageId(UUID.randomUUID()),
+                        id = VillageId.generate(),
                         name = "村1",
                         citizenCount = 10,
                         werewolfCount = 2,
@@ -120,7 +120,7 @@ class VillageRepositoryImplIT(
                         gameMasterUserId = UserId(UUID.fromString(GAME_MASTER_USER_ID_STRING)),
                     )
                     val village2 = Village(
-                        id = VillageId(UUID.randomUUID()),
+                        id = VillageId.generate(),
                         name = "村2",
                         citizenCount = 10,
                         werewolfCount = 2,
@@ -169,7 +169,7 @@ class VillageRepositoryImplIT(
                     it("村が作成される") {
                         // given
                         val village = Village(
-                            id = VillageId(UUID.randomUUID()),
+                            id = VillageId.generate(),
                             name = "村1",
                             citizenCount = 10,
                             werewolfCount = 2,
@@ -192,7 +192,7 @@ class VillageRepositoryImplIT(
                 context("異常系") {
                     it("同じIDの村が作成された場合は村が作成されずに例外がthrowされる") {
                         // given
-                        val sameVillageId = VillageId(UUID.randomUUID())
+                        val sameVillageId = VillageId.generate()
                         val village = Village(
                             id = sameVillageId,
                             name = "村1",
@@ -222,7 +222,7 @@ class VillageRepositoryImplIT(
                         // given
                         val notExistGameMasterUserId = UserId(UUID.randomUUID())
                         val village = Village(
-                            id = VillageId(UUID.randomUUID()),
+                            id = VillageId.generate(),
                             name = "村1",
                             citizenCount = 10,
                             werewolfCount = 2,
