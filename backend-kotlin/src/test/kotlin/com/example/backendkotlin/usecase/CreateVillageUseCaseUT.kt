@@ -119,9 +119,11 @@ class CreateVillageUseCaseUT(
 
                     // then
                     actual shouldBe expected
-                    verify(exactly = 1) { userRepository.createUser(gameMaster) }
-                    verify(exactly = 1) { villageRepository.createVillage(expected, hashedPassword, salt) }
-                    verify(exactly = 1) { rUserVillageRepository.save(gameMaster.id, expected.id) }
+                    verify(exactly = 1) {
+                        userRepository.createUser(gameMaster)
+                        villageRepository.createVillage(expected, hashedPassword, salt)
+                        rUserVillageRepository.save(gameMaster.id, expected.id)
+                    }
                 }
             }
             context("異常系") {
@@ -191,8 +193,10 @@ class CreateVillageUseCaseUT(
                     // then
                     exception.message shouldBe "Password encryption failed"
                     verify(exactly = 1) { userRepository.createUser(gameMaster) }
-                    verify(exactly = 0) { villageRepository.createVillage(village, hashedPassword, salt) }
-                    verify(exactly = 0) { rUserVillageRepository.save(gameMaster.id, village.id) }
+                    verify(exactly = 0) {
+                        villageRepository.createVillage(village, hashedPassword, salt)
+                        rUserVillageRepository.save(gameMaster.id, village.id)
+                    }
                 }
             }
         }
