@@ -1,0 +1,26 @@
+name: プッシュ時ビルド
+
+on:
+  push:
+    branches:
+      - 'feature/**'
+
+jobs:
+    pull_request:
+        runs-on: ubuntu-latest
+        steps:
+            - name: Checkout
+              uses: actions/checkout@v4
+              with:
+                fetch-depth: 0
+            - name: Java環境の構築
+              uses: actions/setup-java@v4
+              with:
+                distribution: corretto
+                java-version: 17
+            - name: formatter
+              working-directory: backend-kotlin
+              run: ./gradlew spotlessCheck
+            - name: Test
+              working-directory: backend-kotlin
+              run: ./gradlew test
