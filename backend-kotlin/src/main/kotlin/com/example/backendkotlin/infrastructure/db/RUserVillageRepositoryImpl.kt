@@ -25,4 +25,36 @@ class RUserVillageRepositoryImpl() : RUserVillageRepository {
         }
         return Pair(userId, villageId)
     }
+
+    /**
+     * {@inheritDoc}
+     */
+    override fun selectByVillageId(villageId: VillageId): List<UserId> {
+        val queryResult = transaction {
+            RUserVillageTable.select(
+                RUserVillageTable.userId,
+            ).where {
+                RUserVillageTable.villageId eq villageId.value
+            }.toList()
+        }
+        return queryResult.map {
+            UserId(it[RUserVillageTable.userId])
+        }
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    override fun selectByVillageIds(villageIds: List<VillageId>): Map<VillageId, List<UserId>> {
+        val queryResult = transaction {
+            RUserVillageTable.select(
+                RUserVillageTable.userId,
+                RUserVillageTable.villageId,
+            ).where {
+                RUserVillageTable.villageId inList villageIds.map { it.value }
+            }.toList()
+        }
+        return queryResult.groupBy { VillageId(it[RUserVillageTable.villageId]) }
+            .mapValues { values -> values.value.map { UserId(it[RUserVillageTable.userId]) } }
+    }
 }
