@@ -44,9 +44,7 @@ class CreateVillageUseCaseUT(
 
     override fun afterTest(f: suspend (Tuple2<TestCase, TestResult>) -> Unit) {
         // テスト後にMockの挙動を初期化する
-        confirmVerified(villageRepository)
-        confirmVerified(userRepository)
-        confirmVerified(rUserVillageRepository)
+        confirmVerified(villageRepository, userRepository, rUserVillageRepository)
         clearAllMocks()
         unmockkStatic(BCrypt::class)
         unmockkObject(UserId.Companion)
