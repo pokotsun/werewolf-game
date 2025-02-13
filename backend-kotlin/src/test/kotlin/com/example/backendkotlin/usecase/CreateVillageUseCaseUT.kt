@@ -47,8 +47,7 @@ class CreateVillageUseCaseUT(
         confirmVerified(villageRepository, userRepository, rUserVillageRepository)
         clearAllMocks()
         unmockkStatic(BCrypt::class)
-        unmockkObject(UserId.Companion)
-        unmockkObject(VillageId.Companion)
+        unmockkObject(UserId, VillageId)
     }
 
     init {
@@ -90,13 +89,12 @@ class CreateVillageUseCaseUT(
 
                     // and
                     mockkStatic(BCrypt::class)
+                    mockkObject(UserId, VillageId)
                     every { BCrypt.gensalt() } returns salt
                     every { BCrypt.hashpw(password, salt) } returns hashedPassword
                     every { BCrypt.checkpw(password, hashedPassword) } returns true
-                    mockkObject(UserId.Companion)
                     every { UserId.generate() } returns gameMasterId
                     every { userRepository.createUser(gameMaster) } returns gameMaster
-                    mockkObject(VillageId.Companion)
                     every { VillageId.generate() } returns villageId
                     every { villageRepository.createVillage(expected, hashedPassword, salt) } returns expected
                     every { rUserVillageRepository.save(gameMaster.id, expected.id) } returns Pair(gameMaster.id, expected.id)
@@ -161,13 +159,12 @@ class CreateVillageUseCaseUT(
 
                     // and
                     mockkStatic(BCrypt::class)
+                    mockkObject(UserId, VillageId)
                     every { BCrypt.gensalt() } returns salt
                     every { BCrypt.hashpw(password, salt) } returns hashedPassword
                     every { BCrypt.checkpw(password, hashedPassword) } returns false
-                    mockkObject(UserId.Companion)
                     every { UserId.generate() } returns gameMasterId
                     every { userRepository.createUser(gameMaster) } returns gameMaster
-                    mockkObject(VillageId.Companion)
                     every { VillageId.generate() } returns villageId
                     every { villageRepository.createVillage(village, hashedPassword, salt) } returns village
                     every { rUserVillageRepository.save(gameMaster.id, village.id) } returns Pair(gameMaster.id, village.id)
