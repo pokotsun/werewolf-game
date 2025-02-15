@@ -4,9 +4,16 @@
 %%{init: {'sequence': {'showSequenceNumbers': true}}}%%
 
 sequenceDiagram
-actor gm as GameMaster
-participant server as Server
-actor ouser as OtherUser
+box Pink GameMaster
+    actor gm as GameMaster
+end
+box LightGreen Server
+    participant server as Server
+    participant db as DB
+end
+box LightBlue Oter Users
+    actor ouser as OtherUser
+end
 
 gm ->>+ server :村作成 API 実行
 Note right of gm: ゲームマスターはこの時点で<br>村の構成人数を決めておく
