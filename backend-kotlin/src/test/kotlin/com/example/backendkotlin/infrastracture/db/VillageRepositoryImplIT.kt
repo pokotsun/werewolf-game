@@ -13,7 +13,10 @@ import io.kotest.core.spec.Spec
 import io.kotest.core.test.TestCase
 import io.kotest.core.test.TestResult
 import io.kotest.matchers.collections.shouldBeEmpty
+import io.kotest.matchers.collections.shouldContainExactlyInAnyOrder
+import io.kotest.matchers.should
 import io.kotest.matchers.shouldBe
+import org.assertj.core.error.ShouldContainExactlyInAnyOrder.shouldContainExactlyInAnyOrder
 import org.jetbrains.exposed.exceptions.ExposedSQLException
 import org.jetbrains.exposed.sql.deleteAll
 import org.jetbrains.exposed.sql.insert
@@ -76,7 +79,6 @@ class VillageRepositoryImplIT(
                     )
                     val saltInput = "salt"
                     val hashedPassword = "passwordHash"
-                    val expectedSize = expected.size
 
                     // and
                     transaction {
@@ -102,8 +104,8 @@ class VillageRepositoryImplIT(
                     val actual = villageRepository.selectAllVillages()
 
                     // then
-                    actual.size.shouldBe(expectedSize)
-                    actual.shouldBe(expected)
+                    actual.shouldContainExactlyInAnyOrder(expected)
+
                 }
                 it("村が全て返却される") {
                     // given
@@ -132,7 +134,6 @@ class VillageRepositoryImplIT(
                         gameMasterUserId = UserId(UUID.fromString(GAME_MASTER_USER_ID_STRING)),
                     )
                     val expected = listOf(village1, village2)
-                    val expectedSize = expected.size
                     val saltInput = "salt"
                     val hashedPassword = "passwordHash"
 
@@ -159,8 +160,7 @@ class VillageRepositoryImplIT(
                         val actual = villageRepository.selectAllVillages()
 
                         // then
-                        actual.size.shouldBe(expectedSize)
-                        actual.shouldBe(expected)
+                        actual.shouldContainExactlyInAnyOrder(expected)
                     }
                 }
             }

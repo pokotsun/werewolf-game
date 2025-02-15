@@ -42,9 +42,18 @@ class CreateVillageUseCaseUT(
     @InjectMockKs
     private lateinit var target: CreateVillageUseCase
 
+    override suspend fun beforeTest(testCase: TestCase) {
+        mockkStatic(BCrypt::class)
+        mockkObject(UserId, VillageId)
+    }
+
     override fun afterTest(f: suspend (Tuple2<TestCase, TestResult>) -> Unit) {
         // テスト後にMockの挙動を初期化する
-        confirmVerified(villageRepository, userRepository, rUserVillageRepository)
+        confirmVerified(
+            villageRepository,
+            userRepository,
+            rUserVillageRepository,
+        )
         clearAllMocks()
         unmockkStatic(BCrypt::class)
         unmockkObject(UserId, VillageId)
@@ -88,8 +97,6 @@ class CreateVillageUseCaseUT(
                     val hashedPassword = "hashedPassword"
 
                     // and
-                    mockkStatic(BCrypt::class)
-                    mockkObject(UserId, VillageId)
                     every { BCrypt.gensalt() } returns salt
                     every { BCrypt.hashpw(password, salt) } returns hashedPassword
                     every { BCrypt.checkpw(password, hashedPassword) } returns true
@@ -158,16 +165,11 @@ class CreateVillageUseCaseUT(
                     val hashedPassword = "hashedPassword"
 
                     // and
-                    mockkStatic(BCrypt::class)
-                    mockkObject(UserId, VillageId)
+                    every { UserId.generate() } returns gameMasterId
+                    every { userRepository.createUser(gameMaster) } returns gameMaster
                     every { BCrypt.gensalt() } returns salt
                     every { BCrypt.hashpw(password, salt) } returns hashedPassword
                     every { BCrypt.checkpw(password, hashedPassword) } returns false
-                    every { UserId.generate() } returns gameMasterId
-                    every { userRepository.createUser(gameMaster) } returns gameMaster
-                    every { VillageId.generate() } returns villageId
-                    every { villageRepository.createVillage(village, hashedPassword, salt) } returns village
-                    every { rUserVillageRepository.save(gameMaster.id, village.id) } returns Pair(gameMaster.id, village.id)
 
                     // when, then
                     val exception = shouldThrowExactly<RuntimeException> {
