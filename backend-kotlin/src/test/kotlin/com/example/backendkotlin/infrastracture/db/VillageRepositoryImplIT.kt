@@ -7,34 +7,17 @@ import com.example.backendkotlin.domain.VillageId
 import com.example.backendkotlin.infrastracture.db.record.UserRecord
 import com.example.backendkotlin.infrastracture.db.record.VillageRecord
 import com.example.backendkotlin.infrastructure.db.VillageRepositoryImpl
-import com.example.backendkotlin.infrastructure.db.table.RUserVillageTable
-import com.example.backendkotlin.infrastructure.db.table.UserTable
-import com.example.backendkotlin.infrastructure.db.table.VillageTable
 import io.kotest.assertions.throwables.shouldNotThrowAny
 import io.kotest.assertions.throwables.shouldThrowExactly
-import io.kotest.core.test.TestCase
-import io.kotest.core.test.TestResult
 import io.kotest.matchers.collections.shouldBeEmpty
 import io.kotest.matchers.collections.shouldContainExactlyInAnyOrder
 import org.jetbrains.exposed.exceptions.ExposedSQLException
-import org.jetbrains.exposed.sql.deleteAll
-import org.jetbrains.exposed.sql.transactions.transaction
 import org.springframework.boot.test.context.SpringBootTest
 
 @SpringBootTest
 class VillageRepositoryImplIT(
     private val villageRepository: VillageRepositoryImpl,
 ) : DescribeSpecUsingPostgreSQLTestContainer() {
-
-    override suspend fun afterTest(testCase: TestCase, result: TestResult) {
-        // 毎テスト終了後に全レコードを削除
-        transaction {
-            VillageTable.deleteAll()
-            UserTable.deleteAll()
-            RUserVillageTable.deleteAll()
-        }
-    }
-
     init {
         this.describe("SelectAllVillages") {
             context("正常系") {

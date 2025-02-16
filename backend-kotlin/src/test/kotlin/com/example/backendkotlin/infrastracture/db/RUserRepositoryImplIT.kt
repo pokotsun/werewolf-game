@@ -7,18 +7,10 @@ import com.example.backendkotlin.domain.VillageId
 import com.example.backendkotlin.infrastracture.db.record.UserRecord
 import com.example.backendkotlin.infrastracture.db.record.VillageRecord
 import com.example.backendkotlin.infrastructure.db.RUserVillageRepositoryImpl
-import com.example.backendkotlin.infrastructure.db.table.RUserVillageTable
-import com.example.backendkotlin.infrastructure.db.table.UserTable
-import com.example.backendkotlin.infrastructure.db.table.VillageTable
 import io.kotest.assertions.throwables.shouldNotThrowAny
 import io.kotest.assertions.throwables.shouldThrowExactly
-import io.kotest.core.test.TestCase
-import io.kotest.core.test.TestResult
 import io.kotest.matchers.shouldBe
 import org.jetbrains.exposed.exceptions.ExposedSQLException
-import org.jetbrains.exposed.sql.deleteAll
-import org.jetbrains.exposed.sql.insert
-import org.jetbrains.exposed.sql.transactions.transaction
 import org.springframework.boot.test.context.SpringBootTest
 
 /**
@@ -30,15 +22,6 @@ import org.springframework.boot.test.context.SpringBootTest
 class RUserRepositoryImplIT(
     private val rUserVillageRepository: RUserVillageRepositoryImpl,
 ) : DescribeSpecUsingPostgreSQLTestContainer() {
-    // 全てのテスト後にUserTable, VillageTable, RUserVillageTableのデータを初期化する
-    override suspend fun afterTest(testCase: TestCase, result: TestResult) {
-        transaction {
-            UserTable.deleteAll()
-            VillageTable.deleteAll()
-            RUserVillageTable.deleteAll()
-        }
-    }
-
     init {
         this.describe("save") {
             context("正常系") {
