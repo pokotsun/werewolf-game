@@ -4,6 +4,8 @@ import com.example.backendkotlin.domain.User
 import com.example.backendkotlin.domain.UserId
 import com.example.backendkotlin.domain.Village
 import com.example.backendkotlin.domain.VillageId
+import com.example.backendkotlin.infrastracture.db.record.UserRecord
+import com.example.backendkotlin.infrastracture.db.record.VillageRecord
 import com.example.backendkotlin.infrastructure.db.RUserVillageRepositoryImpl
 import com.example.backendkotlin.infrastructure.db.table.RUserVillageTable
 import com.example.backendkotlin.infrastructure.db.table.UserTable
@@ -43,8 +45,8 @@ class RUserRepositoryImplIT(
                 it("ユーザが村に参加する") {
                     // given
                     val userId = UserId.generate()
-                    val user = User(userId, "user", true)
                     val villageId = VillageId.generate()
+                    val user = User(userId, "user", true)
                     val village = Village(
                         id = villageId,
                         name = "village",
@@ -57,37 +59,19 @@ class RUserRepositoryImplIT(
                         isInitialActionActive = false,
                         gameMasterUserId = userId,
                     )
+                    val expected = Pair(userId, villageId)
                     val saltInput = "salt"
                     val hashedPassword = "hashedPassword"
 
                     // and
-                    transaction {
-                        UserTable.insert {
-                            it[id] = userId.value
-                            it[name] = user.name
-                            it[isActive] = user.isActive
-                        }
-                        VillageTable.insert {
-                            it[id] = villageId.value
-                            it[name] = village.name
-                            it[salt] = saltInput
-                            it[passwordHash] = hashedPassword
-                            it[citizenCount] = village.citizenCount
-                            it[werewolfCount] = village.werewolfCount
-                            it[fortuneTellerCount] = village.fortuneTellerCount
-                            it[knightCount] = village.knightCount
-                            it[psychicCount] = village.psychicCount
-                            it[madmanCount] = village.madmanCount
-                            it[isInitialActionActive] = village.isInitialActionActive
-                            it[gameMasterUserId] = village.gameMasterUserId.value
-                        }
-                    }
+                    UserRecord(user).insert()
+                    VillageRecord(village, saltInput, hashedPassword).insert()
 
                     // when
-                    val result = rUserVillageRepository.save(userId, villageId)
+                    val actual = rUserVillageRepository.save(userId, villageId)
 
                     // then
-                    result shouldBe Pair(userId, villageId)
+                    actual shouldBe expected
                 }
             }
             context("異常系") {
@@ -112,27 +96,8 @@ class RUserRepositoryImplIT(
                     val hashedPassword = "hashedPassword"
 
                     // and
-                    transaction {
-                        UserTable.insert {
-                            it[id] = userId.value
-                            it[name] = user.name
-                            it[isActive] = user.isActive
-                        }
-                        VillageTable.insert {
-                            it[id] = villageId.value
-                            it[name] = village.name
-                            it[salt] = saltInput
-                            it[passwordHash] = hashedPassword
-                            it[citizenCount] = village.citizenCount
-                            it[werewolfCount] = village.werewolfCount
-                            it[fortuneTellerCount] = village.fortuneTellerCount
-                            it[knightCount] = village.knightCount
-                            it[psychicCount] = village.psychicCount
-                            it[madmanCount] = village.madmanCount
-                            it[isInitialActionActive] = village.isInitialActionActive
-                            it[gameMasterUserId] = village.gameMasterUserId.value
-                        }
-                    }
+                    UserRecord(user).insert()
+                    VillageRecord(village, saltInput, hashedPassword).insert()
 
                     // and
                     shouldNotThrowAny { rUserVillageRepository.save(userId, villageId) }
@@ -164,27 +129,8 @@ class RUserRepositoryImplIT(
                     val anotherUserId = UserId.generate()
 
                     // and
-                    transaction {
-                        UserTable.insert {
-                            it[id] = userId.value
-                            it[name] = user.name
-                            it[isActive] = user.isActive
-                        }
-                        VillageTable.insert {
-                            it[id] = villageId.value
-                            it[name] = village.name
-                            it[salt] = saltInput
-                            it[passwordHash] = hashedPassword
-                            it[citizenCount] = village.citizenCount
-                            it[werewolfCount] = village.werewolfCount
-                            it[fortuneTellerCount] = village.fortuneTellerCount
-                            it[knightCount] = village.knightCount
-                            it[psychicCount] = village.psychicCount
-                            it[madmanCount] = village.madmanCount
-                            it[isInitialActionActive] = village.isInitialActionActive
-                            it[gameMasterUserId] = village.gameMasterUserId.value
-                        }
-                    }
+                    UserRecord(user).insert()
+                    VillageRecord(village, saltInput, hashedPassword).insert()
 
                     // when, then
                     shouldThrowExactly<ExposedSQLException> {
@@ -198,13 +144,7 @@ class RUserRepositoryImplIT(
                     val villageId = VillageId.generate()
 
                     // and
-                    transaction {
-                        UserTable.insert {
-                            it[id] = userId.value
-                            it[name] = user.name
-                            it[isActive] = user.isActive
-                        }
-                    }
+                    UserRecord(user).insert()
 
                     // when, then
                     shouldThrowExactly<ExposedSQLException> {
