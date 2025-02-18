@@ -29,6 +29,7 @@ private static final long serialVersionUID = 0L;
   private CreateVillageResponse() {
     id_ = "";
     name_ = "";
+    gameMasterUserId_ = "";
   }
 
   public static final com.google.protobuf.Descriptors.Descriptor
@@ -210,6 +211,56 @@ private static final long serialVersionUID = 0L;
     return isInitialActionActive_;
   }
 
+  public static final int GAME_MASTER_USER_ID_FIELD_NUMBER = 11;
+  @SuppressWarnings("serial")
+  private volatile java.lang.Object gameMasterUserId_ = "";
+  /**
+   * <code>string game_master_user_id = 11;</code>
+   * @return The gameMasterUserId.
+   */
+  @java.lang.Override
+  public java.lang.String getGameMasterUserId() {
+    java.lang.Object ref = gameMasterUserId_;
+    if (ref instanceof java.lang.String) {
+      return (java.lang.String) ref;
+    } else {
+      com.google.protobuf.ByteString bs = 
+          (com.google.protobuf.ByteString) ref;
+      java.lang.String s = bs.toStringUtf8();
+      gameMasterUserId_ = s;
+      return s;
+    }
+  }
+  /**
+   * <code>string game_master_user_id = 11;</code>
+   * @return The bytes for gameMasterUserId.
+   */
+  @java.lang.Override
+  public com.google.protobuf.ByteString
+      getGameMasterUserIdBytes() {
+    java.lang.Object ref = gameMasterUserId_;
+    if (ref instanceof java.lang.String) {
+      com.google.protobuf.ByteString b = 
+          com.google.protobuf.ByteString.copyFromUtf8(
+              (java.lang.String) ref);
+      gameMasterUserId_ = b;
+      return b;
+    } else {
+      return (com.google.protobuf.ByteString) ref;
+    }
+  }
+
+  public static final int CURRENT_USER_NUMBER_FIELD_NUMBER = 12;
+  private int currentUserNumber_ = 0;
+  /**
+   * <code>int32 current_user_number = 12;</code>
+   * @return The currentUserNumber.
+   */
+  @java.lang.Override
+  public int getCurrentUserNumber() {
+    return currentUserNumber_;
+  }
+
   private byte memoizedIsInitialized = -1;
   @java.lang.Override
   public final boolean isInitialized() {
@@ -253,6 +304,12 @@ private static final long serialVersionUID = 0L;
     }
     if (isInitialActionActive_ != false) {
       output.writeBool(10, isInitialActionActive_);
+    }
+    if (!com.google.protobuf.GeneratedMessage.isStringEmpty(gameMasterUserId_)) {
+      com.google.protobuf.GeneratedMessage.writeString(output, 11, gameMasterUserId_);
+    }
+    if (currentUserNumber_ != 0) {
+      output.writeInt32(12, currentUserNumber_);
     }
     getUnknownFields().writeTo(output);
   }
@@ -301,6 +358,13 @@ private static final long serialVersionUID = 0L;
       size += com.google.protobuf.CodedOutputStream
         .computeBoolSize(10, isInitialActionActive_);
     }
+    if (!com.google.protobuf.GeneratedMessage.isStringEmpty(gameMasterUserId_)) {
+      size += com.google.protobuf.GeneratedMessage.computeStringSize(11, gameMasterUserId_);
+    }
+    if (currentUserNumber_ != 0) {
+      size += com.google.protobuf.CodedOutputStream
+        .computeInt32Size(12, currentUserNumber_);
+    }
     size += getUnknownFields().getSerializedSize();
     memoizedSize = size;
     return size;
@@ -336,6 +400,10 @@ private static final long serialVersionUID = 0L;
         != other.getMadmanCount()) return false;
     if (getIsInitialActionActive()
         != other.getIsInitialActionActive()) return false;
+    if (!getGameMasterUserId()
+        .equals(other.getGameMasterUserId())) return false;
+    if (getCurrentUserNumber()
+        != other.getCurrentUserNumber()) return false;
     if (!getUnknownFields().equals(other.getUnknownFields())) return false;
     return true;
   }
@@ -368,6 +436,10 @@ private static final long serialVersionUID = 0L;
     hash = (37 * hash) + IS_INITIAL_ACTION_ACTIVE_FIELD_NUMBER;
     hash = (53 * hash) + com.google.protobuf.Internal.hashBoolean(
         getIsInitialActionActive());
+    hash = (37 * hash) + GAME_MASTER_USER_ID_FIELD_NUMBER;
+    hash = (53 * hash) + getGameMasterUserId().hashCode();
+    hash = (37 * hash) + CURRENT_USER_NUMBER_FIELD_NUMBER;
+    hash = (53 * hash) + getCurrentUserNumber();
     hash = (29 * hash) + getUnknownFields().hashCode();
     memoizedHashCode = hash;
     return hash;
@@ -509,6 +581,8 @@ private static final long serialVersionUID = 0L;
       psychicCount_ = 0;
       madmanCount_ = 0;
       isInitialActionActive_ = false;
+      gameMasterUserId_ = "";
+      currentUserNumber_ = 0;
       return this;
     }
 
@@ -572,6 +646,12 @@ private static final long serialVersionUID = 0L;
       if (((from_bitField0_ & 0x00000200) != 0)) {
         result.isInitialActionActive_ = isInitialActionActive_;
       }
+      if (((from_bitField0_ & 0x00000400) != 0)) {
+        result.gameMasterUserId_ = gameMasterUserId_;
+      }
+      if (((from_bitField0_ & 0x00000800) != 0)) {
+        result.currentUserNumber_ = currentUserNumber_;
+      }
     }
 
     @java.lang.Override
@@ -619,6 +699,14 @@ private static final long serialVersionUID = 0L;
       }
       if (other.getIsInitialActionActive() != false) {
         setIsInitialActionActive(other.getIsInitialActionActive());
+      }
+      if (!other.getGameMasterUserId().isEmpty()) {
+        gameMasterUserId_ = other.gameMasterUserId_;
+        bitField0_ |= 0x00000400;
+        onChanged();
+      }
+      if (other.getCurrentUserNumber() != 0) {
+        setCurrentUserNumber(other.getCurrentUserNumber());
       }
       this.mergeUnknownFields(other.getUnknownFields());
       onChanged();
@@ -696,6 +784,16 @@ private static final long serialVersionUID = 0L;
               bitField0_ |= 0x00000200;
               break;
             } // case 80
+            case 90: {
+              gameMasterUserId_ = input.readStringRequireUtf8();
+              bitField0_ |= 0x00000400;
+              break;
+            } // case 90
+            case 96: {
+              currentUserNumber_ = input.readInt32();
+              bitField0_ |= 0x00000800;
+              break;
+            } // case 96
             default: {
               if (!super.parseUnknownField(input, extensionRegistry, tag)) {
                 done = true; // was an endgroup tag
@@ -1109,6 +1207,110 @@ private static final long serialVersionUID = 0L;
     public Builder clearIsInitialActionActive() {
       bitField0_ = (bitField0_ & ~0x00000200);
       isInitialActionActive_ = false;
+      onChanged();
+      return this;
+    }
+
+    private java.lang.Object gameMasterUserId_ = "";
+    /**
+     * <code>string game_master_user_id = 11;</code>
+     * @return The gameMasterUserId.
+     */
+    public java.lang.String getGameMasterUserId() {
+      java.lang.Object ref = gameMasterUserId_;
+      if (!(ref instanceof java.lang.String)) {
+        com.google.protobuf.ByteString bs =
+            (com.google.protobuf.ByteString) ref;
+        java.lang.String s = bs.toStringUtf8();
+        gameMasterUserId_ = s;
+        return s;
+      } else {
+        return (java.lang.String) ref;
+      }
+    }
+    /**
+     * <code>string game_master_user_id = 11;</code>
+     * @return The bytes for gameMasterUserId.
+     */
+    public com.google.protobuf.ByteString
+        getGameMasterUserIdBytes() {
+      java.lang.Object ref = gameMasterUserId_;
+      if (ref instanceof String) {
+        com.google.protobuf.ByteString b = 
+            com.google.protobuf.ByteString.copyFromUtf8(
+                (java.lang.String) ref);
+        gameMasterUserId_ = b;
+        return b;
+      } else {
+        return (com.google.protobuf.ByteString) ref;
+      }
+    }
+    /**
+     * <code>string game_master_user_id = 11;</code>
+     * @param value The gameMasterUserId to set.
+     * @return This builder for chaining.
+     */
+    public Builder setGameMasterUserId(
+        java.lang.String value) {
+      if (value == null) { throw new NullPointerException(); }
+      gameMasterUserId_ = value;
+      bitField0_ |= 0x00000400;
+      onChanged();
+      return this;
+    }
+    /**
+     * <code>string game_master_user_id = 11;</code>
+     * @return This builder for chaining.
+     */
+    public Builder clearGameMasterUserId() {
+      gameMasterUserId_ = getDefaultInstance().getGameMasterUserId();
+      bitField0_ = (bitField0_ & ~0x00000400);
+      onChanged();
+      return this;
+    }
+    /**
+     * <code>string game_master_user_id = 11;</code>
+     * @param value The bytes for gameMasterUserId to set.
+     * @return This builder for chaining.
+     */
+    public Builder setGameMasterUserIdBytes(
+        com.google.protobuf.ByteString value) {
+      if (value == null) { throw new NullPointerException(); }
+      checkByteStringIsUtf8(value);
+      gameMasterUserId_ = value;
+      bitField0_ |= 0x00000400;
+      onChanged();
+      return this;
+    }
+
+    private int currentUserNumber_ ;
+    /**
+     * <code>int32 current_user_number = 12;</code>
+     * @return The currentUserNumber.
+     */
+    @java.lang.Override
+    public int getCurrentUserNumber() {
+      return currentUserNumber_;
+    }
+    /**
+     * <code>int32 current_user_number = 12;</code>
+     * @param value The currentUserNumber to set.
+     * @return This builder for chaining.
+     */
+    public Builder setCurrentUserNumber(int value) {
+
+      currentUserNumber_ = value;
+      bitField0_ |= 0x00000800;
+      onChanged();
+      return this;
+    }
+    /**
+     * <code>int32 current_user_number = 12;</code>
+     * @return This builder for chaining.
+     */
+    public Builder clearCurrentUserNumber() {
+      bitField0_ = (bitField0_ & ~0x00000800);
+      currentUserNumber_ = 0;
       onChanged();
       return this;
     }

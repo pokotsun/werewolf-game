@@ -13,6 +13,7 @@ interface VillageRepository {
 
     /**
      * 村を作成する
+     * @condition ゲームマスターがすでにUserTableに作成されていること
      *
      * @param village 村
      * @param passwordHash パスワードのハッシュ

@@ -1,5 +1,6 @@
 package com.example.backendkotlin.usecase
 
+import com.example.backendkotlin.domain.UserId
 import com.example.backendkotlin.domain.Village
 import com.example.backendkotlin.domain.VillageId
 import com.example.backendkotlin.domain.VillageRepository
@@ -14,7 +15,6 @@ import io.mockk.confirmVerified
 import io.mockk.every
 import io.mockk.impl.annotations.InjectMockKs
 import io.mockk.verify
-import java.util.UUID
 
 /**
  * ListVillagesUseCaseのテストクラス
@@ -37,9 +37,10 @@ class ListVillagesUseCaseUT(
             context("正常系") {
                 it("全ての村を取得する") {
                     // given
+                    val gameMasterUserId = UserId.generate()
                     val expected = listOf(
                         Village(
-                            id = VillageId(UUID.randomUUID()),
+                            id = VillageId.generate(),
                             name = "村1",
                             citizenCount = 10,
                             werewolfCount = 2,
@@ -48,9 +49,10 @@ class ListVillagesUseCaseUT(
                             psychicCount = 1,
                             madmanCount = 1,
                             isInitialActionActive = true,
+                            gameMasterUserId = gameMasterUserId,
                         ),
                         Village(
-                            id = VillageId(UUID.randomUUID()),
+                            id = VillageId.generate(),
                             name = "村2",
                             citizenCount = 10,
                             werewolfCount = 2,
@@ -59,6 +61,7 @@ class ListVillagesUseCaseUT(
                             psychicCount = 1,
                             madmanCount = 1,
                             isInitialActionActive = true,
+                            gameMasterUserId = gameMasterUserId,
                         ),
                     )
 

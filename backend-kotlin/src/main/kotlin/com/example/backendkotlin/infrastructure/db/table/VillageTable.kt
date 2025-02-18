@@ -1,6 +1,7 @@
 package com.example.backendkotlin.infrastructure.db.table
 
 import org.jetbrains.exposed.dao.id.UUIDTable
+import org.jetbrains.exposed.sql.ReferenceOption
 import org.jetbrains.exposed.sql.kotlin.datetime.CurrentDateTime
 import org.jetbrains.exposed.sql.kotlin.datetime.datetime
 
@@ -15,6 +16,7 @@ object VillageTable : UUIDTable("village") {
     val psychicCount = integer("psychic_count")
     val madmanCount = integer("madman_count")
     val isInitialActionActive = bool("is_initial_action_active")
+    val gameMasterUserId = uuid("game_master_user_id").references(UserTable.id, onDelete = ReferenceOption.CASCADE)
     val createdAt = datetime("created_at").defaultExpression(CurrentDateTime)
     val updatedAt = datetime("updated_at").defaultExpression(CurrentDateTime)
 }

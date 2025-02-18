@@ -1,7 +1,5 @@
 package com.example.backendkotlin.presentation
 
-import com.example.backendkotlin.domain.Village
-import com.example.backendkotlin.domain.VillageId
 import com.example.backendkotlin.generated.grpc.CreateVillageRequest
 import com.example.backendkotlin.generated.grpc.CreateVillageResponse
 import com.example.backendkotlin.generated.grpc.ListVillagesRequest
@@ -12,7 +10,6 @@ import com.example.backendkotlin.usecase.CreateVillageUseCase
 import com.example.backendkotlin.usecase.ListVillagesUseCase
 import io.grpc.stub.StreamObserver
 import net.devh.boot.grpc.server.service.GrpcService
-import java.util.UUID
 
 /**
  * 村に関するgRPCサービス
@@ -34,22 +31,19 @@ class VillageGrpcService(
         request: CreateVillageRequest,
         responseObserver: StreamObserver<CreateVillageResponse>,
     ) {
-        val newVillageId = VillageId(UUID.randomUUID())
-        val newVillage = request.let { r ->
-            Village(
-                id = newVillageId,
-                name = r.name,
-                citizenCount = r.citizenCount,
-                werewolfCount = r.werewolfCount,
-                fortuneTellerCount = r.fortuneTellerCount,
-                knightCount = r.knightCount,
-                psychicCount = r.psychicCount,
-                madmanCount = r.madmanCount,
-                isInitialActionActive = r.isInitialActionActive,
-            )
-        }
         // 村を作成
-        val createdVillage = createVillageUseCase.invoke(newVillage, request.password)
+        val createdVillage = createVillageUseCase.invoke(
+            gameMasterName = request.gameMasterName,
+            villageName = request.name,
+            villageCitizenCount = request.citizenCount,
+            villageWerewolfCount = request.werewolfCount,
+            villageFortuneTellerCount = request.fortuneTellerCount,
+            villageKnightCount = request.knightCount,
+            villagePsychicCount = request.psychicCount,
+            villageMadmanCount = request.madmanCount,
+            villageIsInitialActionActive = request.isInitialActionActive,
+            villagePassword = request.password,
+        )
         // レスポンスを作成
         val createVillageResponse = createdVillage.let { res ->
             CreateVillageResponse.newBuilder()
@@ -63,6 +57,8 @@ class VillageGrpcService(
                 .setPsychicCount(res.psychicCount)
                 .setMadmanCount(res.madmanCount)
                 .setIsInitialActionActive(res.isInitialActionActive)
+                .setGameMasterUserId(res.gameMasterUserId.value.toString())
+                .setCurrentUserNumber(res.currentUserNumber)
                 .build()
         }
         responseObserver.let { r ->
