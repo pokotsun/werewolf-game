@@ -3,9 +3,11 @@ package com.example.backendkotlin.infrastracture.db
 import com.example.backendkotlin.domain.User
 import com.example.backendkotlin.domain.UserId
 import com.example.backendkotlin.infrastructure.db.UserRepositoryImpl
+import com.example.backendkotlin.util.KSelect
 import io.kotest.assertions.throwables.shouldNotThrowAny
 import io.kotest.assertions.throwables.shouldThrow
 import io.kotest.matchers.shouldBe
+import org.instancio.Instancio
 import org.jetbrains.exposed.exceptions.ExposedSQLException
 import org.springframework.boot.test.context.SpringBootTest
 
@@ -23,11 +25,7 @@ class UserRepositoryImplIT(
             context("正常系") {
                 it("ユーザが作成される") {
                     // given
-                    val user = User(
-                        id = UserId.generate(),
-                        name = "ユーザ1",
-                        isActive = true,
-                    )
+                    val user = Instancio.create(User::class.java)
 
                     // when
                     val createdUser = userRepository.createUser(user)
@@ -39,17 +37,15 @@ class UserRepositoryImplIT(
             context("異常系") {
                 it("同じIDのユーザーをリクエストすると例外が発生する") {
                     // given
-                    val sameUserId = UserId.generate()
-                    val user1 = User(
-                        id = sameUserId,
-                        name = "ユーザ1",
-                        isActive = true,
-                    )
-                    val user2 = User(
-                        id = sameUserId,
-                        name = "ユーザ2",
-                        isActive = true,
-                    )
+                    val sameUserId = Instancio.create(UserId::class.java)
+                    val user1 = Instancio.of(User::class.java)
+                        .set(KSelect.field(User::id), sameUserId)
+                        .set(KSelect.field(User::isActive), true)
+                        .create()
+                    val user2 = Instancio.of(User::class.java)
+                        .set(KSelect.field(User::id), sameUserId)
+                        .set(KSelect.field(User::isActive), true)
+                        .create()
 
                     // when
                     shouldNotThrowAny { userRepository.createUser(user1) }

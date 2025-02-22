@@ -8,10 +8,12 @@ import com.example.backendkotlin.infrastracture.db.record.RUserVillageRecord
 import com.example.backendkotlin.infrastracture.db.record.UserRecord
 import com.example.backendkotlin.infrastracture.db.record.VillageRecord
 import com.example.backendkotlin.infrastructure.db.VillageRepositoryImpl
+import com.example.backendkotlin.util.KSelect
 import io.kotest.assertions.throwables.shouldNotThrowAny
 import io.kotest.assertions.throwables.shouldThrowExactly
 import io.kotest.matchers.collections.shouldBeEmpty
 import io.kotest.matchers.collections.shouldContainExactlyInAnyOrder
+import org.instancio.Instancio
 import org.jetbrains.exposed.exceptions.ExposedSQLException
 import org.springframework.boot.test.context.SpringBootTest
 
@@ -31,16 +33,12 @@ class VillageRepositoryImplIT(
                 }
                 it("現在のユーザー数を含めて村が1つ返却される") {
                     // given
-                    val gameMaster = User(
-                        id = UserId.generate(),
-                        name = "GM",
-                        isActive = true,
-                    )
-                    val user1 = User(
-                        id = UserId.generate(),
-                        name = "user1",
-                        isActive = true,
-                    )
+                    val gameMaster = Instancio.of(User::class.java)
+                        .set(KSelect.field(User::isActive), true)
+                        .create()
+                    val user1 = Instancio.of(User::class.java)
+                        .set(KSelect.field(User::isActive), true)
+                        .create()
                     val village1Users = listOf(gameMaster, user1)
                     val villageId = VillageId.generate()
                     val expected = listOf(
@@ -79,16 +77,12 @@ class VillageRepositoryImplIT(
                 }
                 it("現在のユーザー数を含めて村が全て返却される") {
                     // given
-                    val gameMaster = User(
-                        id = UserId.generate(),
-                        name = "GM",
-                        isActive = true,
-                    )
-                    val village1User = User(
-                        id = UserId.generate(),
-                        name = "user1",
-                        isActive = true,
-                    )
+                    val gameMaster = Instancio.of(User::class.java)
+                        .set(KSelect.field(User::isActive), true)
+                        .create()
+                    val village1User = Instancio.of(User::class.java)
+                        .set(KSelect.field(User::isActive), true)
+                        .create()
                     val village1Users = listOf(gameMaster, village1User)
                     val village1VillageId = VillageId.generate()
                     val village1 = Village(
@@ -150,11 +144,9 @@ class VillageRepositoryImplIT(
             context("正常系") {
                 it("村が作成される") {
                     // given
-                    val gameMaster = User(
-                        id = UserId.generate(),
-                        name = "GM",
-                        isActive = true,
-                    )
+                    val gameMaster = Instancio.of(User::class.java)
+                        .set(KSelect.field(User::isActive), true)
+                        .create()
                     val village = Village(
                         id = VillageId.generate(),
                         name = "村1",
@@ -182,11 +174,9 @@ class VillageRepositoryImplIT(
             context("異常系") {
                 it("同じIDの村が作成された場合は村が作成されずに例外がthrowされる") {
                     // given
-                    val gameMaster = User(
-                        id = UserId.generate(),
-                        name = "GM",
-                        isActive = true,
-                    )
+                    val gameMaster = Instancio.of(User::class.java)
+                        .set(KSelect.field(User::isActive), true)
+                        .create()
                     val sameVillageId = VillageId.generate()
                     val village = Village(
                         id = sameVillageId,
@@ -218,7 +208,7 @@ class VillageRepositoryImplIT(
                 }
                 it("UserTableに登録されてないGameMasterUserIdを持つ村が作成された場合は村が作成されずに例外がthrowされる") {
                     // given
-                    val notExistGameMasterUserId = UserId.generate()
+                    val notExistGameMasterUserId = Instancio.create(UserId::class.java)
                     val village = Village(
                         id = VillageId.generate(),
                         name = "村1",

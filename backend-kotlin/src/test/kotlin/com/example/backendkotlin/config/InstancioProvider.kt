@@ -1,11 +1,15 @@
 package com.example.backendkotlin.config
 
+import com.example.backendkotlin.domain.UserId
+import org.instancio.generator.Generator
 import org.instancio.spi.InstancioServiceProvider
+import java.util.UUID
 
-class InstancioProvider: InstancioServiceProvider {
+class InstancioProvider : InstancioServiceProvider {
     override fun getGeneratorProvider(): InstancioServiceProvider.GeneratorProvider {
         return InstancioServiceProvider.GeneratorProvider { node, _ ->
-            when(node.targetClass) {
+            when (node.targetClass) {
+                UserId::class.java -> Generator { UserId(UUID.randomUUID()) }
                 else -> null
             }
         }

@@ -7,9 +7,11 @@ import com.example.backendkotlin.domain.VillageId
 import com.example.backendkotlin.infrastracture.db.record.UserRecord
 import com.example.backendkotlin.infrastracture.db.record.VillageRecord
 import com.example.backendkotlin.infrastructure.db.RUserVillageRepositoryImpl
+import com.example.backendkotlin.util.KSelect
 import io.kotest.assertions.throwables.shouldNotThrowAny
 import io.kotest.assertions.throwables.shouldThrowExactly
 import io.kotest.matchers.shouldBe
+import org.instancio.Instancio
 import org.jetbrains.exposed.exceptions.ExposedSQLException
 import org.springframework.boot.test.context.SpringBootTest
 
@@ -27,9 +29,12 @@ class RUserRepositoryImplIT(
             context("正常系") {
                 it("ユーザが村に参加する") {
                     // given
-                    val userId = UserId.generate()
+                    val userId = Instancio.create(UserId::class.java)
                     val villageId = VillageId.generate()
-                    val user = User(userId, "user", true)
+                    val user = Instancio.of(User::class.java)
+                        .set(KSelect.field(User::id), userId)
+                        .set(KSelect.field(User::isActive), true)
+                        .create()
                     val village = Village(
                         id = villageId,
                         name = "village",
@@ -60,8 +65,11 @@ class RUserRepositoryImplIT(
             context("異常系") {
                 it("同じユーザが同じ村に参加すると例外が発生する") {
                     // given
-                    val userId = UserId.generate()
-                    val user = User(userId, "user", true)
+                    val userId = Instancio.create(UserId::class.java)
+                    val user = Instancio.of(User::class.java)
+                        .set(KSelect.field(User::id), userId)
+                        .set(KSelect.field(User::isActive), true)
+                        .create()
                     val villageId = VillageId.generate()
                     val village = Village(
                         id = villageId,
@@ -92,8 +100,12 @@ class RUserRepositoryImplIT(
                 }
                 it("UserTableに存在しないユーザが村に参加すると例外が発生する") {
                     // given
-                    val userId = UserId.generate()
-                    val user = User(userId, "user", true)
+                    val userId = Instancio.create(UserId::class.java)
+                    val user = Instancio.of(User::class.java)
+                        .set(KSelect.field(User::id), userId)
+                        .set(KSelect.field(User::isActive), true)
+                        .create()
+
                     val villageId = VillageId.generate()
                     val village = Village(
                         id = villageId,
@@ -109,7 +121,7 @@ class RUserRepositoryImplIT(
                     )
                     val saltInput = "salt"
                     val hashedPassword = "hashedPassword"
-                    val anotherUserId = UserId.generate()
+                    val anotherUserId = Instancio.create(UserId::class.java)
 
                     // and
                     UserRecord(user).insert()
@@ -122,8 +134,12 @@ class RUserRepositoryImplIT(
                 }
                 it("VillageTableに存在しない村にユーザが参加すると例外が発生する") {
                     // given
-                    val userId = UserId.generate()
-                    val user = User(userId, "user", true)
+                    val userId = Instancio.create(UserId::class.java)
+                    val user = Instancio.of(User::class.java)
+                        .set(KSelect.field(User::id), userId)
+                        .set(KSelect.field(User::isActive), true)
+                        .create()
+
                     val villageId = VillageId.generate()
 
                     // and

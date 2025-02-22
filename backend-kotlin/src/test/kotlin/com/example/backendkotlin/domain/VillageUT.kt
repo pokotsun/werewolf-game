@@ -4,6 +4,7 @@ import io.kotest.assertions.throwables.shouldNotThrowAny
 import io.kotest.assertions.throwables.shouldThrow
 import io.kotest.core.spec.style.DescribeSpec
 import io.kotest.matchers.shouldBe
+import org.instancio.Instancio
 
 /**
  * Villageエンティティのテスト
@@ -22,7 +23,7 @@ class VillageUT : DescribeSpec() {
                 val psychicCount = 1
                 val madmanCount = 1
                 val isInitialActionActive = true
-                val gameMasterUserId = UserId.generate()
+                val gameMasterUserId = Instancio.create(UserId::class.java)
 
                 // when, then
                 shouldNotThrowAny {
@@ -51,7 +52,7 @@ class VillageUT : DescribeSpec() {
                 val psychicCount = 1
                 val madmanCount = 1
                 val isInitialActionActive = true
-                val gameMasterUserId = UserId.generate()
+                val gameMasterUserId = Instancio.create(UserId::class.java)
                 val expectedUserNumber = citizenCount + werewolfCount + fortuneTellerCount + knightCount + psychicCount + madmanCount
 
                 // when
@@ -84,7 +85,7 @@ class VillageUT : DescribeSpec() {
                 val psychicCount = 1
                 val madmanCount = 1
                 val isInitialActionActive = true
-                val gameMasterUserId = UserId.generate()
+                val gameMasterUserId = Instancio.create(UserId::class.java)
 
                 // when
                 val exception = shouldThrow<IllegalArgumentException> {
@@ -116,7 +117,7 @@ class VillageUT : DescribeSpec() {
                 val psychicCount = 1
                 val madmanCount = 1
                 val isInitialActionActive = true
-                val gameMasterUserId = UserId.generate()
+                val gameMasterUserId = Instancio.create(UserId::class.java)
 
                 // when
                 val exception = shouldThrow<IllegalArgumentException> {
