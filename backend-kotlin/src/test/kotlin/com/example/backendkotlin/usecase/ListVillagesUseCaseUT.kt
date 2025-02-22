@@ -15,6 +15,7 @@ import io.mockk.confirmVerified
 import io.mockk.every
 import io.mockk.impl.annotations.InjectMockKs
 import io.mockk.verify
+import org.instancio.Instancio
 
 /**
  * ListVillagesUseCaseのテストクラス
@@ -37,7 +38,7 @@ class ListVillagesUseCaseUT(
             context("正常系") {
                 it("全ての村が取得できる") {
                     // given
-                    val village1GameMasterId = UserId.generate()
+                    val village1GameMasterId = Instancio.create(UserId::class.java)
                     val village1 = Village(
                         id = VillageId.generate(),
                         name = "村1",
@@ -51,7 +52,7 @@ class ListVillagesUseCaseUT(
                         gameMasterUserId = village1GameMasterId,
                         currentUserNumber = 2,
                     )
-                    val village2GameMasterId = UserId.generate()
+                    val village2GameMasterId = Instancio.create(UserId::class.java)
                     val village2 = Village(
                         id = VillageId.generate(),
                         name = "村2",

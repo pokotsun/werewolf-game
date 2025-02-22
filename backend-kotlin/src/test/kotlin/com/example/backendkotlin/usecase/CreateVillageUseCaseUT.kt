@@ -7,6 +7,7 @@ import com.example.backendkotlin.domain.UserRepository
 import com.example.backendkotlin.domain.Village
 import com.example.backendkotlin.domain.VillageId
 import com.example.backendkotlin.domain.VillageRepository
+import com.example.backendkotlin.util.KSelect
 import com.ninjasquad.springmockk.MockkBean
 import io.kotest.assertions.throwables.shouldThrowExactly
 import io.kotest.core.Tuple2
@@ -23,6 +24,7 @@ import io.mockk.mockkStatic
 import io.mockk.unmockkObject
 import io.mockk.unmockkStatic
 import io.mockk.verify
+import org.instancio.Instancio
 import org.springframework.security.crypto.bcrypt.BCrypt
 import java.util.UUID
 
@@ -66,11 +68,12 @@ class CreateVillageUseCaseUT(
                     // given
                     val gameMasterId = UserId(UUID.randomUUID())
                     val gameMasterName = "gameMaster"
-                    val gameMaster = User(
-                        id = gameMasterId,
-                        name = gameMasterName,
-                        isActive = true,
-                    )
+                    val gameMaster = Instancio.of(User::class.java)
+                        .set(KSelect.field(User::id), gameMasterId)
+                        .set(KSelect.field(User::name), gameMasterName)
+                        .set(KSelect.field(User::isActive), true)
+                        .create()
+
                     val villageId = VillageId(UUID.randomUUID())
                     val villageName = "村1"
                     val villageCitizenCount = 10
@@ -134,11 +137,12 @@ class CreateVillageUseCaseUT(
                     // given
                     val gameMasterId = UserId(UUID.randomUUID())
                     val gameMasterName = "gameMaster"
-                    val gameMaster = User(
-                        id = gameMasterId,
-                        name = gameMasterName,
-                        isActive = true,
-                    )
+                    val gameMaster = Instancio.of(User::class.java)
+                        .set(KSelect.field(User::id), gameMasterId)
+                        .set(KSelect.field(User::name), gameMasterName)
+                        .set(KSelect.field(User::isActive), true)
+                        .create()
+
                     val villageId = VillageId(UUID.randomUUID())
                     val villageName = "村1"
                     val villageCitizenCount = 10
