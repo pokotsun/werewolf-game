@@ -2,8 +2,8 @@ package com.example.backendkotlin.usecase
 
 import com.example.backendkotlin.domain.UserId
 import com.example.backendkotlin.domain.Village
-import com.example.backendkotlin.domain.VillageId
 import com.example.backendkotlin.domain.VillageRepository
+import com.example.backendkotlin.util.KSelect
 import com.ninjasquad.springmockk.MockkBean
 import io.kotest.core.Tuple2
 import io.kotest.core.spec.style.DescribeSpec
@@ -39,33 +39,30 @@ class ListVillagesUseCaseUT(
                 it("全ての村が取得できる") {
                     // given
                     val village1GameMasterId = Instancio.create(UserId::class.java)
-                    val village1 = Village(
-                        id = VillageId.generate(),
-                        name = "村1",
-                        citizenCount = 10,
-                        werewolfCount = 2,
-                        fortuneTellerCount = 1,
-                        knightCount = 1,
-                        psychicCount = 1,
-                        madmanCount = 1,
-                        isInitialActionActive = true,
-                        gameMasterUserId = village1GameMasterId,
-                        currentUserNumber = 2,
-                    )
+                    val village1 = Instancio.of(Village::class.java)
+                        .set(KSelect.field(Village::citizenCount), 10)
+                        .set(KSelect.field(Village::werewolfCount), 2)
+                        .set(KSelect.field(Village::fortuneTellerCount), 1)
+                        .set(KSelect.field(Village::knightCount), 1)
+                        .set(KSelect.field(Village::psychicCount), 1)
+                        .set(KSelect.field(Village::madmanCount), 1)
+                        .set(KSelect.field(Village::isInitialActionActive), true)
+                        .set(KSelect.field(Village::gameMasterUserId), village1GameMasterId)
+                        .set(KSelect.field(Village::currentUserNumber), 2)
+                        .create()
+
                     val village2GameMasterId = Instancio.create(UserId::class.java)
-                    val village2 = Village(
-                        id = VillageId.generate(),
-                        name = "村2",
-                        citizenCount = 10,
-                        werewolfCount = 2,
-                        fortuneTellerCount = 1,
-                        knightCount = 1,
-                        psychicCount = 1,
-                        madmanCount = 1,
-                        isInitialActionActive = true,
-                        gameMasterUserId = village2GameMasterId,
-                        currentUserNumber = 2,
-                    )
+                    val village2 = Instancio.of(Village::class.java)
+                        .set(KSelect.field(Village::citizenCount), 10)
+                        .set(KSelect.field(Village::werewolfCount), 2)
+                        .set(KSelect.field(Village::fortuneTellerCount), 1)
+                        .set(KSelect.field(Village::knightCount), 1)
+                        .set(KSelect.field(Village::psychicCount), 1)
+                        .set(KSelect.field(Village::madmanCount), 1)
+                        .set(KSelect.field(Village::isInitialActionActive), true)
+                        .set(KSelect.field(Village::gameMasterUserId), village2GameMasterId)
+                        .set(KSelect.field(Village::currentUserNumber), 2)
+                        .create()
                     val expected = listOf(village1, village2)
 
                     // and
