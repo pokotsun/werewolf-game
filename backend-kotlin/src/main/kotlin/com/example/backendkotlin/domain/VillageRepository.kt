@@ -6,6 +6,7 @@ package com.example.backendkotlin.domain
 interface VillageRepository {
     /**
      * 村の一覧を取得する
+     * 村ごとの現在の参加者数を取得し、それを含めた村の一覧を返す
      *
      * @return 村の一覧
      */

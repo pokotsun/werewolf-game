@@ -35,35 +35,37 @@ class ListVillagesUseCaseUT(
     init {
         this.describe("invokeメソッドのテスト") {
             context("正常系") {
-                it("全ての村を取得する") {
+                it("全ての村が取得できる") {
                     // given
-                    val gameMasterUserId = UserId.generate()
-                    val expected = listOf(
-                        Village(
-                            id = VillageId.generate(),
-                            name = "村1",
-                            citizenCount = 10,
-                            werewolfCount = 2,
-                            fortuneTellerCount = 1,
-                            knightCount = 1,
-                            psychicCount = 1,
-                            madmanCount = 1,
-                            isInitialActionActive = true,
-                            gameMasterUserId = gameMasterUserId,
-                        ),
-                        Village(
-                            id = VillageId.generate(),
-                            name = "村2",
-                            citizenCount = 10,
-                            werewolfCount = 2,
-                            fortuneTellerCount = 1,
-                            knightCount = 1,
-                            psychicCount = 1,
-                            madmanCount = 1,
-                            isInitialActionActive = true,
-                            gameMasterUserId = gameMasterUserId,
-                        ),
+                    val village1GameMasterId = UserId.generate()
+                    val village1 = Village(
+                        id = VillageId.generate(),
+                        name = "村1",
+                        citizenCount = 10,
+                        werewolfCount = 2,
+                        fortuneTellerCount = 1,
+                        knightCount = 1,
+                        psychicCount = 1,
+                        madmanCount = 1,
+                        isInitialActionActive = true,
+                        gameMasterUserId = village1GameMasterId,
+                        currentUserNumber = 2,
                     )
+                    val village2GameMasterId = UserId.generate()
+                    val village2 = Village(
+                        id = VillageId.generate(),
+                        name = "村2",
+                        citizenCount = 10,
+                        werewolfCount = 2,
+                        fortuneTellerCount = 1,
+                        knightCount = 1,
+                        psychicCount = 1,
+                        madmanCount = 1,
+                        isInitialActionActive = true,
+                        gameMasterUserId = village2GameMasterId,
+                        currentUserNumber = 2,
+                    )
+                    val expected = listOf(village1, village2)
 
                     // and
                     every { villageRepository.selectAllVillages() } returns expected
@@ -73,7 +75,9 @@ class ListVillagesUseCaseUT(
 
                     // then
                     actual shouldBe expected
-                    verify(exactly = 1) { villageRepository.selectAllVillages() }
+                    verify(exactly = 1) {
+                        villageRepository.selectAllVillages()
+                    }
                 }
             }
         }

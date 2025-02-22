@@ -62,4 +62,5 @@ message VillageResponse {
     int32 psychic_count = 8;
     int32 madman_count = 9;
     bool is_initial_action_active = 10;
+    int32 current_user_number = 11;
 }
