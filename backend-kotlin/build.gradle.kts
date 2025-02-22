@@ -83,6 +83,8 @@ dependencies {
 
     // postgresql testcontainers
     testImplementation("org.testcontainers:postgresql")
+
+    testImplementation("org.instancio:instancio-junit:5.4.0")
 }
 
 tasks.withType<KotlinCompile> {
