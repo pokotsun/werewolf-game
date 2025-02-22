@@ -40,21 +40,20 @@ class VillageRepositoryImplIT(
                         .set(KSelect.field(User::isActive), true)
                         .create()
                     val village1Users = listOf(gameMaster, user1)
-                    val villageId = VillageId.generate()
+                    val villageId = Instancio.create(VillageId::class.java)
                     val expected = listOf(
-                        Village(
-                            id = villageId,
-                            name = "村1",
-                            citizenCount = 10,
-                            werewolfCount = 2,
-                            fortuneTellerCount = 1,
-                            knightCount = 1,
-                            psychicCount = 1,
-                            madmanCount = 1,
-                            isInitialActionActive = true,
-                            gameMasterUserId = gameMaster.id,
-                            currentUserNumber = village1Users.size,
-                        ),
+                        Instancio.of(Village::class.java)
+                            .set(KSelect.field(Village::id), villageId)
+                            .set(KSelect.field(Village::citizenCount), 10)
+                            .set(KSelect.field(Village::werewolfCount), 2)
+                            .set(KSelect.field(Village::fortuneTellerCount), 1)
+                            .set(KSelect.field(Village::knightCount), 1)
+                            .set(KSelect.field(Village::psychicCount), 1)
+                            .set(KSelect.field(Village::madmanCount), 1)
+                            .set(KSelect.field(Village::isInitialActionActive), true)
+                            .set(KSelect.field(Village::gameMasterUserId), gameMaster.id)
+                            .set(KSelect.field(Village::currentUserNumber), village1Users.size)
+                            .create(),
                     )
 
                     val saltInput = "salt"
@@ -84,35 +83,34 @@ class VillageRepositoryImplIT(
                         .set(KSelect.field(User::isActive), true)
                         .create()
                     val village1Users = listOf(gameMaster, village1User)
-                    val village1VillageId = VillageId.generate()
-                    val village1 = Village(
-                        id = village1VillageId,
-                        name = "村1",
-                        citizenCount = 10,
-                        werewolfCount = 2,
-                        fortuneTellerCount = 1,
-                        knightCount = 1,
-                        psychicCount = 1,
-                        madmanCount = 1,
-                        isInitialActionActive = false,
-                        gameMasterUserId = gameMaster.id,
-                        currentUserNumber = village1Users.size,
-                    )
+                    val village1VillageId = Instancio.create(VillageId::class.java)
+                    val village1 = Instancio.of(Village::class.java)
+                        .set(KSelect.field(Village::id), village1VillageId)
+                        .set(KSelect.field(Village::citizenCount), 10)
+                        .set(KSelect.field(Village::werewolfCount), 2)
+                        .set(KSelect.field(Village::fortuneTellerCount), 1)
+                        .set(KSelect.field(Village::knightCount), 1)
+                        .set(KSelect.field(Village::psychicCount), 1)
+                        .set(KSelect.field(Village::madmanCount), 1)
+                        .set(KSelect.field(Village::isInitialActionActive), false)
+                        .set(KSelect.field(Village::gameMasterUserId), gameMaster.id)
+                        .set(KSelect.field(Village::currentUserNumber), village1Users.size)
+                        .create()
+
                     val village2Users = listOf(gameMaster)
-                    val village2VillageId = VillageId.generate()
-                    val village2 = Village(
-                        id = village2VillageId,
-                        name = "村2",
-                        citizenCount = 10,
-                        werewolfCount = 2,
-                        fortuneTellerCount = 1,
-                        knightCount = 1,
-                        psychicCount = 1,
-                        madmanCount = 1,
-                        isInitialActionActive = false,
-                        gameMasterUserId = gameMaster.id,
-                        currentUserNumber = village2Users.size,
-                    )
+                    val village2VillageId = Instancio.create(VillageId::class.java)
+                    val village2 = Instancio.of(Village::class.java)
+                        .set(KSelect.field(Village::id), village2VillageId)
+                        .set(KSelect.field(Village::citizenCount), 10)
+                        .set(KSelect.field(Village::werewolfCount), 2)
+                        .set(KSelect.field(Village::fortuneTellerCount), 1)
+                        .set(KSelect.field(Village::knightCount), 1)
+                        .set(KSelect.field(Village::psychicCount), 1)
+                        .set(KSelect.field(Village::madmanCount), 1)
+                        .set(KSelect.field(Village::isInitialActionActive), false)
+                        .set(KSelect.field(Village::gameMasterUserId), gameMaster.id)
+                        .set(KSelect.field(Village::currentUserNumber), village2Users.size)
+                        .create()
                     val expected = listOf(village1, village2)
                     val saltInput = "salt"
                     val hashedPassword = "passwordHash"
@@ -147,18 +145,16 @@ class VillageRepositoryImplIT(
                     val gameMaster = Instancio.of(User::class.java)
                         .set(KSelect.field(User::isActive), true)
                         .create()
-                    val village = Village(
-                        id = VillageId.generate(),
-                        name = "村1",
-                        citizenCount = 10,
-                        werewolfCount = 2,
-                        fortuneTellerCount = 1,
-                        knightCount = 1,
-                        psychicCount = 1,
-                        madmanCount = 1,
-                        isInitialActionActive = false,
-                        gameMasterUserId = gameMaster.id,
-                    )
+                    val village = Instancio.of(Village::class.java)
+                        .set(KSelect.field(Village::citizenCount), 10)
+                        .set(KSelect.field(Village::werewolfCount), 2)
+                        .set(KSelect.field(Village::fortuneTellerCount), 1)
+                        .set(KSelect.field(Village::knightCount), 1)
+                        .set(KSelect.field(Village::psychicCount), 1)
+                        .set(KSelect.field(Village::madmanCount), 1)
+                        .set(KSelect.field(Village::isInitialActionActive), false)
+                        .set(KSelect.field(Village::gameMasterUserId), gameMaster.id)
+                        .create()
                     val passwordHash = "passwordHash"
                     val salt = "salt"
 
@@ -177,19 +173,18 @@ class VillageRepositoryImplIT(
                     val gameMaster = Instancio.of(User::class.java)
                         .set(KSelect.field(User::isActive), true)
                         .create()
-                    val sameVillageId = VillageId.generate()
-                    val village = Village(
-                        id = sameVillageId,
-                        name = "村1",
-                        citizenCount = 10,
-                        werewolfCount = 2,
-                        fortuneTellerCount = 1,
-                        knightCount = 1,
-                        psychicCount = 1,
-                        madmanCount = 1,
-                        isInitialActionActive = false,
-                        gameMasterUserId = gameMaster.id,
-                    )
+                    val sameVillageId = Instancio.create(VillageId::class.java)
+                    val village = Instancio.of(Village::class.java)
+                        .set(KSelect.field(Village::id), sameVillageId)
+                        .set(KSelect.field(Village::citizenCount), 10)
+                        .set(KSelect.field(Village::werewolfCount), 2)
+                        .set(KSelect.field(Village::fortuneTellerCount), 1)
+                        .set(KSelect.field(Village::knightCount), 1)
+                        .set(KSelect.field(Village::psychicCount), 1)
+                        .set(KSelect.field(Village::madmanCount), 1)
+                        .set(KSelect.field(Village::isInitialActionActive), false)
+                        .set(KSelect.field(Village::gameMasterUserId), gameMaster.id)
+                        .create()
                     val salt = "salt"
                     val passwordHash = "passwordHash"
 
@@ -209,18 +204,17 @@ class VillageRepositoryImplIT(
                 it("UserTableに登録されてないGameMasterUserIdを持つ村が作成された場合は村が作成されずに例外がthrowされる") {
                     // given
                     val notExistGameMasterUserId = Instancio.create(UserId::class.java)
-                    val village = Village(
-                        id = VillageId.generate(),
-                        name = "村1",
-                        citizenCount = 10,
-                        werewolfCount = 2,
-                        fortuneTellerCount = 1,
-                        knightCount = 1,
-                        psychicCount = 1,
-                        madmanCount = 1,
-                        isInitialActionActive = false,
-                        gameMasterUserId = notExistGameMasterUserId,
-                    )
+                    val village = Instancio.of(Village::class.java)
+                        .set(KSelect.field(Village::citizenCount), 10)
+                        .set(KSelect.field(Village::werewolfCount), 2)
+                        .set(KSelect.field(Village::fortuneTellerCount), 1)
+                        .set(KSelect.field(Village::knightCount), 1)
+                        .set(KSelect.field(Village::psychicCount), 1)
+                        .set(KSelect.field(Village::madmanCount), 1)
+                        .set(KSelect.field(Village::isInitialActionActive), false)
+                        .set(KSelect.field(Village::gameMasterUserId), notExistGameMasterUserId)
+                        .create()
+
                     val salt = "salt"
                     val passwordHash = "passwordHash"
 

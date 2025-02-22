@@ -26,7 +26,6 @@ import io.mockk.unmockkStatic
 import io.mockk.verify
 import org.instancio.Instancio
 import org.springframework.security.crypto.bcrypt.BCrypt
-import java.util.UUID
 
 /**
  * CreateVillageUseCaseのテストクラス
@@ -66,7 +65,7 @@ class CreateVillageUseCaseUT(
             context("正常系") {
                 it("村を作成する") {
                     // given
-                    val gameMasterId = UserId(UUID.randomUUID())
+                    val gameMasterId = Instancio.create(UserId::class.java)
                     val gameMasterName = "gameMaster"
                     val gameMaster = Instancio.of(User::class.java)
                         .set(KSelect.field(User::id), gameMasterId)
@@ -74,7 +73,7 @@ class CreateVillageUseCaseUT(
                         .set(KSelect.field(User::isActive), true)
                         .create()
 
-                    val villageId = VillageId(UUID.randomUUID())
+                    val villageId = Instancio.create(VillageId::class.java)
                     val villageName = "村1"
                     val villageCitizenCount = 10
                     val villageWerewolfCount = 2
@@ -83,7 +82,20 @@ class CreateVillageUseCaseUT(
                     val villagePsychicCount = 1
                     val villageMadmanCount = 1
                     val villageIsInitialActionActive = true
-                    val expected = Village(
+                    val expected = Instancio.of(Village::class.java)
+                        .set(KSelect.field(Village::id), villageId)
+                        .set(KSelect.field(Village::name), villageName)
+                        .set(KSelect.field(Village::citizenCount), villageCitizenCount)
+                        .set(KSelect.field(Village::werewolfCount), villageWerewolfCount)
+                        .set(KSelect.field(Village::fortuneTellerCount), villageFortuneTellerCount)
+                        .set(KSelect.field(Village::knightCount), villageKnightCount)
+                        .set(KSelect.field(Village::psychicCount), villagePsychicCount)
+                        .set(KSelect.field(Village::madmanCount), villageMadmanCount)
+                        .set(KSelect.field(Village::isInitialActionActive), villageIsInitialActionActive)
+                        .set(KSelect.field(Village::gameMasterUserId), gameMasterId)
+                        .set(KSelect.field(Village::currentUserNumber), 1)
+                        .create()
+                    val expected2 = Village(
                         id = villageId,
                         name = villageName,
                         citizenCount = villageCitizenCount,
@@ -95,6 +107,9 @@ class CreateVillageUseCaseUT(
                         isInitialActionActive = villageIsInitialActionActive,
                         gameMasterUserId = gameMasterId,
                     )
+
+                    expected shouldBe expected2
+
                     val password = "password"
                     val salt = "salt"
                     val hashedPassword = "hashedPassword"
@@ -106,7 +121,7 @@ class CreateVillageUseCaseUT(
                     every { UserId.generate() } returns gameMasterId
                     every { userRepository.createUser(gameMaster) } returns gameMaster
                     every { VillageId.generate() } returns villageId
-                    every { villageRepository.createVillage(expected, hashedPassword, salt) } returns expected
+                    every { villageRepository.createVillage(any(), hashedPassword, salt) } returns expected
                     every { rUserVillageRepository.save(gameMaster.id, expected.id) } returns Pair(gameMaster.id, expected.id)
 
                     // when
@@ -135,7 +150,7 @@ class CreateVillageUseCaseUT(
             context("異常系") {
                 it("パスワードの暗号化に失敗する") {
                     // given
-                    val gameMasterId = UserId(UUID.randomUUID())
+                    val gameMasterId = Instancio.create(UserId::class.java)
                     val gameMasterName = "gameMaster"
                     val gameMaster = Instancio.of(User::class.java)
                         .set(KSelect.field(User::id), gameMasterId)
@@ -143,7 +158,7 @@ class CreateVillageUseCaseUT(
                         .set(KSelect.field(User::isActive), true)
                         .create()
 
-                    val villageId = VillageId(UUID.randomUUID())
+                    val villageId = Instancio.create(VillageId::class.java)
                     val villageName = "村1"
                     val villageCitizenCount = 10
                     val villageWerewolfCount = 2
@@ -152,18 +167,20 @@ class CreateVillageUseCaseUT(
                     val villagePsychicCount = 1
                     val villageMadmanCount = 1
                     val villageIsInitialActionActive = true
-                    val village = Village(
-                        id = villageId,
-                        name = villageName,
-                        citizenCount = villageCitizenCount,
-                        werewolfCount = villageWerewolfCount,
-                        fortuneTellerCount = villageFortuneTellerCount,
-                        knightCount = villageKnightCount,
-                        psychicCount = villagePsychicCount,
-                        madmanCount = villageMadmanCount,
-                        isInitialActionActive = villageIsInitialActionActive,
-                        gameMasterUserId = gameMasterId,
-                    )
+                    val village = Instancio.of(Village::class.java)
+                        .set(KSelect.field(Village::id), villageId)
+                        .set(KSelect.field(Village::name), villageName)
+                        .set(KSelect.field(Village::citizenCount), villageCitizenCount)
+                        .set(KSelect.field(Village::werewolfCount), villageWerewolfCount)
+                        .set(KSelect.field(Village::fortuneTellerCount), villageFortuneTellerCount)
+                        .set(KSelect.field(Village::knightCount), villageKnightCount)
+                        .set(KSelect.field(Village::psychicCount), villagePsychicCount)
+                        .set(KSelect.field(Village::madmanCount), villageMadmanCount)
+                        .set(KSelect.field(Village::isInitialActionActive), villageIsInitialActionActive)
+                        .set(KSelect.field(Village::gameMasterUserId), gameMasterId)
+                        .set(KSelect.field(Village::currentUserNumber), 1)
+                        .create()
+
                     val password = "password"
                     val salt = "salt"
                     val hashedPassword = "hashedPassword"
