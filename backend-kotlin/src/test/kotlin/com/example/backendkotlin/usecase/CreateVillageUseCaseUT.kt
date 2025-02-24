@@ -94,6 +94,7 @@ class CreateVillageUseCaseUT(
                         .set(KSelect.field(Village::isInitialActionActive), villageIsInitialActionActive)
                         .set(KSelect.field(Village::gameMasterUserId), gameMasterId)
                         .set(KSelect.field(Village::currentUserNumber), 1)
+                        .set(KSelect.field(Village::isRecruited), true)
                         .create()
                     val expected2 = Village(
                         id = villageId,
@@ -179,6 +180,7 @@ class CreateVillageUseCaseUT(
                         .set(KSelect.field(Village::isInitialActionActive), villageIsInitialActionActive)
                         .set(KSelect.field(Village::gameMasterUserId), gameMasterId)
                         .set(KSelect.field(Village::currentUserNumber), 1)
+                        .set(KSelect.field(Village::isRecruited), true)
                         .create()
 
                     val password = "password"
