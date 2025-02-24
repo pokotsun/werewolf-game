@@ -2,6 +2,8 @@ package com.example.backendkotlin.presentation
 
 import com.example.backendkotlin.generated.grpc.CreateVillageRequest
 import com.example.backendkotlin.generated.grpc.CreateVillageResponse
+import com.example.backendkotlin.generated.grpc.EnterVillageRequest
+import com.example.backendkotlin.generated.grpc.EnterVillageResponse
 import com.example.backendkotlin.generated.grpc.ListVillagesRequest
 import com.example.backendkotlin.generated.grpc.ListVillagesResponse
 import com.example.backendkotlin.generated.grpc.VillageResponse
@@ -97,6 +99,26 @@ class VillageGrpcService(
         val listVillagesResponse = ListVillagesResponse.newBuilder().addAllVillages(villageResponseList).build()
         responseObserver.let { r ->
             r.onNext(listVillagesResponse)
+            r.onCompleted()
+        }
+    }
+
+    /**
+     * ユーザーが村に参加する
+     *
+     * @param request 村参加リクエスト
+     * @param responseObserver レスポンス
+     *
+     * @return 村、ユーザー情報
+     */
+    override fun enterVillage(request: EnterVillageRequest, responseObserver: StreamObserver<EnterVillageResponse>) {
+        // Todo: ユーザーが村に参加する処理を実装する
+        val enterVillageResponse = EnterVillageResponse.newBuilder()
+            .setVillageId("xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx")
+            .setUserId("00000000-0000-0000-0000-000000000000")
+            .build()
+        responseObserver.let { r ->
+            r.onNext(enterVillageResponse)
             r.onCompleted()
         }
     }
