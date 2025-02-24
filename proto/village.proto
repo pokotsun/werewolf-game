@@ -12,6 +12,7 @@ option java_outer_classname = "VillageServiceProto";
 service VillageService {
   rpc CreateVillage(CreateVillageRequest) returns (CreateVillageResponse);
   rpc ListVillages(ListVillagesRequest) returns (ListVillagesResponse);
+  rpc EnterVillage(EnterVillageRequest) returns (EnterVillageResponse);
 }
 
 // VillageRequest メッセージ
@@ -63,4 +64,18 @@ message VillageResponse {
     int32 madman_count = 9;
     bool is_initial_action_active = 10;
     int32 current_user_number = 11;
+}
+
+// EnterVillageRequest メッセージ
+message EnterVillageRequest {
+    string village_id = 1;
+    string village_password = 2;
+    string user_name = 3;
+    string user_password = 4;
+}
+
+// EnterVillageResponse メッセージ
+message EnterVillageResponse {
+    string village_id = 1;
+    string user_id = 2;
 }
