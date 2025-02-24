@@ -53,6 +53,7 @@ class VillageRepositoryImplIT(
                             .set(KSelect.field(Village::isInitialActionActive), true)
                             .set(KSelect.field(Village::gameMasterUserId), gameMaster.id)
                             .set(KSelect.field(Village::currentUserNumber), village1Users.size)
+                            .set(KSelect.field(Village::isRecruited), true)
                             .create(),
                     )
 
@@ -95,6 +96,7 @@ class VillageRepositoryImplIT(
                         .set(KSelect.field(Village::isInitialActionActive), false)
                         .set(KSelect.field(Village::gameMasterUserId), gameMaster.id)
                         .set(KSelect.field(Village::currentUserNumber), village1Users.size)
+                        .set(KSelect.field(Village::isRecruited), true)
                         .create()
 
                     val village2Users = listOf(gameMaster)
@@ -110,6 +112,7 @@ class VillageRepositoryImplIT(
                         .set(KSelect.field(Village::isInitialActionActive), false)
                         .set(KSelect.field(Village::gameMasterUserId), gameMaster.id)
                         .set(KSelect.field(Village::currentUserNumber), village2Users.size)
+                        .set(KSelect.field(Village::isRecruited), true)
                         .create()
                     val expected = listOf(village1, village2)
                     val saltInput = "salt"

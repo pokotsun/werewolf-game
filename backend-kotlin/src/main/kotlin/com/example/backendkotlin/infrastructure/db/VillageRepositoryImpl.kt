@@ -33,7 +33,9 @@ class VillageRepositoryImpl() : VillageRepository {
                 VillageTable.madmanCount,
                 VillageTable.isInitialActionActive,
                 VillageTable.gameMasterUserId,
-            ).toList()
+            )
+                .where { VillageTable.isRecruited eq true }
+                .toList()
         }
         // village_idごとにcurrent_userを取得
         val villageIds = villageRecords.map { it[VillageTable.id].value }

@@ -17,6 +17,7 @@ object VillageTable : UUIDTable("village") {
     val madmanCount = integer("madman_count")
     val isInitialActionActive = bool("is_initial_action_active")
     val gameMasterUserId = uuid("game_master_user_id").references(UserTable.id, onDelete = ReferenceOption.CASCADE)
+    val isRecruited = bool("is_recruited").default(true)
     val createdAt = datetime("created_at").defaultExpression(CurrentDateTime)
     val updatedAt = datetime("updated_at").defaultExpression(CurrentDateTime)
 }

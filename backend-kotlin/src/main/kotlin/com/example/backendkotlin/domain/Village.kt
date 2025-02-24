@@ -14,6 +14,7 @@ package com.example.backendkotlin.domain
  * @param isInitialActionActive 初日のアクションが有効かどうか
  * @param gameMasterUserId この村のゲームマスターのユーザID
  * @param currentUserNumber 現在村に参加しているユーザーの数(ゲームマスターを含む)
+ * @param isRecruited 村が募集中かどうか
  */
 data class Village(
     val id: VillageId,
@@ -27,6 +28,7 @@ data class Village(
     val isInitialActionActive: Boolean,
     val gameMasterUserId: UserId,
     val currentUserNumber: Int = 1,
+    val isRecruited: Boolean = true,
 ) {
     val userNumber: Int
         get() = citizenCount + werewolfCount + fortuneTellerCount + knightCount + psychicCount + madmanCount
