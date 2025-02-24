@@ -1,5 +1,6 @@
 package com.example.backendkotlin.usecase
 
+import com.example.backendkotlin.domain.HashedPasswordWithRandomSalt
 import com.example.backendkotlin.domain.RUserVillageRepository
 import com.example.backendkotlin.domain.User
 import com.example.backendkotlin.domain.UserId
@@ -7,7 +8,6 @@ import com.example.backendkotlin.domain.UserRepository
 import com.example.backendkotlin.domain.Village
 import com.example.backendkotlin.domain.VillageId
 import com.example.backendkotlin.domain.VillageRepository
-import org.springframework.security.crypto.bcrypt.BCrypt
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 
@@ -80,14 +80,14 @@ class CreateVillageUseCase(
             gameMasterUserId = createdGameMaster.id,
         )
         // パスワードの暗号化
-        val salt = BCrypt.gensalt()
-        val passwordHash = BCrypt.hashpw(villagePassword, salt)
-        // パスワード検証
-        if (!BCrypt.checkpw(villagePassword, passwordHash)) {
-            throw RuntimeException("Password encryption failed")
-        }
+        val passwordWithRandomSalt = HashedPasswordWithRandomSalt.create(villagePassword)
+
         // DBに保存
-        val createdVillage = villageRepository.createVillage(newVillage, passwordHash, salt)
+        val createdVillage = villageRepository.createVillage(
+            village = newVillage,
+            passwordHash = passwordWithRandomSalt.hashedPassword,
+            salt = passwordWithRandomSalt.salt,
+        )
 
         // ユーザーと村の紐付け
         rUserVillageRepository.save(createdGameMaster.id, createdVillage.id)
