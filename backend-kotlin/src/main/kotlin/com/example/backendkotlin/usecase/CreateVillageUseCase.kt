@@ -85,8 +85,7 @@ class CreateVillageUseCase(
         // DBに保存
         val createdVillage = villageRepository.createVillage(
             village = newVillage,
-            passwordHash = passwordWithRandomSalt.hashedPassword,
-            salt = passwordWithRandomSalt.salt,
+            hashedPasswordWithRandomSalt = passwordWithRandomSalt,
         )
 
         // ユーザーと村の紐付け

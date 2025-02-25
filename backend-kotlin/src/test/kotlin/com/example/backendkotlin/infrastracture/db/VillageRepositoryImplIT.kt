@@ -1,5 +1,6 @@
 package com.example.backendkotlin.infrastracture.db
 
+import com.example.backendkotlin.domain.HashedPasswordWithRandomSalt
 import com.example.backendkotlin.domain.User
 import com.example.backendkotlin.domain.UserId
 import com.example.backendkotlin.domain.Village
@@ -158,15 +159,14 @@ class VillageRepositoryImplIT(
                         .set(KSelect.field(Village::isInitialActionActive), false)
                         .set(KSelect.field(Village::gameMasterUserId), gameMaster.id)
                         .create()
-                    val passwordHash = "passwordHash"
-                    val salt = "salt"
+                    val hashedPasswordWithRandomSalt = Instancio.create(HashedPasswordWithRandomSalt::class.java)
 
                     // and
                     UserRecord(gameMaster).insert()
 
                     // when, then
                     shouldNotThrowAny {
-                        villageRepository.createVillage(village, passwordHash, salt)
+                        villageRepository.createVillage(village, hashedPasswordWithRandomSalt)
                     }
                 }
             }
@@ -188,19 +188,17 @@ class VillageRepositoryImplIT(
                         .set(KSelect.field(Village::isInitialActionActive), false)
                         .set(KSelect.field(Village::gameMasterUserId), gameMaster.id)
                         .create()
-                    val salt = "salt"
-                    val passwordHash = "passwordHash"
+                    val hashedPasswordWithRandomSalt = Instancio.create(HashedPasswordWithRandomSalt::class.java)
 
                     // and
                     UserRecord(gameMaster).insert()
 
                     // when, then
-                    shouldNotThrowAny { villageRepository.createVillage(village, passwordHash, salt) }
+                    shouldNotThrowAny { villageRepository.createVillage(village, hashedPasswordWithRandomSalt) }
                     shouldThrowExactly<ExposedSQLException> {
                         villageRepository.createVillage(
                             village,
-                            passwordHash,
-                            salt,
+                            hashedPasswordWithRandomSalt,
                         )
                     }
                 }
@@ -217,12 +215,10 @@ class VillageRepositoryImplIT(
                         .set(KSelect.field(Village::isInitialActionActive), false)
                         .set(KSelect.field(Village::gameMasterUserId), notExistGameMasterUserId)
                         .create()
-
-                    val salt = "salt"
-                    val passwordHash = "passwordHash"
+                    val hashedPasswordWithRandomSalt = Instancio.create(HashedPasswordWithRandomSalt::class.java)
 
                     // when, then
-                    shouldThrowExactly<ExposedSQLException> { villageRepository.createVillage(village, passwordHash, salt) }
+                    shouldThrowExactly<ExposedSQLException> { villageRepository.createVillage(village, hashedPasswordWithRandomSalt) }
                 }
             }
         }
