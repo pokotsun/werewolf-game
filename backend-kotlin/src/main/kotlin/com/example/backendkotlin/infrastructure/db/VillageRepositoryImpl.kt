@@ -1,5 +1,6 @@
 package com.example.backendkotlin.infrastructure.db
 
+import com.example.backendkotlin.domain.HashedPasswordWithRandomSalt
 import com.example.backendkotlin.domain.UserId
 import com.example.backendkotlin.domain.Village
 import com.example.backendkotlin.domain.VillageId
@@ -72,13 +73,13 @@ class VillageRepositoryImpl() : VillageRepository {
     /**
      * {@inheritDoc}
      */
-    override fun createVillage(village: Village, passwordHash: String, salt: String): Village {
+    override fun createVillage(village: Village, hashedPasswordWithRandomSalt: HashedPasswordWithRandomSalt): Village {
         transaction {
             VillageTable.insert {
                 it[id] = village.id.value
                 it[name] = village.name
-                it[VillageTable.salt] = salt
-                it[VillageTable.passwordHash] = passwordHash
+                it[salt] = hashedPasswordWithRandomSalt.salt
+                it[passwordHash] = hashedPasswordWithRandomSalt.hashedPassword
                 it[citizenCount] = village.citizenCount
                 it[werewolfCount] = village.werewolfCount
                 it[fortuneTellerCount] = village.fortuneTellerCount
