@@ -104,7 +104,7 @@ class CreateVillageUseCaseUT(
                 every { UserId.generate() } returns gameMasterId
                 every { userRepository.createUser(gameMaster) } returns gameMaster
                 every { VillageId.generate() } returns villageId
-                every { villageRepository.createVillage(expected, hashedPassword, salt) } returns expected
+                every { villageRepository.createVillage(expected, hashedPasswordWithRandomSalt) } returns expected
                 every { rUserVillageRepository.save(gameMaster.id, expected.id) } returns Pair(gameMaster.id, expected.id)
                 every { HashedPasswordWithRandomSalt.create(password) } returns hashedPasswordWithRandomSalt
 
@@ -126,7 +126,7 @@ class CreateVillageUseCaseUT(
                 actual shouldBe expected
                 verify(exactly = 1) {
                     userRepository.createUser(gameMaster)
-                    villageRepository.createVillage(expected, hashedPassword, salt)
+                    villageRepository.createVillage(expected, hashedPasswordWithRandomSalt)
                     rUserVillageRepository.save(gameMaster.id, expected.id)
                 }
             }
