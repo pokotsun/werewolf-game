@@ -17,10 +17,9 @@ interface VillageRepository {
      * @condition ゲームマスターがすでにUserTableに作成されていること
      *
      * @param village 村
-     * @param passwordHash パスワードのハッシュ
-     * @param salt パスワードのソルト
+     * @param hashedPasswordWithRandomSalt パスワードとそのランダムなsalt
      *
      * @return 作成した村
      */
-    fun createVillage(village: Village, passwordHash: String, salt: String): Village
+    fun createVillage(village: Village, hashedPasswordWithRandomSalt: HashedPasswordWithRandomSalt): Village
 }
