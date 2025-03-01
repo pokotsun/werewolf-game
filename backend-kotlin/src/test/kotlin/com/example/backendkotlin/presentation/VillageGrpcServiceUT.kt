@@ -80,7 +80,7 @@ class VillageGrpcServiceUT(
                     )
                 } returns expected
 
-                val responseObserver = object : StreamObserver<CreateVillageResponse> {
+                val spiedResponseObserver = object : StreamObserver<CreateVillageResponse> {
                     override fun onNext(value: CreateVillageResponse) {
                         value.id shouldBe expected.id.value.toString()
                         value.name shouldBe expected.name
@@ -103,10 +103,10 @@ class VillageGrpcServiceUT(
                     override fun onCompleted() {
                         // do nothing
                     }
-                }
+                }.let { spyk(it) }
 
                 // when:
-                service.createVillage(request, responseObserver)
+                service.createVillage(request, spiedResponseObserver)
 
                 // then:
                 verify(exactly = 1) {
@@ -122,6 +122,7 @@ class VillageGrpcServiceUT(
                         villageIsInitialActionActive = true,
                         villagePassword = "password",
                     )
+                    spiedResponseObserver.onCompleted()
                 }
             }
             it("usecase 層でエラーが発生") {
@@ -154,7 +155,7 @@ class VillageGrpcServiceUT(
                     )
                 } throws Status.UNKNOWN.asRuntimeException()
 
-                val responseObserver = object : StreamObserver<CreateVillageResponse> {
+                val spiedResponseObserver = object : StreamObserver<CreateVillageResponse> {
                     override fun onNext(value: CreateVillageResponse) {
                         // do nothing
                     }
@@ -166,10 +167,10 @@ class VillageGrpcServiceUT(
                     override fun onCompleted() {
                         // do nothing
                     }
-                }
+                }.let { spyk(it) }
 
                 // when:
-                val e = shouldThrow<StatusRuntimeException> { service.createVillage(request, responseObserver) }
+                val e = shouldThrow<StatusRuntimeException> { service.createVillage(request, spiedResponseObserver) }
 
                 // then:
                 e.status shouldBe Status.UNKNOWN
@@ -187,6 +188,7 @@ class VillageGrpcServiceUT(
                         villagePassword = "password",
                     )
                 }
+                verify(exactly = 0) { spiedResponseObserver.onCompleted() }
             }
         }
 
@@ -199,7 +201,7 @@ class VillageGrpcServiceUT(
                 val expectedList = Instancio.createList(Village::class.java)
                 every { listVillagesUseCase.invoke() } returns expectedList
 
-                val responseObserver = object : StreamObserver<ListVillagesResponse> {
+                val spiedResponseObserver = object : StreamObserver<ListVillagesResponse> {
                     override fun onNext(value: ListVillagesResponse) {
                         val sortedExpectedList = expectedList.sortedBy { it.id.value.toString() }
                         val actualSortedList = value.villagesList.sortedBy { it.id }
@@ -227,13 +229,16 @@ class VillageGrpcServiceUT(
                     override fun onCompleted() {
                         // do nothing
                     }
-                }
+                }.let { spyk(it) }
 
                 // when:
-                service.listVillages(request, responseObserver)
+                service.listVillages(request, spiedResponseObserver)
 
                 // then:
-                verify(exactly = 1) { listVillagesUseCase.invoke() }
+                verify(exactly = 1) {
+                    listVillagesUseCase.invoke()
+                    spiedResponseObserver.onCompleted()
+                }
             }
             it("usecase 層でエラーが発生") {
                 // given:
@@ -242,7 +247,7 @@ class VillageGrpcServiceUT(
 
                 every { listVillagesUseCase.invoke() } throws Status.UNKNOWN.asRuntimeException()
 
-                val responseObserver = object : StreamObserver<ListVillagesResponse> {
+                val spiedResponseObserver = object : StreamObserver<ListVillagesResponse> {
                     override fun onNext(value: ListVillagesResponse) {
                         // do nothing
                     }
@@ -254,14 +259,15 @@ class VillageGrpcServiceUT(
                     override fun onCompleted() {
                         // do nothing
                     }
-                }
+                }.let { spyk(it) }
 
                 // when:
-                val e = shouldThrow<StatusRuntimeException> { service.listVillages(request, responseObserver) }
+                val e = shouldThrow<StatusRuntimeException> { service.listVillages(request, spiedResponseObserver) }
 
                 // then:
                 e.status shouldBe Status.UNKNOWN
                 verify(exactly = 1) { listVillagesUseCase.invoke() }
+                verify(exactly = 0) { spiedResponseObserver.onCompleted() }
             }
         }
     }
