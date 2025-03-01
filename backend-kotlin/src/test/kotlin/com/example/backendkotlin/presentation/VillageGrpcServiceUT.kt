@@ -3,6 +3,8 @@ package com.example.backendkotlin.presentation
 import com.example.backendkotlin.domain.Village
 import com.example.backendkotlin.generated.grpc.CreateVillageRequest
 import com.example.backendkotlin.generated.grpc.CreateVillageResponse
+import com.example.backendkotlin.generated.grpc.ListVillagesRequest
+import com.example.backendkotlin.generated.grpc.ListVillagesResponse
 import com.example.backendkotlin.usecase.CreateVillageUseCase
 import com.example.backendkotlin.usecase.ListVillagesUseCase
 import com.ninjasquad.springmockk.MockkBean
@@ -185,6 +187,81 @@ class VillageGrpcServiceUT(
                         villagePassword = "password",
                     )
                 }
+            }
+        }
+
+        this.describe("listVillages") {
+            it("正常系") {
+                // given:
+                val request = ListVillagesRequest.newBuilder()
+                    .build()
+
+                val expectedList = Instancio.createList(Village::class.java)
+                every { listVillagesUseCase.invoke() } returns expectedList
+
+                val responseObserver = object : StreamObserver<ListVillagesResponse> {
+                    override fun onNext(value: ListVillagesResponse) {
+                        val sortedExpectedList = expectedList.sortedBy { it.id.value.toString() }
+                        val actualSortedList = value.villagesList.sortedBy { it.id }
+                        actualSortedList
+                            .zip(sortedExpectedList)
+                            .forEach { (actual, expected) ->
+                                actual.id shouldBe expected.id.value.toString()
+                                actual.name shouldBe expected.name
+                                actual.userNumber shouldBe expected.userNumber
+                                actual.citizenCount shouldBe expected.citizenCount
+                                actual.werewolfCount shouldBe expected.werewolfCount
+                                actual.fortuneTellerCount shouldBe expected.fortuneTellerCount
+                                actual.knightCount shouldBe expected.knightCount
+                                actual.psychicCount shouldBe expected.psychicCount
+                                actual.madmanCount shouldBe expected.madmanCount
+                                actual.isInitialActionActive shouldBe expected.isInitialActionActive
+                                actual.currentUserNumber shouldBe expected.currentUserNumber
+                            }
+                    }
+
+                    override fun onError(t: Throwable) {
+                        // do nothing
+                    }
+
+                    override fun onCompleted() {
+                        // do nothing
+                    }
+                }
+
+                // when:
+                service.listVillages(request, responseObserver)
+
+                // then:
+                verify(exactly = 1) { listVillagesUseCase.invoke() }
+            }
+            it("usecase 層でエラーが発生") {
+                // given:
+                val request = ListVillagesRequest.newBuilder()
+                    .build()
+
+                every { listVillagesUseCase.invoke() } throws Status.UNKNOWN.asRuntimeException()
+
+                val responseObserver = object : StreamObserver<ListVillagesResponse> {
+                    override fun onNext(value: ListVillagesResponse) {
+                        // do nothing
+                    }
+
+                    override fun onError(t: Throwable) {
+                        // do nothing
+                    }
+
+                    override fun onCompleted() {
+                        // do nothing
+                    }
+                }
+
+                // when:
+                val e = shouldThrow<StatusRuntimeException> { service.listVillages(request, responseObserver) }
+
+                // then:
+                e.status shouldBe Status.UNKNOWN
+                verify(exactly = 1) { listVillagesUseCase.invoke() }
             }
         }
     }
