@@ -1,5 +1,6 @@
 package com.example.backendkotlin.infrastracture.db.record
 
+import com.example.backendkotlin.domain.HashedPassword
 import com.example.backendkotlin.domain.UserId
 import com.example.backendkotlin.domain.Village
 import com.example.backendkotlin.domain.VillageId
@@ -26,7 +27,6 @@ import org.jetbrains.exposed.sql.transactions.transaction
 data class VillageRecord(
     val id: VillageId,
     val name: String,
-    val salt: String,
     val passwordHash: String,
     val citizenCount: Int,
     val werewolfCount: Int,
@@ -41,14 +41,12 @@ data class VillageRecord(
      * VillageRecordのコンストラクタ
      *
      * @param village 村
-     * @param saltInput パスワードのソルト
      * @param hashedPassword パスワードのハッシュ値
      */
-    constructor(village: Village, saltInput: String, hashedPassword: String) : this(
+    constructor(village: Village, hashedPassword: HashedPassword) : this(
         id = village.id,
         name = village.name,
-        salt = saltInput,
-        passwordHash = hashedPassword,
+        passwordHash = hashedPassword.value,
         citizenCount = village.citizenCount,
         werewolfCount = village.werewolfCount,
         fortuneTellerCount = village.fortuneTellerCount,
@@ -69,7 +67,6 @@ data class VillageRecord(
             VillageTable.insert {
                 it[id] = this@VillageRecord.id.value
                 it[name] = this@VillageRecord.name
-                it[salt] = this@VillageRecord.salt
                 it[passwordHash] = this@VillageRecord.passwordHash
                 it[citizenCount] = this@VillageRecord.citizenCount
                 it[werewolfCount] = this@VillageRecord.werewolfCount

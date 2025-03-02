@@ -1,6 +1,6 @@
 package com.example.backendkotlin.usecase
 
-import com.example.backendkotlin.domain.HashedPasswordWithRandomSalt
+import com.example.backendkotlin.domain.HashedPassword
 import com.example.backendkotlin.domain.RUserVillageRepository
 import com.example.backendkotlin.domain.User
 import com.example.backendkotlin.domain.UserId
@@ -41,7 +41,7 @@ class CreateVillageUseCaseUT(
     private lateinit var target: CreateVillageUseCase
 
     override suspend fun beforeTest(testCase: TestCase) {
-        mockkObject(UserId, VillageId, HashedPasswordWithRandomSalt)
+        mockkObject(UserId, VillageId, HashedPassword)
     }
 
     override fun afterTest(f: suspend (Tuple2<TestCase, TestResult>) -> Unit) {
@@ -52,7 +52,7 @@ class CreateVillageUseCaseUT(
             rUserVillageRepository,
         )
         clearAllMocks()
-        unmockkObject(UserId, VillageId, HashedPasswordWithRandomSalt)
+        unmockkObject(UserId, VillageId, HashedPassword)
     }
 
     init {
@@ -92,21 +92,15 @@ class CreateVillageUseCaseUT(
                     .create()
 
                 val password = "password"
-                val salt = "salt"
-                val hashedPassword = "hashedPassword"
-                val hashedPasswordWithRandomSalt = Instancio.of(HashedPasswordWithRandomSalt::class.java)
-                    .set(KSelect.field(HashedPasswordWithRandomSalt::password), password)
-                    .set(KSelect.field(HashedPasswordWithRandomSalt::salt), salt)
-                    .set(KSelect.field(HashedPasswordWithRandomSalt::hashedPassword), hashedPassword)
-                    .create()
+                val hashedPassword = Instancio.create(HashedPassword::class.java)
 
                 // and
                 every { UserId.generate() } returns gameMasterId
                 every { userRepository.createUser(gameMaster) } returns gameMaster
                 every { VillageId.generate() } returns villageId
-                every { villageRepository.createVillage(expected, hashedPasswordWithRandomSalt) } returns expected
+                every { villageRepository.createVillage(expected, hashedPassword) } returns expected
                 every { rUserVillageRepository.save(gameMaster.id, expected.id) } returns Pair(gameMaster.id, expected.id)
-                every { HashedPasswordWithRandomSalt.create(password) } returns hashedPasswordWithRandomSalt
+                every { HashedPassword.create(password) } returns hashedPassword
 
                 // when
                 val actual = target.invoke(
@@ -126,7 +120,7 @@ class CreateVillageUseCaseUT(
                 actual shouldBe expected
                 verify(exactly = 1) {
                     userRepository.createUser(gameMaster)
-                    villageRepository.createVillage(expected, hashedPasswordWithRandomSalt)
+                    villageRepository.createVillage(expected, hashedPassword)
                     rUserVillageRepository.save(gameMaster.id, expected.id)
                 }
             }
