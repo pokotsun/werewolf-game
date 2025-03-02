@@ -27,6 +27,7 @@ message CreateVillageRequest {
     bool is_initial_action_active = 8;
     string password = 9;
     string game_master_name = 10;
+    string game_master_password = 11;
 }
 
 message CreateVillageResponse {
