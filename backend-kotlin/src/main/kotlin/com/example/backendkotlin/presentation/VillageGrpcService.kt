@@ -9,6 +9,7 @@ import com.example.backendkotlin.generated.grpc.ListVillagesResponse
 import com.example.backendkotlin.generated.grpc.VillageResponse
 import com.example.backendkotlin.generated.grpc.VillageServiceGrpc
 import com.example.backendkotlin.usecase.CreateVillageUseCase
+import com.example.backendkotlin.usecase.EnterVillageUseCase
 import com.example.backendkotlin.usecase.ListVillagesUseCase
 import io.grpc.stub.StreamObserver
 import net.devh.boot.grpc.server.service.GrpcService
@@ -20,6 +21,7 @@ import net.devh.boot.grpc.server.service.GrpcService
 class VillageGrpcService(
     private val listVillagesUseCase: ListVillagesUseCase,
     private val createVillageUseCase: CreateVillageUseCase,
+    private val enterVillageUseCase: EnterVillageUseCase,
 ) : VillageServiceGrpc.VillageServiceImplBase() {
     /**
      * 村を作成する
@@ -114,10 +116,20 @@ class VillageGrpcService(
      */
     override fun enterVillage(request: EnterVillageRequest, responseObserver: StreamObserver<EnterVillageResponse>) {
         // Todo: ユーザーが村に参加する処理を実装する
-        val enterVillageResponse = EnterVillageResponse.newBuilder()
-            .setVillageId("xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx")
-            .setUserId("00000000-0000-0000-0000-000000000000")
-            .build()
+        val result = enterVillageUseCase.invoke(
+            villageIdString = request.villageId,
+            villagePassword = request.villagePassword,
+            userName = request.userName,
+            userPassword = request.userPassword,
+        )
+
+        // レスポンスを作成
+        val enterVillageResponse = result.let { (villageId, userId) ->
+            EnterVillageResponse.newBuilder()
+                .setVillageId(villageId.value.toString())
+                .setUserId(userId.value.toString())
+                .build()
+        }
         responseObserver.let { r ->
             r.onNext(enterVillageResponse)
             r.onCompleted()
