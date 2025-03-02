@@ -7,6 +7,7 @@ import com.example.backendkotlin.domain.UserId
 import com.example.backendkotlin.domain.UserRepository
 import com.example.backendkotlin.domain.VillageId
 import com.example.backendkotlin.domain.VillageRepository
+import com.example.backendkotlin.infrastructure.db.table.RUserVillageTable.userId
 import org.springframework.stereotype.Service
 import java.util.UUID
 
@@ -33,16 +34,21 @@ class EnterVillageUseCase(
     fun invoke(villageIdString: String, villagePassword: String, userName: String, userPassword: String): Pair<VillageId, UserId> {
         // リクエストされた村が存在するか確認
         val villageId = VillageId(UUID.fromString(villageIdString))
-        // villageRepository.findById(villageId)
+        val villageAndHashedPassword = villageRepository.selectVillageById(villageId) ?: throw IllegalArgumentException("村が存在しません")
 
         // 取得した村のパスワードが正しいか確認
+        if (HashedPassword.doesMatch(villagePassword, villageAndHashedPassword.second)) {
+            throw IllegalArgumentException("パスワードが違います")
+        }
+
+        // ユーザーを作成
         val userId = UserId.generate()
+        val newUser = User(userId, userName, true)
 
         // ユーザーのパスワードを暗号化
         val userHashedPassword = HashedPassword.create(userPassword)
 
-        // ユーザーを作成
-        val newUser = User(userId, userName, true)
+        // ユーザーを保存
         userRepository.createUser(newUser, userHashedPassword)
 
         // ユーザーと村を紐付ける
