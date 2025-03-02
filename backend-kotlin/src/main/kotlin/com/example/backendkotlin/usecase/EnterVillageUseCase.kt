@@ -9,7 +9,6 @@ import com.example.backendkotlin.domain.VillageId
 import com.example.backendkotlin.domain.VillageRepository
 import com.example.backendkotlin.infrastructure.db.table.RUserVillageTable.userId
 import org.springframework.stereotype.Service
-import java.util.UUID
 
 /**
  *  一般ユーザーが村にログインするユースケース
@@ -31,13 +30,13 @@ class EnterVillageUseCase(
      *
      * @return 村IDとユーザーID
      */
-    fun invoke(villageIdString: String, villagePassword: String, userName: String, userPassword: String): Pair<VillageId, UserId> {
+    fun invoke(villageIdString: String, villagePassword: String, userName: String, userPassword: String): Pair<UserId, VillageId> {
         // リクエストされた村が存在するか確認
-        val villageId = VillageId(UUID.fromString(villageIdString))
+        val villageId = VillageId.generate(villageIdString)
         val villageAndHashedPassword = villageRepository.selectVillageById(villageId) ?: throw IllegalArgumentException("村が存在しません")
 
         // 取得した村のパスワードが正しいか確認
-        if (HashedPassword.doesMatch(villagePassword, villageAndHashedPassword.second)) {
+        if (!HashedPassword.doesMatch(villagePassword, villageAndHashedPassword.second)) {
             throw IllegalArgumentException("パスワードが違います")
         }
 
@@ -52,9 +51,9 @@ class EnterVillageUseCase(
         userRepository.createUser(newUser, userHashedPassword)
 
         // ユーザーと村を紐付ける
-        rUserVillageRepository.save(userId, villageId)
+        val result = rUserVillageRepository.save(userId, villageId)
 
         // レスポンスを作成
-        return Pair(villageId, userId)
+        return result
     }
 }

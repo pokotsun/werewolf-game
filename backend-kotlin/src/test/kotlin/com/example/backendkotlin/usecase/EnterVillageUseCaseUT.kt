@@ -10,6 +10,7 @@ import com.example.backendkotlin.domain.VillageId
 import com.example.backendkotlin.domain.VillageRepository
 import com.example.backendkotlin.util.KSelect
 import com.ninjasquad.springmockk.MockkBean
+import io.kotest.assertions.throwables.shouldThrow
 import io.kotest.core.Tuple2
 import io.kotest.core.spec.style.DescribeSpec
 import io.kotest.core.test.TestCase
@@ -21,7 +22,6 @@ import io.mockk.impl.annotations.InjectMockKs
 import io.mockk.mockkObject
 import io.mockk.unmockkObject
 import io.mockk.verify
-import kotlinx.coroutines.test.TestResult
 import org.instancio.Instancio
 
 /**
@@ -124,6 +124,67 @@ class EnterVillageUseCaseUT(
                         HashedPassword.create(newUserPassword)
                         userRepository.createUser(newUser, newUserHashedPassword)
                         rUserVillageRepository.save(newUserId, villageId)
+                    }
+                }
+            }
+            context("異常系") {
+                it("村が存在しない") {
+                    // given
+                    val villageIdString = "00000000-0000-0000-0000-000000000000"
+                    val villageId = Instancio.create(VillageId::class.java)
+
+                    // and
+                    every { VillageId.generate(villageIdString) } returns villageId
+                    every { villageRepository.selectVillageById(villageId) } returns null
+
+                    // when, then
+                    val exception = shouldThrow<IllegalArgumentException> {
+                        target.invoke(villageIdString, "password", "userName", "password")
+                    }
+                    exception.message shouldBe "村が存在しません"
+
+                    verify(exactly = 1) {
+                        villageRepository.selectVillageById(villageId)
+                    }
+                    verify(exactly = 0) {
+                        HashedPassword.doesMatch(any(), any())
+                        UserId.generate()
+                        HashedPassword.create(any())
+                        userRepository.createUser(any(), any())
+                        rUserVillageRepository.save(any(), any())
+                    }
+                }
+                it("パスワードが違う") {
+                    // given
+                    val villageIdString = "00000000-0000-0000-0000-000000000000"
+                    val villageId = Instancio.create(VillageId::class.java)
+                    val village = Instancio.create(Village::class.java)
+                    val incorrectVillagePassword = "password"
+                    val villageHashedPassword = Instancio.create(HashedPassword::class.java)
+                    val villageAndHashedPassword = Pair(village, villageHashedPassword)
+
+                    // and
+                    every { VillageId.generate(villageIdString) } returns villageId
+                    every { villageRepository.selectVillageById(villageId) } returns villageAndHashedPassword
+                    every { HashedPassword.doesMatch(incorrectVillagePassword, villageHashedPassword) } returns false
+
+                    // when, then
+                    val exception = shouldThrow<IllegalArgumentException> {
+                        target.invoke(villageIdString, incorrectVillagePassword, "userName", "password")
+                    }
+
+                    // then
+                    exception.message shouldBe "パスワードが違います"
+
+                    verify(exactly = 1) {
+                        villageRepository.selectVillageById(villageId)
+                        HashedPassword.doesMatch(incorrectVillagePassword, villageHashedPassword)
+                    }
+                    verify(exactly = 0) {
+                        UserId.generate()
+                        HashedPassword.create(any())
+                        userRepository.createUser(any(), any())
+                        rUserVillageRepository.save(any(), any())
                     }
                 }
             }
