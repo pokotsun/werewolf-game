@@ -37,9 +37,11 @@ class VillageRepositoryImplIT(
                     val gameMaster = Instancio.of(User::class.java)
                         .set(KSelect.field(User::isActive), true)
                         .create()
+                    val gameMasterHashedPassword = Instancio.create(HashedPassword::class.java)
                     val user1 = Instancio.of(User::class.java)
                         .set(KSelect.field(User::isActive), true)
                         .create()
+                    val user1HashedPassword = Instancio.create(HashedPassword::class.java)
                     val village1Users = listOf(gameMaster, user1)
                     val villageId = Instancio.create(VillageId::class.java)
                     val expected = listOf(
@@ -58,13 +60,13 @@ class VillageRepositoryImplIT(
                             .create(),
                     )
 
-                    val hashedPassword = Instancio.create(HashedPassword::class.java)
+                    val villageHashedPassword = Instancio.create(HashedPassword::class.java)
 
                     // and
-                    UserRecord(gameMaster).insert()
-                    UserRecord(user1).insert()
+                    UserRecord(gameMaster, gameMasterHashedPassword).insert()
+                    UserRecord(user1, user1HashedPassword).insert()
                     expected.forEach { village ->
-                        VillageRecord(village, hashedPassword).insert()
+                        VillageRecord(village, villageHashedPassword).insert()
                     }
                     village1Users.forEach { user ->
                         RUserVillageRecord(user.id, villageId).insert()
@@ -80,9 +82,11 @@ class VillageRepositoryImplIT(
                     val gameMaster = Instancio.of(User::class.java)
                         .set(KSelect.field(User::isActive), true)
                         .create()
+                    val gameMasterHashedPassword = Instancio.create(HashedPassword::class.java)
                     val village1User = Instancio.of(User::class.java)
                         .set(KSelect.field(User::isActive), true)
                         .create()
+                    val village1UserHashedPassword = Instancio.create(HashedPassword::class.java)
                     val village1Users = listOf(gameMaster, village1User)
                     val village1VillageId = Instancio.create(VillageId::class.java)
                     val village1 = Instancio.of(Village::class.java)
@@ -115,14 +119,14 @@ class VillageRepositoryImplIT(
                         .set(KSelect.field(Village::isRecruited), true)
                         .create()
                     val expected = listOf(village1, village2)
-                    val hashedPassword = Instancio.create(HashedPassword::class.java)
+                    val villageHashedPassword = Instancio.create(HashedPassword::class.java)
 
                     // and
-                    UserRecord(gameMaster).insert()
-                    UserRecord(village1User).insert()
+                    UserRecord(gameMaster, gameMasterHashedPassword).insert()
+                    UserRecord(village1User, village1UserHashedPassword).insert()
                     // village2のユーザーはgameMasterのみですでにinsertされている
                     expected.forEach { village ->
-                        VillageRecord(village, hashedPassword).insert()
+                        VillageRecord(village, villageHashedPassword).insert()
                     }
                     village1Users.forEach { user ->
                         RUserVillageRecord(user.id, village1VillageId).insert()
@@ -147,6 +151,7 @@ class VillageRepositoryImplIT(
                     val gameMaster = Instancio.of(User::class.java)
                         .set(KSelect.field(User::isActive), true)
                         .create()
+                    val gameMasterHashedPassword = Instancio.create(HashedPassword::class.java)
                     val village = Instancio.of(Village::class.java)
                         .set(KSelect.field(Village::citizenCount), 10)
                         .set(KSelect.field(Village::werewolfCount), 2)
@@ -157,14 +162,14 @@ class VillageRepositoryImplIT(
                         .set(KSelect.field(Village::isInitialActionActive), false)
                         .set(KSelect.field(Village::gameMasterUserId), gameMaster.id)
                         .create()
-                    val hashedPassword = Instancio.create(HashedPassword::class.java)
+                    val villageHashedPassword = Instancio.create(HashedPassword::class.java)
 
                     // and
-                    UserRecord(gameMaster).insert()
+                    UserRecord(gameMaster, gameMasterHashedPassword).insert()
 
                     // when, then
                     shouldNotThrowAny {
-                        villageRepository.createVillage(village, hashedPassword)
+                        villageRepository.createVillage(village, villageHashedPassword)
                     }
                 }
             }
@@ -174,6 +179,7 @@ class VillageRepositoryImplIT(
                     val gameMaster = Instancio.of(User::class.java)
                         .set(KSelect.field(User::isActive), true)
                         .create()
+                    val gameMasterHashedPassword = Instancio.create(HashedPassword::class.java)
                     val sameVillageId = Instancio.create(VillageId::class.java)
                     val village = Instancio.of(Village::class.java)
                         .set(KSelect.field(Village::id), sameVillageId)
@@ -186,17 +192,17 @@ class VillageRepositoryImplIT(
                         .set(KSelect.field(Village::isInitialActionActive), false)
                         .set(KSelect.field(Village::gameMasterUserId), gameMaster.id)
                         .create()
-                    val hashedPassword = Instancio.create(HashedPassword::class.java)
+                    val villageHashedPassword = Instancio.create(HashedPassword::class.java)
 
                     // and
-                    UserRecord(gameMaster).insert()
+                    UserRecord(gameMaster, gameMasterHashedPassword).insert()
 
                     // when, then
-                    shouldNotThrowAny { villageRepository.createVillage(village, hashedPassword) }
+                    shouldNotThrowAny { villageRepository.createVillage(village, villageHashedPassword) }
                     shouldThrowExactly<ExposedSQLException> {
                         villageRepository.createVillage(
                             village,
-                            hashedPassword,
+                            villageHashedPassword,
                         )
                     }
                 }
@@ -213,10 +219,10 @@ class VillageRepositoryImplIT(
                         .set(KSelect.field(Village::isInitialActionActive), false)
                         .set(KSelect.field(Village::gameMasterUserId), notExistGameMasterUserId)
                         .create()
-                    val hashedPassword = Instancio.create(HashedPassword::class.java)
+                    val villageHashedPassword = Instancio.create(HashedPassword::class.java)
 
                     // when, then
-                    shouldThrowExactly<ExposedSQLException> { villageRepository.createVillage(village, hashedPassword) }
+                    shouldThrowExactly<ExposedSQLException> { villageRepository.createVillage(village, villageHashedPassword) }
                 }
             }
         }

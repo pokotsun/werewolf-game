@@ -91,20 +91,24 @@ class CreateVillageUseCaseUT(
                     .set(KSelect.field(Village::isRecruited), true)
                     .create()
 
-                val password = "password"
-                val hashedPassword = Instancio.create(HashedPassword::class.java)
+                val gameMasterPassword = "game-master-password"
+                val gameMasterHashedPassword = Instancio.create(HashedPassword::class.java)
+                val villagePassword = "village-password"
+                val villageHashedPassword = Instancio.create(HashedPassword::class.java)
 
                 // and
                 every { UserId.generate() } returns gameMasterId
-                every { userRepository.createUser(gameMaster) } returns gameMaster
+                every { HashedPassword.create(gameMasterPassword) } returns gameMasterHashedPassword
+                every { HashedPassword.create(villagePassword) } returns villageHashedPassword
+                every { userRepository.createUser(gameMaster, gameMasterHashedPassword) } returns gameMaster
                 every { VillageId.generate() } returns villageId
-                every { villageRepository.createVillage(expected, hashedPassword) } returns expected
+                every { villageRepository.createVillage(expected, villageHashedPassword) } returns expected
                 every { rUserVillageRepository.save(gameMaster.id, expected.id) } returns Pair(gameMaster.id, expected.id)
-                every { HashedPassword.create(password) } returns hashedPassword
 
                 // when
                 val actual = target.invoke(
                     gameMasterName = gameMasterName,
+                    gameMasterPassword = gameMasterPassword,
                     villageName = villageName,
                     villageCitizenCount = villageCitizenCount,
                     villageWerewolfCount = villageWerewolfCount,
@@ -113,14 +117,14 @@ class CreateVillageUseCaseUT(
                     villagePsychicCount = villagePsychicCount,
                     villageMadmanCount = villageMadmanCount,
                     villageIsInitialActionActive = villageIsInitialActionActive,
-                    villagePassword = password,
+                    villagePassword = villagePassword,
                 )
 
                 // then
                 actual shouldBe expected
                 verify(exactly = 1) {
-                    userRepository.createUser(gameMaster)
-                    villageRepository.createVillage(expected, hashedPassword)
+                    userRepository.createUser(gameMaster, gameMasterHashedPassword)
+                    villageRepository.createVillage(expected, villageHashedPassword)
                     rUserVillageRepository.save(gameMaster.id, expected.id)
                 }
             }

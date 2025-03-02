@@ -61,6 +61,7 @@ class VillageGrpcServiceUT(
                     .setIsInitialActionActive(true)
                     .setPassword("password")
                     .setGameMasterName("GM")
+                    .setGameMasterPassword("password")
                     .build()
 
                 val expected = Instancio.create(Village::class.java)
@@ -68,6 +69,7 @@ class VillageGrpcServiceUT(
                 every {
                     createVillageUseCase.invoke(
                         gameMasterName = "GM",
+                        gameMasterPassword = "password",
                         villageName = "村名",
                         villageCitizenCount = 10,
                         villageWerewolfCount = 2,
@@ -112,6 +114,7 @@ class VillageGrpcServiceUT(
                 verify(exactly = 1) {
                     createVillageUseCase.invoke(
                         gameMasterName = "GM",
+                        gameMasterPassword = "password",
                         villageName = "村名",
                         villageCitizenCount = 10,
                         villageWerewolfCount = 2,
@@ -138,11 +141,13 @@ class VillageGrpcServiceUT(
                     .setIsInitialActionActive(true)
                     .setPassword("password")
                     .setGameMasterName("GM")
+                    .setGameMasterPassword("password")
                     .build()
 
                 every {
                     createVillageUseCase.invoke(
                         gameMasterName = "GM",
+                        gameMasterPassword = "password",
                         villageName = "村名",
                         villageCitizenCount = 10,
                         villageWerewolfCount = 2,
@@ -177,6 +182,7 @@ class VillageGrpcServiceUT(
                 verify(exactly = 1) {
                     createVillageUseCase.invoke(
                         gameMasterName = "GM",
+                        gameMasterPassword = "password",
                         villageName = "村名",
                         villageCitizenCount = 10,
                         villageWerewolfCount = 2,

@@ -36,6 +36,7 @@ class VillageGrpcService(
         // 村を作成
         val createdVillage = createVillageUseCase.invoke(
             gameMasterName = request.gameMasterName,
+            gameMasterPassword = request.gameMasterPassword,
             villageName = request.name,
             villageCitizenCount = request.citizenCount,
             villageWerewolfCount = request.werewolfCount,

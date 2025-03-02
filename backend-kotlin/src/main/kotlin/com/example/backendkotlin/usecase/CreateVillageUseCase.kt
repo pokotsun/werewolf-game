@@ -29,6 +29,7 @@ class CreateVillageUseCase(
      * ユーザーから受け付けたパスワードを暗号化して保存する
      *
      * @param gameMasterName ゲームマスター名
+     * @param gameMasterPassword ゲームマスターのパスワード
      * @param villageName 村名
      * @param villageCitizenCount 村の市民の数
      * @param villageWerewolfCount 村の人狼の数
@@ -44,6 +45,7 @@ class CreateVillageUseCase(
     @Transactional
     fun invoke(
         gameMasterName: String,
+        gameMasterPassword: String,
         villageName: String,
         villageCitizenCount: Int,
         villageWerewolfCount: Int,
@@ -62,8 +64,9 @@ class CreateVillageUseCase(
             name = gameMasterName,
             isActive = true,
         )
+        val newGameMasterPassword = HashedPassword.create(gameMasterPassword)
         // DBに保存
-        val createdGameMaster = userRepository.createUser(newGameMaster)
+        val createdGameMaster = userRepository.createUser(newGameMaster, newGameMasterPassword)
 
         // 村の作成
         val newVillageId = VillageId.generate()
