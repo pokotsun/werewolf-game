@@ -82,6 +82,59 @@ class VillageRepositoryImpl() : VillageRepository {
     /**
      * {@inheritDoc}
      */
+    override fun selectVillageById(villageId: VillageId): Pair<Village, HashedPassword>? {
+        // villageテーブルから指定された村を取得する
+        val villageRecord = transaction {
+            VillageTable.select(
+                VillageTable.id,
+                VillageTable.name,
+                VillageTable.passwordHash,
+                VillageTable.citizenCount,
+                VillageTable.werewolfCount,
+                VillageTable.fortuneTellerCount,
+                VillageTable.knightCount,
+                VillageTable.psychicCount,
+                VillageTable.madmanCount,
+                VillageTable.isInitialActionActive,
+                VillageTable.gameMasterUserId,
+            )
+                .where { VillageTable.id eq villageId.value }
+                .firstOrNull()
+        } ?: return null
+
+        // village_idを指定してcurrent_userを取得
+        val rUserVillageRecords = transaction {
+            RUserVillageTable.select(
+                RUserVillageTable.villageId,
+                RUserVillageTable.userId,
+            ).where {
+                RUserVillageTable.villageId eq villageId.value
+            }.toList()
+        }
+        val currentUserNumber = rUserVillageRecords.size
+
+        // ドメインに変換する
+        return Pair(
+            Village(
+                id = VillageId(villageRecord[VillageTable.id].value),
+                name = villageRecord[VillageTable.name],
+                citizenCount = villageRecord[VillageTable.citizenCount],
+                werewolfCount = villageRecord[VillageTable.werewolfCount],
+                fortuneTellerCount = villageRecord[VillageTable.fortuneTellerCount],
+                knightCount = villageRecord[VillageTable.knightCount],
+                psychicCount = villageRecord[VillageTable.psychicCount],
+                madmanCount = villageRecord[VillageTable.madmanCount],
+                isInitialActionActive = villageRecord[VillageTable.isInitialActionActive],
+                gameMasterUserId = UserId(villageRecord[VillageTable.gameMasterUserId]),
+                currentUserNumber = currentUserNumber,
+            ),
+            HashedPassword(villageRecord[VillageTable.passwordHash]),
+        )
+    }
+
+    /**
+     * {@inheritDoc}
+     */
     override fun createVillage(village: Village, hashedPassword: HashedPassword): Village {
         transaction {
             VillageTable.insert {
