@@ -1,11 +1,16 @@
 package com.example.backendkotlin.presentation
 
+import com.example.backendkotlin.domain.UserId
 import com.example.backendkotlin.domain.Village
+import com.example.backendkotlin.domain.VillageId
 import com.example.backendkotlin.generated.grpc.CreateVillageRequest
 import com.example.backendkotlin.generated.grpc.CreateVillageResponse
+import com.example.backendkotlin.generated.grpc.EnterVillageRequest
+import com.example.backendkotlin.generated.grpc.EnterVillageResponse
 import com.example.backendkotlin.generated.grpc.ListVillagesRequest
 import com.example.backendkotlin.generated.grpc.ListVillagesResponse
 import com.example.backendkotlin.usecase.CreateVillageUseCase
+import com.example.backendkotlin.usecase.EnterVillageUseCase
 import com.example.backendkotlin.usecase.ListVillagesUseCase
 import com.ninjasquad.springmockk.MockkBean
 import io.grpc.Status
@@ -30,6 +35,9 @@ class VillageGrpcServiceUT(
     private val listVillagesUseCase: ListVillagesUseCase,
     @MockkBean
     private val createVillageUseCase: CreateVillageUseCase,
+
+    @MockkBean
+    private val enterVillageUseCase: EnterVillageUseCase,
 ) : DescribeSpec() {
     @InjectMockKs
     private lateinit var service: VillageGrpcService
@@ -43,6 +51,7 @@ class VillageGrpcServiceUT(
         confirmVerified(
             listVillagesUseCase,
             createVillageUseCase,
+            enterVillageUseCase,
         )
     }
 
@@ -274,6 +283,155 @@ class VillageGrpcServiceUT(
                 e.status shouldBe Status.UNKNOWN
                 verify(exactly = 1) { listVillagesUseCase.invoke() }
                 verify(exactly = 0) { spiedResponseObserver.onCompleted() }
+            }
+        }
+
+        this.describe("enterVillage") {
+            context("正常系") {
+                it("村にログインできる") {
+                    // given:
+                    val request = EnterVillageRequest.newBuilder()
+                        .setVillageId("村ID")
+                        .setVillagePassword("password")
+                        .setUserName("ユーザー名")
+                        .setUserPassword("password")
+                        .build()
+
+                    val expected = Pair(UserId.generate(), VillageId.generate())
+                    every {
+                        enterVillageUseCase.invoke(
+                            villageIdString = "村ID",
+                            villagePassword = "password",
+                            userName = "ユーザー名",
+                            userPassword = "password",
+                        )
+                    } returns expected
+
+                    val spiedResponseObserver = object : StreamObserver<EnterVillageResponse> {
+                        override fun onNext(value: EnterVillageResponse) {
+                            value.userId shouldBe expected.first.value.toString()
+                            value.villageId shouldBe expected.second.value.toString()
+                        }
+
+                        override fun onError(t: Throwable) {
+                            // do nothing
+                        }
+
+                        override fun onCompleted() {
+                            // do nothing
+                        }
+                    }.let { spyk(it) }
+
+                    // when:
+                    service.enterVillage(request, spiedResponseObserver)
+
+                    // then:
+                    verify(exactly = 1) {
+                        enterVillageUseCase.invoke(
+                            villageIdString = "村ID",
+                            villagePassword = "password",
+                            userName = "ユーザー名",
+                            userPassword = "password",
+                        )
+                        spiedResponseObserver.onCompleted()
+                    }
+                }
+            }
+            context("異常系") {
+                it("村情報が誤っていたらログインできない") {
+                    // given:
+                    val request = EnterVillageRequest.newBuilder()
+                        .setVillageId("村ID")
+                        .setVillagePassword("password")
+                        .setUserName("ユーザー名")
+                        .setUserPassword("password")
+                        .build()
+
+                    every {
+                        enterVillageUseCase.invoke(
+                            villageIdString = "村ID",
+                            villagePassword = "password",
+                            userName = "ユーザー名",
+                            userPassword = "password",
+                        )
+                    } throws IllegalArgumentException("村IDまたはパスワードが間違っています")
+
+                    val spiedResponseObserver = object : StreamObserver<EnterVillageResponse> {
+                        override fun onNext(value: EnterVillageResponse) {
+                            // do nothing
+                        }
+
+                        override fun onError(t: Throwable) {
+                            // do nothing
+                            t.message shouldBe "INVALID_ARGUMENT: You mistake the village ID or password."
+                        }
+
+                        override fun onCompleted() {
+                            // do nothing
+                        }
+                    }.let { spyk(it) }
+
+                    // when:
+                    service.enterVillage(request, spiedResponseObserver)
+
+                    // then:
+                    verify(exactly = 1) {
+                        enterVillageUseCase.invoke(
+                            villageIdString = "村ID",
+                            villagePassword = "password",
+                            userName = "ユーザー名",
+                            userPassword = "password",
+                        )
+                    }
+                    verify(exactly = 0) { spiedResponseObserver.onCompleted() }
+                }
+                it("usecase 層でエラーが発生") {
+                    // given:
+                    val request = EnterVillageRequest.newBuilder()
+                        .setVillageId("村ID")
+                        .setVillagePassword("password")
+                        .setUserName("ユーザー名")
+                        .setUserPassword("password")
+                        .build()
+
+                    every {
+                        enterVillageUseCase.invoke(
+                            villageIdString = "村ID",
+                            villagePassword = "password",
+                            userName = "ユーザー名",
+                            userPassword = "password",
+                        )
+                    } throws Status.UNKNOWN.asRuntimeException()
+
+                    val spiedResponseObserver = object : StreamObserver<EnterVillageResponse> {
+                        override fun onNext(value: EnterVillageResponse) {
+                            // do nothing
+                        }
+
+                        override fun onError(t: Throwable) {
+                            // do nothing
+                        }
+
+                        override fun onCompleted() {
+                            // do nothing
+                        }
+                    }.let { spyk(it) }
+
+                    // when:
+                    val e = shouldThrow<StatusRuntimeException> { service.enterVillage(request, spiedResponseObserver) }
+
+                    // then:
+                    e.status shouldBe Status.UNKNOWN
+                    verify(exactly = 1) {
+                        enterVillageUseCase.invoke(
+                            villageIdString = "村ID",
+                            villagePassword = "password",
+                            userName = "ユーザー名",
+                            userPassword = "password",
+                        )
+                    }
+                    verify(exactly = 0) { spiedResponseObserver.onCompleted() }
+                }
             }
         }
     }
