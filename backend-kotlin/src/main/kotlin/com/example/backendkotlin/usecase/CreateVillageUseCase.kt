@@ -1,6 +1,6 @@
 package com.example.backendkotlin.usecase
 
-import com.example.backendkotlin.domain.HashedPasswordWithRandomSalt
+import com.example.backendkotlin.domain.HashedPassword
 import com.example.backendkotlin.domain.RUserVillageRepository
 import com.example.backendkotlin.domain.User
 import com.example.backendkotlin.domain.UserId
@@ -80,12 +80,12 @@ class CreateVillageUseCase(
             gameMasterUserId = createdGameMaster.id,
         )
         // パスワードの暗号化
-        val passwordWithRandomSalt = HashedPasswordWithRandomSalt.create(villagePassword)
+        val hashedPassword = HashedPassword.create(villagePassword)
 
         // DBに保存
         val createdVillage = villageRepository.createVillage(
             village = newVillage,
-            hashedPasswordWithRandomSalt = passwordWithRandomSalt,
+            hashedPassword = hashedPassword,
         )
 
         // ユーザーと村の紐付け

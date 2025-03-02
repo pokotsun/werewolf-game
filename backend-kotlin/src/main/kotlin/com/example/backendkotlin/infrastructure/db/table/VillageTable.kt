@@ -7,7 +7,6 @@ import org.jetbrains.exposed.sql.kotlin.datetime.datetime
 
 object VillageTable : UUIDTable("village") {
     val name = varchar("name", length = 255)
-    val salt = varchar("salt", length = 255)
     val passwordHash = varchar("password_hash", length = 255)
     val citizenCount = integer("citizen_count")
     val werewolfCount = integer("werewolf_count")

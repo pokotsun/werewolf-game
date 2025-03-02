@@ -1,5 +1,6 @@
 package com.example.backendkotlin.infrastracture.db
 
+import com.example.backendkotlin.domain.HashedPassword
 import com.example.backendkotlin.domain.User
 import com.example.backendkotlin.domain.UserId
 import com.example.backendkotlin.domain.Village
@@ -49,12 +50,11 @@ class RUserRepositoryImplIT(
                         .create()
 
                     val expected = Pair(userId, villageId)
-                    val saltInput = "salt"
-                    val hashedPassword = "hashedPassword"
+                    val hashedPassword = Instancio.create(HashedPassword::class.java)
 
                     // and
                     UserRecord(user).insert()
-                    VillageRecord(village, saltInput, hashedPassword).insert()
+                    VillageRecord(village, hashedPassword).insert()
 
                     // when
                     val actual = rUserVillageRepository.save(userId, villageId)
@@ -85,12 +85,11 @@ class RUserRepositoryImplIT(
                         .set(KSelect.field(Village::gameMasterUserId), userId)
                         .create()
 
-                    val saltInput = "salt"
-                    val hashedPassword = "hashedPassword"
+                    val hashedPassword = Instancio.create(HashedPassword::class.java)
 
                     // and
                     UserRecord(user).insert()
-                    VillageRecord(village, saltInput, hashedPassword).insert()
+                    VillageRecord(village, hashedPassword).insert()
 
                     // and
                     shouldNotThrowAny { rUserVillageRepository.save(userId, villageId) }
@@ -121,13 +120,12 @@ class RUserRepositoryImplIT(
                         .set(KSelect.field(Village::gameMasterUserId), userId)
                         .create()
 
-                    val saltInput = "salt"
-                    val hashedPassword = "hashedPassword"
+                    val hashedPassword = Instancio.create(HashedPassword::class.java)
                     val anotherUserId = Instancio.create(UserId::class.java)
 
                     // and
                     UserRecord(user).insert()
-                    VillageRecord(village, saltInput, hashedPassword).insert()
+                    VillageRecord(village, hashedPassword).insert()
 
                     // when, then
                     shouldThrowExactly<ExposedSQLException> {
