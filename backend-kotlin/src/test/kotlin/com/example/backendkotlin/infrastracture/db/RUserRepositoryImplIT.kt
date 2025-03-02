@@ -35,6 +35,7 @@ class RUserRepositoryImplIT(
                         .set(KSelect.field(User::id), userId)
                         .set(KSelect.field(User::isActive), true)
                         .create()
+                    val userHashedPassword = Instancio.create(HashedPassword::class.java)
 
                     val villageId = Instancio.create(VillageId::class.java)
                     val village = Instancio.of(Village::class.java)
@@ -50,11 +51,11 @@ class RUserRepositoryImplIT(
                         .create()
 
                     val expected = Pair(userId, villageId)
-                    val hashedPassword = Instancio.create(HashedPassword::class.java)
+                    val villageHashedPassword = Instancio.create(HashedPassword::class.java)
 
                     // and
-                    UserRecord(user).insert()
-                    VillageRecord(village, hashedPassword).insert()
+                    UserRecord(user, userHashedPassword).insert()
+                    VillageRecord(village, villageHashedPassword).insert()
 
                     // when
                     val actual = rUserVillageRepository.save(userId, villageId)
@@ -71,6 +72,7 @@ class RUserRepositoryImplIT(
                         .set(KSelect.field(User::id), userId)
                         .set(KSelect.field(User::isActive), true)
                         .create()
+                    val userHashedPassword = Instancio.create(HashedPassword::class.java)
 
                     val villageId = Instancio.create(VillageId::class.java)
                     val village = Instancio.of(Village::class.java)
@@ -85,11 +87,11 @@ class RUserRepositoryImplIT(
                         .set(KSelect.field(Village::gameMasterUserId), userId)
                         .create()
 
-                    val hashedPassword = Instancio.create(HashedPassword::class.java)
+                    val villageHashedPassword = Instancio.create(HashedPassword::class.java)
 
                     // and
-                    UserRecord(user).insert()
-                    VillageRecord(village, hashedPassword).insert()
+                    UserRecord(user, userHashedPassword).insert()
+                    VillageRecord(village, villageHashedPassword).insert()
 
                     // and
                     shouldNotThrowAny { rUserVillageRepository.save(userId, villageId) }
@@ -106,6 +108,7 @@ class RUserRepositoryImplIT(
                         .set(KSelect.field(User::id), userId)
                         .set(KSelect.field(User::isActive), true)
                         .create()
+                    val userHashedPassword = Instancio.create(HashedPassword::class.java)
 
                     val villageId = Instancio.create(VillageId::class.java)
                     val village = Instancio.of(Village::class.java)
@@ -120,12 +123,12 @@ class RUserRepositoryImplIT(
                         .set(KSelect.field(Village::gameMasterUserId), userId)
                         .create()
 
-                    val hashedPassword = Instancio.create(HashedPassword::class.java)
+                    val villageHashedPassword = Instancio.create(HashedPassword::class.java)
                     val anotherUserId = Instancio.create(UserId::class.java)
 
                     // and
-                    UserRecord(user).insert()
-                    VillageRecord(village, hashedPassword).insert()
+                    UserRecord(user, userHashedPassword).insert()
+                    VillageRecord(village, villageHashedPassword).insert()
 
                     // when, then
                     shouldThrowExactly<ExposedSQLException> {
@@ -139,11 +142,12 @@ class RUserRepositoryImplIT(
                         .set(KSelect.field(User::id), userId)
                         .set(KSelect.field(User::isActive), true)
                         .create()
+                    val userHashedPassword = Instancio.create(HashedPassword::class.java)
 
                     val villageId = Instancio.create(VillageId::class.java)
 
                     // and
-                    UserRecord(user).insert()
+                    UserRecord(user, userHashedPassword).insert()
 
                     // when, then
                     shouldThrowExactly<ExposedSQLException> {

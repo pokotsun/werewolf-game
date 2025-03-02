@@ -11,5 +11,5 @@ interface UserRepository {
      *
      * @return 作成したユーザ
      */
-    fun createUser(user: User): User
+    fun createUser(user: User, hashedPassword: HashedPassword): User
 }

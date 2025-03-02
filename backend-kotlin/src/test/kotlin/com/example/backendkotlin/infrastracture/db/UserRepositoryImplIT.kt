@@ -1,5 +1,6 @@
 package com.example.backendkotlin.infrastracture.db
 
+import com.example.backendkotlin.domain.HashedPassword
 import com.example.backendkotlin.domain.User
 import com.example.backendkotlin.domain.UserId
 import com.example.backendkotlin.infrastructure.db.UserRepositoryImpl
@@ -26,9 +27,10 @@ class UserRepositoryImplIT(
                 it("ユーザが作成される") {
                     // given
                     val user = Instancio.create(User::class.java)
+                    val hashedPassword = Instancio.create(HashedPassword::class.java)
 
                     // when
-                    val createdUser = userRepository.createUser(user)
+                    val createdUser = userRepository.createUser(user, hashedPassword)
 
                     // then
                     createdUser shouldBe user
@@ -42,15 +44,17 @@ class UserRepositoryImplIT(
                         .set(KSelect.field(User::id), sameUserId)
                         .set(KSelect.field(User::isActive), true)
                         .create()
+                    val user1HashedPassword = Instancio.create(HashedPassword::class.java)
                     val user2 = Instancio.of(User::class.java)
                         .set(KSelect.field(User::id), sameUserId)
                         .set(KSelect.field(User::isActive), true)
                         .create()
+                    val user2HashedPassword = Instancio.create(HashedPassword::class.java)
 
                     // when
-                    shouldNotThrowAny { userRepository.createUser(user1) }
+                    shouldNotThrowAny { userRepository.createUser(user1, user1HashedPassword) }
                     shouldThrow<ExposedSQLException> {
-                        userRepository.createUser(user2)
+                        userRepository.createUser(user2, user2HashedPassword)
                     }
                 }
             }
