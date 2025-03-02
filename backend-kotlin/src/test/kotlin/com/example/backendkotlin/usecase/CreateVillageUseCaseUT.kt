@@ -10,7 +10,7 @@ import com.example.backendkotlin.domain.VillageId
 import com.example.backendkotlin.domain.VillageRepository
 import com.example.backendkotlin.util.KSelect
 import com.ninjasquad.springmockk.MockkBean
-import io.kotest.core.Tuple2
+import io.kotest.core.spec.Spec
 import io.kotest.core.spec.style.DescribeSpec
 import io.kotest.core.test.TestCase
 import io.kotest.core.test.TestResult
@@ -40,11 +40,15 @@ class CreateVillageUseCaseUT(
     @InjectMockKs
     private lateinit var target: CreateVillageUseCase
 
-    override suspend fun beforeTest(testCase: TestCase) {
+    override suspend fun beforeSpec(spec: Spec) {
         mockkObject(UserId, VillageId, HashedPassword)
     }
 
-    override fun afterTest(f: suspend (Tuple2<TestCase, TestResult>) -> Unit) {
+    override suspend fun afterSpec(spec: Spec) {
+        unmockkObject(UserId, VillageId, HashedPassword)
+    }
+
+    override suspend fun afterTest(testCase: TestCase, result: TestResult) {
         // テスト後にMockの挙動を初期化する
         confirmVerified(
             villageRepository,
@@ -52,7 +56,6 @@ class CreateVillageUseCaseUT(
             rUserVillageRepository,
         )
         clearAllMocks()
-        unmockkObject(UserId, VillageId, HashedPassword)
     }
 
     init {

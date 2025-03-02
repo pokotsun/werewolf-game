@@ -5,7 +5,6 @@ import com.example.backendkotlin.domain.Village
 import com.example.backendkotlin.domain.VillageRepository
 import com.example.backendkotlin.util.KSelect
 import com.ninjasquad.springmockk.MockkBean
-import io.kotest.core.Tuple2
 import io.kotest.core.spec.style.DescribeSpec
 import io.kotest.core.test.TestCase
 import io.kotest.core.test.TestResult
@@ -27,7 +26,7 @@ class ListVillagesUseCaseUT(
     @InjectMockKs
     private lateinit var target: ListVillagesUseCase
 
-    override fun afterTest(f: suspend (Tuple2<TestCase, TestResult>) -> Unit) {
+    override suspend fun afterTest(testCase: TestCase, result: TestResult) {
         // テスト後にMockの挙動を初期化する
         confirmVerified(villageRepository)
         clearAllMocks()

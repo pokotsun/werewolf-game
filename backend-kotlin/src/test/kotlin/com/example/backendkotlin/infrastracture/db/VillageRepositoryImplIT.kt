@@ -14,6 +14,7 @@ import io.kotest.assertions.throwables.shouldNotThrowAny
 import io.kotest.assertions.throwables.shouldThrowExactly
 import io.kotest.matchers.collections.shouldBeEmpty
 import io.kotest.matchers.collections.shouldContainExactlyInAnyOrder
+import io.kotest.matchers.shouldBe
 import org.instancio.Instancio
 import org.jetbrains.exposed.exceptions.ExposedSQLException
 import org.springframework.boot.test.context.SpringBootTest
@@ -161,6 +162,56 @@ class VillageRepositoryImplIT(
 
                     // then
                     actual.shouldContainExactlyInAnyOrder(expected)
+                }
+            }
+        }
+
+        this.describe("SelectVillageById") {
+            context("正常系") {
+                it("指定したidの村が取得できる") {
+                    // given
+                    val gameMaster = Instancio.of(User::class.java)
+                        .set(KSelect.field(User::isActive), true)
+                        .create()
+                    val gameMasterHashedPassword = Instancio.create(HashedPassword::class.java)
+                    val villageId = Instancio.create(VillageId::class.java)
+                    val village = Instancio.of(Village::class.java)
+                        .set(KSelect.field(Village::id), villageId)
+                        .set(KSelect.field(Village::citizenCount), 10)
+                        .set(KSelect.field(Village::werewolfCount), 2)
+                        .set(KSelect.field(Village::fortuneTellerCount), 1)
+                        .set(KSelect.field(Village::knightCount), 1)
+                        .set(KSelect.field(Village::psychicCount), 1)
+                        .set(KSelect.field(Village::madmanCount), 1)
+                        .set(KSelect.field(Village::isInitialActionActive), false)
+                        .set(KSelect.field(Village::gameMasterUserId), gameMaster.id)
+                        .set(KSelect.field(Village::currentUserNumber), 1)
+                        .set(KSelect.field(Village::isRecruited), true)
+                        .create()
+                    val villageHashedPassword = Instancio.create(HashedPassword::class.java)
+
+                    // and
+                    UserRecord(gameMaster, gameMasterHashedPassword).insert()
+                    VillageRecord(village, villageHashedPassword).insert()
+                    RUserVillageRecord(gameMaster.id, village.id).insert()
+
+                    // when
+                    val actual = villageRepository.selectVillageById(village.id)
+
+                    // then
+                    actual shouldBe Pair(village, villageHashedPassword)
+                }
+            }
+            context("異常系") {
+                it("指定したidの村が存在しない場合はnullが返却される") {
+                    // given
+                    val villageId = Instancio.create(VillageId::class.java)
+
+                    // when
+                    val actual = villageRepository.selectVillageById(villageId)
+
+                    // then
+                    actual shouldBe null
                 }
             }
         }

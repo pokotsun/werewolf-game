@@ -27,7 +27,7 @@ class VillageGrpcService(
     private val createVillageUseCase: CreateVillageUseCase,
     private val getCurrentVillageUsersUseCase: GetCurrentVillageUsersUseCase,
     private val enterVillageUseCase: EnterVillageUseCase,
-) : VillageServiceGrpc.VillageServiceImplBase() {
+) : VillageServiceGrpc.VillageServiceImplBase(), GrpcServiceExceptionHandler {
     /**
      * 村を作成する
      *
@@ -120,24 +120,23 @@ class VillageGrpcService(
      * @return 村、ユーザー情報
      */
     override fun enterVillage(request: EnterVillageRequest, responseObserver: StreamObserver<EnterVillageResponse>) {
-        // Todo: ユーザーが村に参加する処理を実装する
-        val result = enterVillageUseCase.invoke(
-            villageIdString = request.villageId,
-            villagePassword = request.villagePassword,
-            userName = request.userName,
-            userPassword = request.userPassword,
-        )
-
-        // レスポンスを作成
-        val enterVillageResponse = result.let { (villageId, userId) ->
-            EnterVillageResponse.newBuilder()
-                .setVillageId(villageId.value.toString())
-                .setUserId(userId.value.toString())
+        handleException(responseObserver = responseObserver) {
+            // 村に参加
+            val result = enterVillageUseCase.invoke(
+                villageIdString = request.villageId,
+                villagePassword = request.villagePassword,
+                userName = request.userName,
+                userPassword = request.userPassword,
+            )
+            // レスポンスを作成
+            val enterVillageResponse = EnterVillageResponse.newBuilder()
+                .setUserId(result.first.value.toString())
+                .setVillageId(result.second.value.toString())
                 .build()
-        }
-        responseObserver.let { r ->
-            r.onNext(enterVillageResponse)
-            r.onCompleted()
+            responseObserver.let { r ->
+                r.onNext(enterVillageResponse)
+                r.onCompleted()
+            }
         }
     }
 
