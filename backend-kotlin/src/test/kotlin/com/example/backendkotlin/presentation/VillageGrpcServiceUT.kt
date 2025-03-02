@@ -1,14 +1,19 @@
 package com.example.backendkotlin.presentation
 
 import com.example.backendkotlin.domain.User
+import com.example.backendkotlin.domain.UserId
 import com.example.backendkotlin.domain.Village
+import com.example.backendkotlin.domain.VillageId
 import com.example.backendkotlin.generated.grpc.CreateVillageRequest
 import com.example.backendkotlin.generated.grpc.CreateVillageResponse
+import com.example.backendkotlin.generated.grpc.EnterVillageRequest
+import com.example.backendkotlin.generated.grpc.EnterVillageResponse
 import com.example.backendkotlin.generated.grpc.GetCurrentVillageUsersRequest
 import com.example.backendkotlin.generated.grpc.GetCurrentVillageUsersResponse
 import com.example.backendkotlin.generated.grpc.ListVillagesRequest
 import com.example.backendkotlin.generated.grpc.ListVillagesResponse
 import com.example.backendkotlin.usecase.CreateVillageUseCase
+import com.example.backendkotlin.usecase.EnterVillageUseCase
 import com.example.backendkotlin.usecase.GetCurrentVillageUsersUseCase
 import com.example.backendkotlin.usecase.ListVillagesUseCase
 import com.ninjasquad.springmockk.MockkBean
@@ -36,6 +41,8 @@ class VillageGrpcServiceUT(
     private val createVillageUseCase: CreateVillageUseCase,
     @MockkBean
     private val getCurrentVillageUsersUseCase: GetCurrentVillageUsersUseCase,
+    @MockkBean
+    private val enterVillageUseCase: EnterVillageUseCase,
 ) : DescribeSpec() {
     @InjectMockKs
     private lateinit var service: VillageGrpcService
@@ -49,6 +56,7 @@ class VillageGrpcServiceUT(
         confirmVerified(
             listVillagesUseCase,
             createVillageUseCase,
+            enterVillageUseCase,
         )
     }
 
@@ -342,6 +350,57 @@ class VillageGrpcServiceUT(
                         userIdString = "1",
                         userIdPassword = "password",
                     )
+                }
+            }
+        }
+
+        this.describe("enterVillage") {
+            it("正常系") {
+                // given:
+                val request = EnterVillageRequest.newBuilder()
+                    .setVillageId("村ID")
+                    .setVillagePassword("password")
+                    .setUserName("ユーザー名")
+                    .setUserPassword("password")
+                    .build()
+
+                val expected = Pair(VillageId.generate(), UserId.generate())
+                every {
+                    enterVillageUseCase.invoke(
+                        villageIdString = "村ID",
+                        villagePassword = "password",
+                        userName = "ユーザー名",
+                        userPassword = "password",
+                    )
+                } returns expected
+
+                val spiedResponseObserver = object : StreamObserver<EnterVillageResponse> {
+                    override fun onNext(value: EnterVillageResponse) {
+                        value.villageId shouldBe expected.first.value.toString()
+                        value.userId shouldBe expected.second.value.toString()
+                    }
+
+                    override fun onError(t: Throwable) {
+                        // do nothing
+                    }
+
+                    override fun onCompleted() {
+                        // do nothing
+                    }
+                }.let { spyk(it) }
+
+                // when:
+                service.enterVillage(request, spiedResponseObserver)
+
+                // then:
+                verify(exactly = 1) {
+                    enterVillageUseCase.invoke(
+                        villageIdString = "村ID",
+                        villagePassword = "password",
+                        userName = "ユーザー名",
+                        userPassword = "password",
+                    )
+                    spiedResponseObserver.onCompleted()
                 }
             }
         }
