@@ -69,44 +69,45 @@ public final class VillageServiceProto {
       descriptor;
   static {
     java.lang.String[] descriptorData = {
-      "\n\023proto/village.proto\022\007village\"\202\002\n\024Creat" +
+      "\n\023proto/village.proto\022\007village\"\240\002\n\024Creat" +
       "eVillageRequest\022\014\n\004name\030\001 \001(\t\022\025\n\rcitizen" +
       "_count\030\002 \001(\005\022\026\n\016werewolf_count\030\003 \001(\005\022\034\n\024" +
       "fortune_teller_count\030\004 \001(\005\022\024\n\014knight_cou" +
       "nt\030\005 \001(\005\022\025\n\rpsychic_count\030\006 \001(\005\022\024\n\014madma" +
       "n_count\030\007 \001(\005\022 \n\030is_initial_action_activ" +
       "e\030\010 \001(\010\022\020\n\010password\030\t \001(\t\022\030\n\020game_master" +
-      "_name\030\n \001(\t\"\262\002\n\025CreateVillageResponse\022\n\n" +
-      "\002id\030\001 \001(\t\022\014\n\004name\030\002 \001(\t\022\023\n\013user_number\030\003" +
-      " \001(\005\022\025\n\rcitizen_count\030\004 \001(\005\022\026\n\016werewolf_" +
-      "count\030\005 \001(\005\022\034\n\024fortune_teller_count\030\006 \001(" +
-      "\005\022\024\n\014knight_count\030\007 \001(\005\022\025\n\rpsychic_count" +
-      "\030\010 \001(\005\022\024\n\014madman_count\030\t \001(\005\022 \n\030is_initi" +
-      "al_action_active\030\n \001(\010\022\033\n\023game_master_us" +
-      "er_id\030\013 \001(\t\022\033\n\023current_user_number\030\014 \001(\005" +
-      "\"\025\n\023ListVillagesRequest\"B\n\024ListVillagesR" +
-      "esponse\022*\n\010villages\030\001 \003(\0132\030.village.Vill" +
-      "ageResponse\"\217\002\n\017VillageResponse\022\n\n\002id\030\001 " +
-      "\001(\t\022\014\n\004name\030\002 \001(\t\022\023\n\013user_number\030\003 \001(\005\022\025" +
-      "\n\rcitizen_count\030\004 \001(\005\022\026\n\016werewolf_count\030" +
-      "\005 \001(\005\022\034\n\024fortune_teller_count\030\006 \001(\005\022\024\n\014k" +
-      "night_count\030\007 \001(\005\022\025\n\rpsychic_count\030\010 \001(\005" +
-      "\022\024\n\014madman_count\030\t \001(\005\022 \n\030is_initial_act" +
-      "ion_active\030\n \001(\010\022\033\n\023current_user_number\030" +
-      "\013 \001(\005\"m\n\023EnterVillageRequest\022\022\n\nvillage_" +
-      "id\030\001 \001(\t\022\030\n\020village_password\030\002 \001(\t\022\021\n\tus" +
-      "er_name\030\003 \001(\t\022\025\n\ruser_password\030\004 \001(\t\";\n\024" +
-      "EnterVillageResponse\022\022\n\nvillage_id\030\001 \001(\t" +
-      "\022\017\n\007user_id\030\002 \001(\t2\372\001\n\016VillageService\022N\n\r" +
-      "CreateVillage\022\035.village.CreateVillageReq" +
-      "uest\032\036.village.CreateVillageResponse\022K\n\014" +
-      "ListVillages\022\034.village.ListVillagesReque" +
-      "st\032\035.village.ListVillagesResponse\022K\n\014Ent" +
-      "erVillage\022\034.village.EnterVillageRequest\032" +
-      "\035.village.EnterVillageResponseBl\n(com.ex" +
-      "ample.backendkotlin.generated.grpcB\023Vill" +
-      "ageServiceProtoP\001Z)github.com/pokotsun/w" +
-      "erewolf/grpc/villageb\006proto3"
+      "_name\030\n \001(\t\022\034\n\024game_master_password\030\013 \001(" +
+      "\t\"\262\002\n\025CreateVillageResponse\022\n\n\002id\030\001 \001(\t\022" +
+      "\014\n\004name\030\002 \001(\t\022\023\n\013user_number\030\003 \001(\005\022\025\n\rci" +
+      "tizen_count\030\004 \001(\005\022\026\n\016werewolf_count\030\005 \001(" +
+      "\005\022\034\n\024fortune_teller_count\030\006 \001(\005\022\024\n\014knigh" +
+      "t_count\030\007 \001(\005\022\025\n\rpsychic_count\030\010 \001(\005\022\024\n\014" +
+      "madman_count\030\t \001(\005\022 \n\030is_initial_action_" +
+      "active\030\n \001(\010\022\033\n\023game_master_user_id\030\013 \001(" +
+      "\t\022\033\n\023current_user_number\030\014 \001(\005\"\025\n\023ListVi" +
+      "llagesRequest\"B\n\024ListVillagesResponse\022*\n" +
+      "\010villages\030\001 \003(\0132\030.village.VillageRespons" +
+      "e\"\217\002\n\017VillageResponse\022\n\n\002id\030\001 \001(\t\022\014\n\004nam" +
+      "e\030\002 \001(\t\022\023\n\013user_number\030\003 \001(\005\022\025\n\rcitizen_" +
+      "count\030\004 \001(\005\022\026\n\016werewolf_count\030\005 \001(\005\022\034\n\024f" +
+      "ortune_teller_count\030\006 \001(\005\022\024\n\014knight_coun" +
+      "t\030\007 \001(\005\022\025\n\rpsychic_count\030\010 \001(\005\022\024\n\014madman" +
+      "_count\030\t \001(\005\022 \n\030is_initial_action_active" +
+      "\030\n \001(\010\022\033\n\023current_user_number\030\013 \001(\005\"m\n\023E" +
+      "nterVillageRequest\022\022\n\nvillage_id\030\001 \001(\t\022\030" +
+      "\n\020village_password\030\002 \001(\t\022\021\n\tuser_name\030\003 " +
+      "\001(\t\022\025\n\ruser_password\030\004 \001(\t\";\n\024EnterVilla" +
+      "geResponse\022\022\n\nvillage_id\030\001 \001(\t\022\017\n\007user_i" +
+      "d\030\002 \001(\t2\372\001\n\016VillageService\022N\n\rCreateVill" +
+      "age\022\035.village.CreateVillageRequest\032\036.vil" +
+      "lage.CreateVillageResponse\022K\n\014ListVillag" +
+      "es\022\034.village.ListVillagesRequest\032\035.villa" +
+      "ge.ListVillagesResponse\022K\n\014EnterVillage\022" +
+      "\034.village.EnterVillageRequest\032\035.village." +
+      "EnterVillageResponseBl\n(com.example.back" +
+      "endkotlin.generated.grpcB\023VillageService" +
+      "ProtoP\001Z)github.com/pokotsun/werewolf/gr" +
+      "pc/villageb\006proto3"
     };
     descriptor = com.google.protobuf.Descriptors.FileDescriptor
       .internalBuildGeneratedFileFrom(descriptorData,
@@ -117,7 +118,7 @@ public final class VillageServiceProto {
     internal_static_village_CreateVillageRequest_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessage.FieldAccessorTable(
         internal_static_village_CreateVillageRequest_descriptor,
-        new java.lang.String[] { "Name", "CitizenCount", "WerewolfCount", "FortuneTellerCount", "KnightCount", "PsychicCount", "MadmanCount", "IsInitialActionActive", "Password", "GameMasterName", });
+        new java.lang.String[] { "Name", "CitizenCount", "WerewolfCount", "FortuneTellerCount", "KnightCount", "PsychicCount", "MadmanCount", "IsInitialActionActive", "Password", "GameMasterName", "GameMasterPassword", });
     internal_static_village_CreateVillageResponse_descriptor =
       getDescriptor().getMessageTypes().get(1);
     internal_static_village_CreateVillageResponse_fieldAccessorTable = new
