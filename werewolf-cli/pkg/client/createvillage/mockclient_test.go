@@ -10,6 +10,9 @@ func TestSuccess(t *testing.T) {
 	mockVillageCreator := MockVillageCreator{}
 
 	name := "TestVillage"
+	password := "password"
+	gameMasterName := "GameMaster"
+	gameMasterPassword := "GameMasterPassword"
 	req := CreateVillageRequest{
 		Name:                  &name,
 		CitizenCount:          10,
@@ -19,6 +22,9 @@ func TestSuccess(t *testing.T) {
 		PsychicCount:          1,
 		MadmanCount:           1,
 		IsInitialActionActive: true,
+		Password:              &password,
+		GameMasterName:        &gameMasterName,
+		GameMasterPassword:    &gameMasterPassword,
 	}
 
 	// when:
@@ -26,7 +32,7 @@ func TestSuccess(t *testing.T) {
 
 	// then:
 	assert.Equal(t, nil, err)
-	assert.Equal(t, "fa7f219efc9db23ca1611b50ff29d5e56de5920fd756669bb519622ada3a995f", *actual.Id)
+	assert.Equal(t, "ffd8a8822eddbac951b1ece03fcbd3623c56d8d8d532aa945dd9970406cf1efd", *actual.Id)
 	assert.Equal(t, *req.Name, *actual.Name)
 	assert.Equal(t, req.CitizenCount, actual.CitizenCount)
 	assert.Equal(t, req.WerewolfCount, actual.WerewolfCount)

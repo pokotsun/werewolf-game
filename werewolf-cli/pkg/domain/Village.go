@@ -10,4 +10,5 @@ type Village struct {
 	PsychicCount          int32
 	MadmanCount           int32
 	IsInitialActionActive bool
+	CurrentUserNumber     int32
 }

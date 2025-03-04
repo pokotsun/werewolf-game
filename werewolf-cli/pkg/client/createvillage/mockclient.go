@@ -28,5 +28,6 @@ func (m *MockVillageCreator) createVillage(request CreateVillageRequest) (*domai
 		PsychicCount:          request.PsychicCount,
 		MadmanCount:           request.MadmanCount,
 		IsInitialActionActive: request.IsInitialActionActive,
+		CurrentUserNumber:     1,
 	}, nil
 }
