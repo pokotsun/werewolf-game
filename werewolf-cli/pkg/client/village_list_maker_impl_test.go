@@ -1,15 +1,19 @@
-package main
+//go:build integration
+// +build integration
+
+package client
 
 import (
 	"context"
-	"github.com/pokotsun/werewolf-game/pkg/grpc/github.com/pokotsun/werewolf/grpc/village"
-	_ "github.com/pokotsun/werewolf-game/pkg/grpc/github.com/pokotsun/werewolf/grpc/village"
+	"github.com/stretchr/testify/assert"
 	"google.golang.org/grpc"
 	"log"
+	"testing"
 	"time"
 )
 
-func main() {
+func TestSuccessOnVillageListMakerServerIntegration(t *testing.T) {
+	// given:
 	// コンテキストを作成し、タイムアウトを設定
 	ctx, cancel := context.WithTimeout(context.Background(), time.Second*10)
 	defer cancel()
@@ -19,20 +23,21 @@ func main() {
 	if err != nil {
 		log.Fatalf("did not connect: %v", err)
 	}
-	defer conn.Close()
+	defer func(conn *grpc.ClientConn) {
+		err := conn.Close()
+		if err != nil {
+			log.Fatalf("could not close connection: %v", err)
+		}
+	}(conn)
 
-	// クライアントを作成
-	c := village.NewVillageServiceClient(conn)
+	client := NewWerewolfServerClient(&ctx, conn)
 
-	// リクエストを作成
-	req := &village.CreateVillageRequest{Name: "Test Village 1st", UserNumber: 7}
-
-	// サーバーにリクエストを送信
-	res, err := c.CreateVillage(ctx, req)
+	// when:
+	res, err := client.ListVillages()
 	if err != nil {
 		log.Fatalf("could not get village info: %v", err)
 	}
 
 	// レスポンスを表示
-	log.Printf("Village Info: %v", res)
+	assert.Equal(t, 4, len(res))
 }
