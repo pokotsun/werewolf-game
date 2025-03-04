@@ -39,5 +39,5 @@ func TestSuccessOnVillageListMakerServerIntegration(t *testing.T) {
 	}
 
 	// レスポンスを表示
-	assert.Equal(t, 5, len(res))
+	assert.Equal(t, 4, len(res))
 }

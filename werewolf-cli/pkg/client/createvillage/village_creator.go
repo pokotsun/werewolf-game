@@ -11,6 +11,9 @@ type CreateVillageRequest struct {
 	PsychicCount          int32
 	MadmanCount           int32
 	IsInitialActionActive bool
+	Password              *string
+	GameMasterName        *string
+	GameMasterPassword    *string
 }
 
 type VillageCreator interface {

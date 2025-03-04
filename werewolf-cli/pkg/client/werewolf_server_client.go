@@ -24,10 +24,6 @@ func NewWerewolfServerClient(ctx *context.Context, conn *grpc.ClientConn) *Werew
 }
 
 func (c *WerewolfServerClient) CreateVillage(request client.CreateVillageRequest) (*domain.Village, error) {
-	isInitialActionActive := int32(1)
-	if !request.IsInitialActionActive {
-		isInitialActionActive = 0
-	}
 	req := village.CreateVillageRequest{
 		Name:                  *request.Name,
 		CitizenCount:          request.CitizenCount,
@@ -36,7 +32,10 @@ func (c *WerewolfServerClient) CreateVillage(request client.CreateVillageRequest
 		KnightCount:           request.KnightCount,
 		PsychicCount:          request.PsychicCount,
 		MadmanCount:           request.MadmanCount,
-		IsInitialActionActive: isInitialActionActive,
+		IsInitialActionActive: request.IsInitialActionActive,
+		Password:              *request.Password,
+		GameMasterName:        *request.GameMasterName,
+		GameMasterPassword:    *request.GameMasterPassword,
 	}
 
 	// サーバーにリクエストを送信
@@ -50,11 +49,13 @@ func (c *WerewolfServerClient) CreateVillage(request client.CreateVillageRequest
 		Id:                    &res.Id,
 		Name:                  &res.Name,
 		CitizenCount:          res.CitizenCount,
+		WerewolfCount:         res.WerewolfCount,
 		FortuneTellerCount:    request.FortuneTellerCount,
 		KnightCount:           request.KnightCount,
 		PsychicCount:          request.PsychicCount,
 		MadmanCount:           request.MadmanCount,
 		IsInitialActionActive: true,
+		CurrentUserNumber:     res.CurrentUserNumber,
 	}
 
 	return &response, nil
@@ -74,11 +75,13 @@ func (c *WerewolfServerClient) ListVillages() ([]*domain.Village, error) {
 			Id:                    &villageResponse.Id,
 			Name:                  &villageResponse.Name,
 			CitizenCount:          villageResponse.CitizenCount,
+			WerewolfCount:         villageResponse.WerewolfCount,
 			FortuneTellerCount:    villageResponse.FortuneTellerCount,
 			KnightCount:           villageResponse.KnightCount,
 			PsychicCount:          villageResponse.PsychicCount,
 			MadmanCount:           villageResponse.MadmanCount,
 			IsInitialActionActive: true,
+			CurrentUserNumber:     villageResponse.CurrentUserNumber,
 		}
 		targetList = append(targetList, &target)
 	}
