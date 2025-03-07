@@ -1,11 +1,18 @@
 package com.example.backendkotlin.presentation
 
+import com.example.backendkotlin.domain.UserId
 import com.example.backendkotlin.domain.Village
+import com.example.backendkotlin.domain.VillageId
+import com.example.backendkotlin.domain.WerewolfErrorCode
+import com.example.backendkotlin.domain.WerewolfException
 import com.example.backendkotlin.generated.grpc.CreateVillageRequest
 import com.example.backendkotlin.generated.grpc.CreateVillageResponse
+import com.example.backendkotlin.generated.grpc.EnterVillageRequest
+import com.example.backendkotlin.generated.grpc.EnterVillageResponse
 import com.example.backendkotlin.generated.grpc.ListVillagesRequest
 import com.example.backendkotlin.generated.grpc.ListVillagesResponse
 import com.example.backendkotlin.usecase.CreateVillageUseCase
+import com.example.backendkotlin.usecase.EnterVillageUseCase
 import com.example.backendkotlin.usecase.ListVillagesUseCase
 import com.ninjasquad.springmockk.MockkBean
 import io.grpc.Status
@@ -24,12 +31,16 @@ import io.mockk.impl.annotations.InjectMockKs
 import io.mockk.spyk
 import io.mockk.verify
 import org.instancio.Instancio
+import org.springframework.data.rest.webmvc.ResourceNotFoundException
 
 class VillageGrpcServiceUT(
     @MockkBean
     private val listVillagesUseCase: ListVillagesUseCase,
     @MockkBean
     private val createVillageUseCase: CreateVillageUseCase,
+
+    @MockkBean
+    private val enterVillageUseCase: EnterVillageUseCase,
 ) : DescribeSpec() {
     @InjectMockKs
     private lateinit var service: VillageGrpcService
@@ -43,6 +54,7 @@ class VillageGrpcServiceUT(
         confirmVerified(
             listVillagesUseCase,
             createVillageUseCase,
+            enterVillageUseCase,
         )
     }
 
@@ -274,6 +286,153 @@ class VillageGrpcServiceUT(
                 e.status shouldBe Status.UNKNOWN
                 verify(exactly = 1) { listVillagesUseCase.invoke() }
                 verify(exactly = 0) { spiedResponseObserver.onCompleted() }
+            }
+        }
+
+        this.describe("enterVillage") {
+            context("正常系") {
+                it("村にログインできる") {
+                    // given:
+                    val request = EnterVillageRequest.newBuilder()
+                        .setVillageId("村ID")
+                        .setVillagePassword("password")
+                        .setUserName("ユーザー名")
+                        .setUserPassword("password")
+                        .build()
+
+                    val expected = Pair(UserId.generate(), VillageId.generate())
+                    every {
+                        enterVillageUseCase.invoke(
+                            villageIdString = "村ID",
+                            villagePassword = "password",
+                            userName = "ユーザー名",
+                            userPassword = "password",
+                        )
+                    } returns expected
+
+                    val spiedResponseObserver = object : StreamObserver<EnterVillageResponse> {
+                        override fun onNext(value: EnterVillageResponse) {
+                            value.userId shouldBe expected.first.value.toString()
+                            value.villageId shouldBe expected.second.value.toString()
+                        }
+
+                        override fun onError(t: Throwable) {
+                            // do nothing
+                        }
+
+                        override fun onCompleted() {
+                            // do nothing
+                        }
+                    }.let { spyk(it) }
+
+                    // when:
+                    service.enterVillage(request, spiedResponseObserver)
+
+                    // then:
+                    verify(exactly = 1) {
+                        enterVillageUseCase.invoke(
+                            villageIdString = "村ID",
+                            villagePassword = "password",
+                            userName = "ユーザー名",
+                            userPassword = "password",
+                        )
+                        spiedResponseObserver.onCompleted()
+                    }
+                }
+            }
+            context("異常系") {
+                it("村IDが存在していなかったらNOT_FOUNDを返す") {
+                    // given:
+                    val request = EnterVillageRequest.newBuilder()
+                        .setVillageId("村ID")
+                        .setVillagePassword("password")
+                        .setUserName("ユーザー名")
+                        .setUserPassword("password")
+                        .build()
+
+                    every {
+                        enterVillageUseCase.invoke(
+                            villageIdString = "村ID",
+                            villagePassword = "password",
+                            userName = "ユーザー名",
+                            userPassword = "password",
+                        )
+                    } throws ResourceNotFoundException("村が存在しません")
+
+                    val spiedResponseObserver = object : StreamObserver<EnterVillageResponse> {
+                        override fun onNext(value: EnterVillageResponse) {
+                            // do nothing
+                        }
+
+                        override fun onError(t: Throwable) {
+                            t.message shouldBe "NOT_FOUND: The village does not exist"
+                        }
+
+                        override fun onCompleted() {
+                            // do nothing
+                        }
+                    }.let { spyk(it) }
+
+                    // when:
+                    service.enterVillage(request, spiedResponseObserver)
+
+                    // then:
+                    verify(exactly = 1) {
+                        enterVillageUseCase.invoke(
+                            villageIdString = "村ID",
+                            villagePassword = "password",
+                            userName = "ユーザー名",
+                            userPassword = "password",
+                        )
+                    }
+                    verify(exactly = 0) { spiedResponseObserver.onCompleted() }
+                }
+                it("村のパスワードが違う場合INVALID_ARGUMENTを返す") {
+                    // given:
+                    val request = EnterVillageRequest.newBuilder()
+                        .setVillageId("村ID")
+                        .setVillagePassword("password")
+                        .setUserName("ユーザー名")
+                        .setUserPassword("password")
+                        .build()
+
+                    every {
+                        enterVillageUseCase.invoke(
+                            villageIdString = "村ID",
+                            villagePassword = "password",
+                            userName = "ユーザー名",
+                            userPassword = "password",
+                        )
+                    } throws WerewolfException(WerewolfErrorCode.VILLAGE_PASSWORD_IS_WRONG, "村のパスワードが違います")
+
+                    val spiedResponseObserver = object : StreamObserver<EnterVillageResponse> {
+                        override fun onNext(value: EnterVillageResponse) {
+                            // do nothing
+                        }
+
+                        override fun onError(t: Throwable) {
+                            t.message shouldBe "INVALID_ARGUMENT: The village password is wrong"
+                        }
+
+                        override fun onCompleted() {
+                            // do nothing
+                        }
+                    }.let { spyk(it) }
+
+                    // when:
+                    service.enterVillage(request, spiedResponseObserver)
+
+                    // then:
+                    verify(exactly = 1) {
+                        enterVillageUseCase.invoke(
+                            villageIdString = "村ID",
+                            villagePassword = "password",
+                            userName = "ユーザー名",
+                            userPassword = "password",
+                        )
+                    }
+                    verify(exactly = 0) { spiedResponseObserver.onCompleted() }
+                }
             }
         }
     }

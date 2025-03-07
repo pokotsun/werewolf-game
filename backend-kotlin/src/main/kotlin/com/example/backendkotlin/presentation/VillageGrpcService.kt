@@ -1,5 +1,7 @@
 package com.example.backendkotlin.presentation
 
+import com.example.backendkotlin.domain.WerewolfErrorCode
+import com.example.backendkotlin.domain.WerewolfException
 import com.example.backendkotlin.generated.grpc.CreateVillageRequest
 import com.example.backendkotlin.generated.grpc.CreateVillageResponse
 import com.example.backendkotlin.generated.grpc.EnterVillageRequest
@@ -9,9 +11,12 @@ import com.example.backendkotlin.generated.grpc.ListVillagesResponse
 import com.example.backendkotlin.generated.grpc.VillageResponse
 import com.example.backendkotlin.generated.grpc.VillageServiceGrpc
 import com.example.backendkotlin.usecase.CreateVillageUseCase
+import com.example.backendkotlin.usecase.EnterVillageUseCase
 import com.example.backendkotlin.usecase.ListVillagesUseCase
+import io.grpc.Status
 import io.grpc.stub.StreamObserver
 import net.devh.boot.grpc.server.service.GrpcService
+import org.springframework.data.rest.webmvc.ResourceNotFoundException
 
 /**
  * 村に関するgRPCサービス
@@ -20,6 +25,7 @@ import net.devh.boot.grpc.server.service.GrpcService
 class VillageGrpcService(
     private val listVillagesUseCase: ListVillagesUseCase,
     private val createVillageUseCase: CreateVillageUseCase,
+    private val enterVillageUseCase: EnterVillageUseCase,
 ) : VillageServiceGrpc.VillageServiceImplBase() {
     /**
      * 村を作成する
@@ -113,14 +119,39 @@ class VillageGrpcService(
      * @return 村、ユーザー情報
      */
     override fun enterVillage(request: EnterVillageRequest, responseObserver: StreamObserver<EnterVillageResponse>) {
-        // Todo: ユーザーが村に参加する処理を実装する
-        val enterVillageResponse = EnterVillageResponse.newBuilder()
-            .setVillageId("xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx")
-            .setUserId("00000000-0000-0000-0000-000000000000")
-            .build()
-        responseObserver.let { r ->
-            r.onNext(enterVillageResponse)
-            r.onCompleted()
+        try {
+            val result = enterVillageUseCase.invoke(
+                villageIdString = request.villageId,
+                villagePassword = request.villagePassword,
+                userName = request.userName,
+                userPassword = request.userPassword,
+            )
+
+            // レスポンスを作成
+            val enterVillageResponse = result.let { (userId, villageId) ->
+                EnterVillageResponse.newBuilder()
+                    .setVillageId(villageId.value.toString())
+                    .setUserId(userId.value.toString())
+                    .build()
+            }
+            responseObserver.let { r ->
+                r.onNext(enterVillageResponse)
+                r.onCompleted()
+            }
+        } catch (e: ResourceNotFoundException) {
+            val message = "The village does not exist"
+            responseObserver.onError(Status.NOT_FOUND.withDescription(message).asRuntimeException())
+        } catch (e: WerewolfException) {
+            if (e.code == WerewolfErrorCode.VILLAGE_PASSWORD_IS_WRONG) {
+                val message = "The village password is wrong"
+                responseObserver.onError(Status.INVALID_ARGUMENT.withDescription(message).asRuntimeException())
+            } else {
+                val message = "An error occurred"
+                responseObserver.onError(Status.UNKNOWN.withDescription(message).asRuntimeException())
+            }
+        } catch (e: Exception) {
+            val message = "An error occurred"
+            responseObserver.onError(Status.UNKNOWN.withDescription(message).asRuntimeException())
         }
     }
 }

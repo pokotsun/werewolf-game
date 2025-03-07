@@ -13,6 +13,15 @@ interface VillageRepository {
     fun selectAllVillages(): List<Village>
 
     /**
+     * 村を取得する
+     *
+     * @param villageId 村ID
+     *
+     * @return 村
+     */
+    fun selectVillageById(villageId: VillageId): Pair<Village, HashedPassword>?
+
+    /**
      * 村を作成する
      * @condition ゲームマスターがすでにUserTableに作成されていること
      *
