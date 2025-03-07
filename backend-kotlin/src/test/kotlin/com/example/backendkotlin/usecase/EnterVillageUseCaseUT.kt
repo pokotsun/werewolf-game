@@ -8,6 +8,8 @@ import com.example.backendkotlin.domain.UserRepository
 import com.example.backendkotlin.domain.Village
 import com.example.backendkotlin.domain.VillageId
 import com.example.backendkotlin.domain.VillageRepository
+import com.example.backendkotlin.domain.WerewolfErrorCode
+import com.example.backendkotlin.domain.WerewolfException
 import com.example.backendkotlin.util.KSelect
 import com.ninjasquad.springmockk.MockkBean
 import io.kotest.assertions.throwables.shouldThrow
@@ -23,6 +25,7 @@ import io.mockk.mockkObject
 import io.mockk.unmockkObject
 import io.mockk.verify
 import org.instancio.Instancio
+import org.springframework.data.rest.webmvc.ResourceNotFoundException
 
 /**
  * EnterVillageUseCaseのテストクラス
@@ -138,7 +141,7 @@ class EnterVillageUseCaseUT(
                     every { villageRepository.selectVillageById(villageId) } returns null
 
                     // when, then
-                    val exception = shouldThrow<IllegalArgumentException> {
+                    val exception = shouldThrow<ResourceNotFoundException> {
                         target.invoke(villageIdString, "password", "userName", "password")
                     }
                     exception.message shouldBe "村が存在しません"
@@ -169,12 +172,13 @@ class EnterVillageUseCaseUT(
                     every { HashedPassword.doesMatch(incorrectVillagePassword, villageHashedPassword) } returns false
 
                     // when, then
-                    val exception = shouldThrow<IllegalArgumentException> {
+                    val exception = shouldThrow<WerewolfException> {
                         target.invoke(villageIdString, incorrectVillagePassword, "userName", "password")
                     }
 
                     // then
-                    exception.message shouldBe "パスワードが違います"
+                    exception.code shouldBe WerewolfErrorCode.VILLAGE_PASSWORD_IS_WRONG
+                    exception.message shouldBe "村のパスワードが違います"
 
                     verify(exactly = 1) {
                         villageRepository.selectVillageById(villageId)

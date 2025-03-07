@@ -3,6 +3,8 @@ package com.example.backendkotlin.presentation
 import com.example.backendkotlin.domain.UserId
 import com.example.backendkotlin.domain.Village
 import com.example.backendkotlin.domain.VillageId
+import com.example.backendkotlin.domain.WerewolfErrorCode
+import com.example.backendkotlin.domain.WerewolfException
 import com.example.backendkotlin.generated.grpc.CreateVillageRequest
 import com.example.backendkotlin.generated.grpc.CreateVillageResponse
 import com.example.backendkotlin.generated.grpc.EnterVillageRequest
@@ -29,6 +31,7 @@ import io.mockk.impl.annotations.InjectMockKs
 import io.mockk.spyk
 import io.mockk.verify
 import org.instancio.Instancio
+import org.springframework.data.rest.webmvc.ResourceNotFoundException
 
 class VillageGrpcServiceUT(
     @MockkBean
@@ -338,7 +341,7 @@ class VillageGrpcServiceUT(
                 }
             }
             context("異常系") {
-                it("村情報が誤っていたらログインできない") {
+                it("村IDが存在していなかったらNOT_FOUNDを返す") {
                     // given:
                     val request = EnterVillageRequest.newBuilder()
                         .setVillageId("村ID")
@@ -354,7 +357,7 @@ class VillageGrpcServiceUT(
                             userName = "ユーザー名",
                             userPassword = "password",
                         )
-                    } throws IllegalArgumentException("村IDまたはパスワードが間違っています")
+                    } throws ResourceNotFoundException("村が存在しません")
 
                     val spiedResponseObserver = object : StreamObserver<EnterVillageResponse> {
                         override fun onNext(value: EnterVillageResponse) {
@@ -362,8 +365,7 @@ class VillageGrpcServiceUT(
                         }
 
                         override fun onError(t: Throwable) {
-                            // do nothing
-                            t.message shouldBe "INVALID_ARGUMENT: You mistake the village ID or password."
+                            t.message shouldBe "NOT_FOUND: The village does not exist"
                         }
 
                         override fun onCompleted() {
@@ -385,7 +387,7 @@ class VillageGrpcServiceUT(
                     }
                     verify(exactly = 0) { spiedResponseObserver.onCompleted() }
                 }
-                it("usecase 層でエラーが発生") {
+                it("村のパスワードが違う場合INVALID_ARGUMENTを返す") {
                     // given:
                     val request = EnterVillageRequest.newBuilder()
                         .setVillageId("村ID")
@@ -401,7 +403,7 @@ class VillageGrpcServiceUT(
                             userName = "ユーザー名",
                             userPassword = "password",
                         )
-                    } throws Status.UNKNOWN.asRuntimeException()
+                    } throws WerewolfException(WerewolfErrorCode.VILLAGE_PASSWORD_IS_WRONG, "村のパスワードが違います")
 
                     val spiedResponseObserver = object : StreamObserver<EnterVillageResponse> {
                         override fun onNext(value: EnterVillageResponse) {
@@ -409,7 +411,7 @@ class VillageGrpcServiceUT(
                         }
 
                         override fun onError(t: Throwable) {
-                            // do nothing
+                            t.message shouldBe "INVALID_ARGUMENT: The village password is wrong"
                         }
 
                         override fun onCompleted() {
@@ -418,10 +420,9 @@ class VillageGrpcServiceUT(
                     }.let { spyk(it) }
 
                     // when:
-                    val e = shouldThrow<StatusRuntimeException> { service.enterVillage(request, spiedResponseObserver) }
+                    service.enterVillage(request, spiedResponseObserver)
 
                     // then:
-                    e.status shouldBe Status.UNKNOWN
                     verify(exactly = 1) {
                         enterVillageUseCase.invoke(
                             villageIdString = "村ID",
