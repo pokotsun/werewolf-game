@@ -47,7 +47,9 @@ message CreateVillageResponse {
 }
 
 // ListVillagesRequest メッセージ
-message ListVillagesRequest {}
+message ListVillagesRequest {
+    bool is_recruited_only = 1;
+}
 
 // ListVillagesResponse メッセージ
 message ListVillagesResponse {
