@@ -28,7 +28,7 @@ data class Village(
     val isInitialActionActive: Boolean,
     val gameMasterUserId: UserId,
     val currentUserNumber: Int = 1,
-    val isRecruited: Boolean = true,
+    var isRecruited: Boolean = true,
 ) {
     val userNumber: Int
         get() = citizenCount + werewolfCount + fortuneTellerCount + knightCount + psychicCount + madmanCount

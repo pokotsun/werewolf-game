@@ -8,4 +8,10 @@ package com.example.backendkotlin.generated.grpc;
 public interface ListVillagesRequestOrBuilder extends
     // @@protoc_insertion_point(interface_extends:village.ListVillagesRequest)
     com.google.protobuf.MessageOrBuilder {
+
+  /**
+   * <code>bool is_recruited_only = 1;</code>
+   * @return The isRecruitedOnly.
+   */
+  boolean getIsRecruitedOnly();
 }
