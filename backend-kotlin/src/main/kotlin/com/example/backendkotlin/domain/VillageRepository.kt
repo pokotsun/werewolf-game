@@ -8,9 +8,11 @@ interface VillageRepository {
      * 村の一覧を取得する
      * 村ごとの現在の参加者数を取得し、それを含めた村の一覧を返す
      *
+     * @param isRecruitedOnly 募集中の村のみ取得するかどうか
+     *
      * @return 村の一覧
      */
-    fun selectAllVillages(): List<Village>
+    fun selectAllVillages(isRecruitedOnly: Boolean): List<Village>
 
     /**
      * 村を作成する
