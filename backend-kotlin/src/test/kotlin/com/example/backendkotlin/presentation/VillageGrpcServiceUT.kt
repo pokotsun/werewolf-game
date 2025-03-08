@@ -208,10 +208,11 @@ class VillageGrpcServiceUT(
             it("正常系") {
                 // given:
                 val request = ListVillagesRequest.newBuilder()
+                    .setIsRecruitedOnly(true)
                     .build()
 
                 val expectedList = Instancio.createList(Village::class.java)
-                every { listVillagesUseCase.invoke() } returns expectedList
+                every { listVillagesUseCase.invoke(request.isRecruitedOnly) } returns expectedList
 
                 val spiedResponseObserver = object : StreamObserver<ListVillagesResponse> {
                     override fun onNext(value: ListVillagesResponse) {
@@ -248,16 +249,17 @@ class VillageGrpcServiceUT(
 
                 // then:
                 verify(exactly = 1) {
-                    listVillagesUseCase.invoke()
+                    listVillagesUseCase.invoke(request.isRecruitedOnly)
                     spiedResponseObserver.onCompleted()
                 }
             }
             it("usecase 層でエラーが発生") {
                 // given:
                 val request = ListVillagesRequest.newBuilder()
+                    .setIsRecruitedOnly(false)
                     .build()
 
-                every { listVillagesUseCase.invoke() } throws Status.UNKNOWN.asRuntimeException()
+                every { listVillagesUseCase.invoke(request.isRecruitedOnly) } throws Status.UNKNOWN.asRuntimeException()
 
                 val spiedResponseObserver = object : StreamObserver<ListVillagesResponse> {
                     override fun onNext(value: ListVillagesResponse) {
@@ -278,7 +280,7 @@ class VillageGrpcServiceUT(
 
                 // then:
                 e.status shouldBe Status.UNKNOWN
-                verify(exactly = 1) { listVillagesUseCase.invoke() }
+                verify(exactly = 1) { listVillagesUseCase.invoke(request.isRecruitedOnly) }
                 verify(exactly = 0) { spiedResponseObserver.onCompleted() }
             }
         }

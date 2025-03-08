@@ -27,12 +27,12 @@ class VillageRepositoryImplIT(
             context("正常系") {
                 it("村が1つもない場合、空のリストが返却される") {
                     // when
-                    val actual = villageRepository.selectAllVillages()
+                    val actual = villageRepository.selectAllVillages(isRecruitedOnly = false)
 
                     // then
                     actual.shouldBeEmpty()
                 }
-                it("現在のユーザー数を含めて村が1つ返却される") {
+                it("isRecruitedの条件でfilterされて現在のユーザー数を含めて村が1つ返却される") {
                     // given
                     val gameMaster = Instancio.of(User::class.java)
                         .set(KSelect.field(User::isActive), true)
@@ -43,41 +43,62 @@ class VillageRepositoryImplIT(
                         .create()
                     val user1HashedPassword = Instancio.create(HashedPassword::class.java)
                     val village1Users = listOf(gameMaster, user1)
-                    val villageId = Instancio.create(VillageId::class.java)
-                    val expected = listOf(
-                        Instancio.of(Village::class.java)
-                            .set(KSelect.field(Village::id), villageId)
-                            .set(KSelect.field(Village::citizenCount), 10)
-                            .set(KSelect.field(Village::werewolfCount), 2)
-                            .set(KSelect.field(Village::fortuneTellerCount), 1)
-                            .set(KSelect.field(Village::knightCount), 1)
-                            .set(KSelect.field(Village::psychicCount), 1)
-                            .set(KSelect.field(Village::madmanCount), 1)
-                            .set(KSelect.field(Village::isInitialActionActive), true)
-                            .set(KSelect.field(Village::gameMasterUserId), gameMaster.id)
-                            .set(KSelect.field(Village::currentUserNumber), village1Users.size)
-                            .set(KSelect.field(Village::isRecruited), true)
-                            .create(),
+                    val village1Id = Instancio.create(VillageId::class.java)
+                    val village2Id = Instancio.create(VillageId::class.java)
+                    val village2Users = listOf(gameMaster)
+                    val village1 = Instancio.of(Village::class.java)
+                        .set(KSelect.field(Village::id), village1Id)
+                        .set(KSelect.field(Village::citizenCount), 10)
+                        .set(KSelect.field(Village::werewolfCount), 2)
+                        .set(KSelect.field(Village::fortuneTellerCount), 1)
+                        .set(KSelect.field(Village::knightCount), 1)
+                        .set(KSelect.field(Village::psychicCount), 1)
+                        .set(KSelect.field(Village::madmanCount), 1)
+                        .set(KSelect.field(Village::isInitialActionActive), true)
+                        .set(KSelect.field(Village::gameMasterUserId), gameMaster.id)
+                        .set(KSelect.field(Village::currentUserNumber), village1Users.size)
+                        .set(KSelect.field(Village::isRecruited), true)
+                        .create()
+                    val village2 = Instancio.of(Village::class.java)
+                        .set(KSelect.field(Village::id), village2Id)
+                        .set(KSelect.field(Village::citizenCount), 10)
+                        .set(KSelect.field(Village::werewolfCount), 2)
+                        .set(KSelect.field(Village::fortuneTellerCount), 1)
+                        .set(KSelect.field(Village::knightCount), 1)
+                        .set(KSelect.field(Village::psychicCount), 1)
+                        .set(KSelect.field(Village::madmanCount), 1)
+                        .set(KSelect.field(Village::isInitialActionActive), true)
+                        .set(KSelect.field(Village::gameMasterUserId), gameMaster.id)
+                        .set(KSelect.field(Village::currentUserNumber), village2Users.size)
+                        .set(KSelect.field(Village::isRecruited), false)
+                        .create()
+                    val villages = listOf(
+                        village1,
+                        village2,
                     )
+                    val expected = villages.filter { it.isRecruited }
 
                     val villageHashedPassword = Instancio.create(HashedPassword::class.java)
 
                     // and
                     UserRecord(gameMaster, gameMasterHashedPassword).insert()
                     UserRecord(user1, user1HashedPassword).insert()
-                    expected.forEach { village ->
+                    villages.forEach { village ->
                         VillageRecord(village, villageHashedPassword).insert()
                     }
                     village1Users.forEach { user ->
-                        RUserVillageRecord(user.id, villageId).insert()
+                        RUserVillageRecord(user.id, village1Id).insert()
+                    }
+                    village1Users.forEach { user ->
+                        RUserVillageRecord(user.id, village2Id).insert()
                     }
                     // when
-                    val actual = villageRepository.selectAllVillages()
+                    val actual = villageRepository.selectAllVillages(isRecruitedOnly = true)
 
                     // then
                     actual.shouldContainExactlyInAnyOrder(expected)
                 }
-                it("現在のユーザー数を含めて村が全て返却される") {
+                it("isRecruitedのfilterがかからず、現在のユーザー数を含めて村が全て返却される") {
                     // given
                     val gameMaster = Instancio.of(User::class.java)
                         .set(KSelect.field(User::isActive), true)
@@ -116,7 +137,7 @@ class VillageRepositoryImplIT(
                         .set(KSelect.field(Village::isInitialActionActive), false)
                         .set(KSelect.field(Village::gameMasterUserId), gameMaster.id)
                         .set(KSelect.field(Village::currentUserNumber), village2Users.size)
-                        .set(KSelect.field(Village::isRecruited), true)
+                        .set(KSelect.field(Village::isRecruited), false)
                         .create()
                     val expected = listOf(village1, village2)
                     val villageHashedPassword = Instancio.create(HashedPassword::class.java)
@@ -136,7 +157,7 @@ class VillageRepositoryImplIT(
                     }
 
                     // when
-                    val actual = villageRepository.selectAllVillages()
+                    val actual = villageRepository.selectAllVillages(isRecruitedOnly = false)
 
                     // then
                     actual.shouldContainExactlyInAnyOrder(expected)
