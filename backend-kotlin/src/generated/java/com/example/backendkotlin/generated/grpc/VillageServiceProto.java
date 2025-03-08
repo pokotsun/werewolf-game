@@ -99,39 +99,40 @@ public final class VillageServiceProto {
       "t_count\030\007 \001(\005\022\025\n\rpsychic_count\030\010 \001(\005\022\024\n\014" +
       "madman_count\030\t \001(\005\022 \n\030is_initial_action_" +
       "active\030\n \001(\010\022\033\n\023game_master_user_id\030\013 \001(" +
-      "\t\022\033\n\023current_user_number\030\014 \001(\005\"\025\n\023ListVi" +
-      "llagesRequest\"B\n\024ListVillagesResponse\022*\n" +
-      "\010villages\030\001 \003(\0132\030.village.VillageRespons" +
-      "e\"\217\002\n\017VillageResponse\022\n\n\002id\030\001 \001(\t\022\014\n\004nam" +
-      "e\030\002 \001(\t\022\023\n\013user_number\030\003 \001(\005\022\025\n\rcitizen_" +
-      "count\030\004 \001(\005\022\026\n\016werewolf_count\030\005 \001(\005\022\034\n\024f" +
-      "ortune_teller_count\030\006 \001(\005\022\024\n\014knight_coun" +
-      "t\030\007 \001(\005\022\025\n\rpsychic_count\030\010 \001(\005\022\024\n\014madman" +
-      "_count\030\t \001(\005\022 \n\030is_initial_action_active" +
-      "\030\n \001(\010\022\033\n\023current_user_number\030\013 \001(\005\"m\n\023E" +
-      "nterVillageRequest\022\022\n\nvillage_id\030\001 \001(\t\022\030" +
-      "\n\020village_password\030\002 \001(\t\022\021\n\tuser_name\030\003 " +
-      "\001(\t\022\025\n\ruser_password\030\004 \001(\t\";\n\024EnterVilla" +
-      "geResponse\022\022\n\nvillage_id\030\001 \001(\t\022\017\n\007user_i" +
-      "d\030\002 \001(\t\"u\n\035GetCurrentVillageUsersRequest" +
-      "\022\022\n\nvillage_id\030\001 \001(\t\022\030\n\020village_password" +
-      "\030\002 \001(\t\022\017\n\007user_id\030\003 \001(\t\022\025\n\ruser_password" +
-      "\030\004 \001(\t\"i\n\036GetCurrentVillageUsersResponse" +
-      "\022\022\n\nvillage_id\030\001 \001(\t\0223\n\rcurrent_users\030\002 " +
-      "\003(\0132\034.village.CurrentUserResponse\"(\n\023Cur" +
-      "rentUserResponse\022\021\n\tuser_name\030\001 \001(\t2\347\002\n\016" +
-      "VillageService\022N\n\rCreateVillage\022\035.villag" +
-      "e.CreateVillageRequest\032\036.village.CreateV" +
-      "illageResponse\022K\n\014ListVillages\022\034.village" +
-      ".ListVillagesRequest\032\035.village.ListVilla" +
-      "gesResponse\022K\n\014EnterVillage\022\034.village.En" +
-      "terVillageRequest\032\035.village.EnterVillage" +
-      "Response\022k\n\026GetCurrentVillageUsers\022&.vil" +
-      "lage.GetCurrentVillageUsersRequest\032\'.vil" +
-      "lage.GetCurrentVillageUsersResponse0\001Bl\n" +
-      "(com.example.backendkotlin.generated.grp" +
-      "cB\023VillageServiceProtoP\001Z)github.com/pok" +
-      "otsun/werewolf/grpc/villageb\006proto3"
+      "\t\022\033\n\023current_user_number\030\014 \001(\005\"0\n\023ListVi" +
+      "llagesRequest\022\031\n\021is_recruited_only\030\001 \001(\010" +
+      "\"B\n\024ListVillagesResponse\022*\n\010villages\030\001 \003" +
+      "(\0132\030.village.VillageResponse\"\217\002\n\017Village" +
+      "Response\022\n\n\002id\030\001 \001(\t\022\014\n\004name\030\002 \001(\t\022\023\n\013us" +
+      "er_number\030\003 \001(\005\022\025\n\rcitizen_count\030\004 \001(\005\022\026" +
+      "\n\016werewolf_count\030\005 \001(\005\022\034\n\024fortune_teller" +
+      "_count\030\006 \001(\005\022\024\n\014knight_count\030\007 \001(\005\022\025\n\rps" +
+      "ychic_count\030\010 \001(\005\022\024\n\014madman_count\030\t \001(\005\022" +
+      " \n\030is_initial_action_active\030\n \001(\010\022\033\n\023cur" +
+      "rent_user_number\030\013 \001(\005\"m\n\023EnterVillageRe" +
+      "quest\022\022\n\nvillage_id\030\001 \001(\t\022\030\n\020village_pas" +
+      "sword\030\002 \001(\t\022\021\n\tuser_name\030\003 \001(\t\022\025\n\ruser_p" +
+      "assword\030\004 \001(\t\";\n\024EnterVillageResponse\022\022\n" +
+      "\nvillage_id\030\001 \001(\t\022\017\n\007user_id\030\002 \001(\t\"u\n\035Ge" +
+      "tCurrentVillageUsersRequest\022\022\n\nvillage_i" +
+      "d\030\001 \001(\t\022\030\n\020village_password\030\002 \001(\t\022\017\n\007use" +
+      "r_id\030\003 \001(\t\022\025\n\ruser_password\030\004 \001(\t\"i\n\036Get" +
+      "CurrentVillageUsersResponse\022\022\n\nvillage_i" +
+      "d\030\001 \001(\t\0223\n\rcurrent_users\030\002 \003(\0132\034.village" +
+      ".CurrentUserResponse\"(\n\023CurrentUserRespo" +
+      "nse\022\021\n\tuser_name\030\001 \001(\t2\347\002\n\016VillageServic" +
+      "e\022N\n\rCreateVillage\022\035.village.CreateVilla" +
+      "geRequest\032\036.village.CreateVillageRespons" +
+      "e\022K\n\014ListVillages\022\034.village.ListVillages" +
+      "Request\032\035.village.ListVillagesResponse\022K" +
+      "\n\014EnterVillage\022\034.village.EnterVillageReq" +
+      "uest\032\035.village.EnterVillageResponse\022k\n\026G" +
+      "etCurrentVillageUsers\022&.village.GetCurre" +
+      "ntVillageUsersRequest\032\'.village.GetCurre" +
+      "ntVillageUsersResponse0\001Bl\n(com.example." +
+      "backendkotlin.generated.grpcB\023VillageSer" +
+      "viceProtoP\001Z)github.com/pokotsun/werewol" +
+      "f/grpc/villageb\006proto3"
     };
     descriptor = com.google.protobuf.Descriptors.FileDescriptor
       .internalBuildGeneratedFileFrom(descriptorData,
@@ -154,7 +155,7 @@ public final class VillageServiceProto {
     internal_static_village_ListVillagesRequest_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessage.FieldAccessorTable(
         internal_static_village_ListVillagesRequest_descriptor,
-        new java.lang.String[] { });
+        new java.lang.String[] { "IsRecruitedOnly", });
     internal_static_village_ListVillagesResponse_descriptor =
       getDescriptor().getMessageTypes().get(3);
     internal_static_village_ListVillagesResponse_fieldAccessorTable = new
