@@ -85,7 +85,7 @@ class VillageGrpcService(
      */
     override fun listVillages(request: ListVillagesRequest, responseObserver: StreamObserver<ListVillagesResponse>) {
         // 村一覧を取得
-        val villages = listVillagesUseCase.invoke()
+        val villages = listVillagesUseCase.invoke(request.isRecruitedOnly)
         // レスポンスを作成
         val villageResponseList = villages.map { res ->
             VillageResponse.newBuilder()

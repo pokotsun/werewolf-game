@@ -7,7 +7,9 @@ import com.example.backendkotlin.domain.VillageId
 import com.example.backendkotlin.domain.VillageRepository
 import com.example.backendkotlin.infrastructure.db.table.RUserVillageTable
 import com.example.backendkotlin.infrastructure.db.table.VillageTable
+import org.jetbrains.exposed.sql.SqlExpressionBuilder.eq
 import org.jetbrains.exposed.sql.insert
+import org.jetbrains.exposed.sql.statements.DeleteStatement.Companion.where
 import org.jetbrains.exposed.sql.transactions.transaction
 import org.springframework.stereotype.Repository
 
@@ -20,23 +22,29 @@ class VillageRepositoryImpl() : VillageRepository {
     /**
      * {@inheritDoc}
      */
-    override fun selectAllVillages(): List<Village> {
+    override fun selectAllVillages(isRecruitedOnly: Boolean): List<Village> {
         // villageテーブルから全ての村を取得する
+        val selectStatement = VillageTable.select(
+            VillageTable.id,
+            VillageTable.name,
+            VillageTable.citizenCount,
+            VillageTable.werewolfCount,
+            VillageTable.fortuneTellerCount,
+            VillageTable.knightCount,
+            VillageTable.psychicCount,
+            VillageTable.madmanCount,
+            VillageTable.isInitialActionActive,
+            VillageTable.gameMasterUserId,
+            VillageTable.isRecruited,
+        )
         val villageRecords = transaction {
-            VillageTable.select(
-                VillageTable.id,
-                VillageTable.name,
-                VillageTable.citizenCount,
-                VillageTable.werewolfCount,
-                VillageTable.fortuneTellerCount,
-                VillageTable.knightCount,
-                VillageTable.psychicCount,
-                VillageTable.madmanCount,
-                VillageTable.isInitialActionActive,
-                VillageTable.gameMasterUserId,
-            )
-                .where { VillageTable.isRecruited eq true }
-                .toList()
+            if (isRecruitedOnly) {
+                selectStatement
+                    .where { VillageTable.isRecruited eq true }
+                    .toList()
+            } else {
+                selectStatement.toList()
+            }
         }
         // village_idごとにcurrent_userを取得
         val villageIds = villageRecords.map { it[VillageTable.id].value }
@@ -66,6 +74,7 @@ class VillageRepositoryImpl() : VillageRepository {
                 isInitialActionActive = r[VillageTable.isInitialActionActive],
                 gameMasterUserId = UserId(r[VillageTable.gameMasterUserId]),
                 currentUserNumber = currentUserNumber,
+                isRecruited = r[VillageTable.isRecruited],
             )
         }
     }

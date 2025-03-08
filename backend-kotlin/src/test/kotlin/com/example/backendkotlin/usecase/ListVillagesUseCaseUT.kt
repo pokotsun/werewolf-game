@@ -64,17 +64,18 @@ class ListVillagesUseCaseUT(
                         .set(KSelect.field(Village::currentUserNumber), 2)
                         .create()
                     val expected = listOf(village1, village2)
+                    val isRecruitedOnly = false
 
                     // and
-                    every { villageRepository.selectAllVillages() } returns expected
+                    every { villageRepository.selectAllVillages(isRecruitedOnly) } returns expected
 
                     // when
-                    val actual = target.invoke()
+                    val actual = target.invoke(isRecruitedOnly)
 
                     // then
                     actual shouldBe expected
                     verify(exactly = 1) {
-                        villageRepository.selectAllVillages()
+                        villageRepository.selectAllVillages(isRecruitedOnly)
                     }
                 }
             }

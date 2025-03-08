@@ -13,7 +13,6 @@ import org.jetbrains.exposed.sql.transactions.transaction
  *
  * @property id 村ID
  * @property name 村名
- * @property salt パスワードのソルト
  * @property passwordHash パスワードのハッシュ値
  * @property citizenCount 村人の数
  * @property werewolfCount 人狼の数
@@ -23,6 +22,7 @@ import org.jetbrains.exposed.sql.transactions.transaction
  * @property madmanCount 狂人の数
  * @property isInitialActionActive 初日のアクションが有効かどうか
  * @property gameMasterUserId GMのユーザID
+ * @property isRecruited 募集中かどうか
  */
 data class VillageRecord(
     val id: VillageId,
@@ -36,6 +36,7 @@ data class VillageRecord(
     val madmanCount: Int,
     val isInitialActionActive: Boolean,
     val gameMasterUserId: UserId,
+    val isRecruited: Boolean,
 ) {
     /**
      * VillageRecordのコンストラクタ
@@ -55,6 +56,7 @@ data class VillageRecord(
         madmanCount = village.madmanCount,
         isInitialActionActive = village.isInitialActionActive,
         gameMasterUserId = village.gameMasterUserId,
+        isRecruited = village.isRecruited,
     )
 
     /**
@@ -76,6 +78,7 @@ data class VillageRecord(
                 it[madmanCount] = this@VillageRecord.madmanCount
                 it[isInitialActionActive] = this@VillageRecord.isInitialActionActive
                 it[gameMasterUserId] = this@VillageRecord.gameMasterUserId.value
+                it[isRecruited] = this@VillageRecord.isRecruited
             }
         }
         return this

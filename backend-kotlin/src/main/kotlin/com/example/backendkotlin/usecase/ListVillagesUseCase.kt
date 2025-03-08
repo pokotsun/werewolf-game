@@ -14,9 +14,11 @@ class ListVillagesUseCase(
     /**
      * 村ごとの現在の参加者数を取得し、それを含めた村の一覧を返す
      *
+     * @param isRecruitedOnly 募集中の村のみ取得するかどうか
+     *
      * @return 村の一覧
      */
-    fun invoke(): List<Village> {
-        return villageRepository.selectAllVillages()
+    fun invoke(isRecruitedOnly: Boolean = false): List<Village> {
+        return villageRepository.selectAllVillages(isRecruitedOnly)
     }
 }
