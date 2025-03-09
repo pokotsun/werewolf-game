@@ -125,27 +125,35 @@ class VillageGrpcService(
      */
     override fun getVillage(request: GetVillageRequest, responseObserver: StreamObserver<GetVillageResponse>?) {
         // 村を取得
-        val village = getVillageUseCase.invoke(request.villageId)
+        try {
+            val village = getVillageUseCase.invoke(request.villageId)
 
-        // レスポンスを作成
-        val getVillageResponse = village.let { res ->
-            GetVillageResponse.newBuilder()
-                .setId(res.id.value.toString())
-                .setName(res.name)
-                .setUserNumber(res.userNumber)
-                .setCitizenCount(res.citizenCount)
-                .setWerewolfCount(res.werewolfCount)
-                .setFortuneTellerCount(res.fortuneTellerCount)
-                .setKnightCount(res.knightCount)
-                .setPsychicCount(res.psychicCount)
-                .setMadmanCount(res.madmanCount)
-                .setIsInitialActionActive(res.isInitialActionActive)
-                .setCurrentUserNumber(res.currentUserNumber)
-                .build()
-        }
-        responseObserver?.let { r ->
-            r.onNext(getVillageResponse)
-            r.onCompleted()
+            // レスポンスを作成
+            val getVillageResponse = village.let { res ->
+                GetVillageResponse.newBuilder()
+                    .setId(res.id.value.toString())
+                    .setName(res.name)
+                    .setUserNumber(res.userNumber)
+                    .setCitizenCount(res.citizenCount)
+                    .setWerewolfCount(res.werewolfCount)
+                    .setFortuneTellerCount(res.fortuneTellerCount)
+                    .setKnightCount(res.knightCount)
+                    .setPsychicCount(res.psychicCount)
+                    .setMadmanCount(res.madmanCount)
+                    .setIsInitialActionActive(res.isInitialActionActive)
+                    .setCurrentUserNumber(res.currentUserNumber)
+                    .build()
+            }
+            responseObserver?.let { r ->
+                r.onNext(getVillageResponse)
+                r.onCompleted()
+            }
+        } catch (e: ResourceNotFoundException) {
+            val message = "The village does not exist"
+            responseObserver?.onError(Status.NOT_FOUND.withDescription(message).asRuntimeException())
+        } catch (e: Exception) {
+            val message = "An error occurred"
+            responseObserver?.onError(Status.UNKNOWN.withDescription(message).asRuntimeException())
         }
     }
 
