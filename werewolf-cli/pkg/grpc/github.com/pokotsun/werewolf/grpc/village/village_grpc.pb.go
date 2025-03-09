@@ -19,9 +19,10 @@ import (
 const _ = grpc.SupportPackageIsVersion9
 
 const (
-	VillageService_CreateVillage_FullMethodName = "/village.VillageService/CreateVillage"
-	VillageService_ListVillages_FullMethodName  = "/village.VillageService/ListVillages"
-	VillageService_EnterVillage_FullMethodName  = "/village.VillageService/EnterVillage"
+	VillageService_CreateVillage_FullMethodName          = "/village.VillageService/CreateVillage"
+	VillageService_ListVillages_FullMethodName           = "/village.VillageService/ListVillages"
+	VillageService_EnterVillage_FullMethodName           = "/village.VillageService/EnterVillage"
+	VillageService_GetCurrentVillageUsers_FullMethodName = "/village.VillageService/GetCurrentVillageUsers"
 )
 
 // VillageServiceClient is the client API for VillageService service.
@@ -33,6 +34,7 @@ type VillageServiceClient interface {
 	CreateVillage(ctx context.Context, in *CreateVillageRequest, opts ...grpc.CallOption) (*CreateVillageResponse, error)
 	ListVillages(ctx context.Context, in *ListVillagesRequest, opts ...grpc.CallOption) (*ListVillagesResponse, error)
 	EnterVillage(ctx context.Context, in *EnterVillageRequest, opts ...grpc.CallOption) (*EnterVillageResponse, error)
+	GetCurrentVillageUsers(ctx context.Context, in *GetCurrentVillageUsersRequest, opts ...grpc.CallOption) (grpc.ServerStreamingClient[GetCurrentVillageUsersResponse], error)
 }
 
 type villageServiceClient struct {
@@ -73,6 +75,25 @@ func (c *villageServiceClient) EnterVillage(ctx context.Context, in *EnterVillag
 	return out, nil
 }
 
+func (c *villageServiceClient) GetCurrentVillageUsers(ctx context.Context, in *GetCurrentVillageUsersRequest, opts ...grpc.CallOption) (grpc.ServerStreamingClient[GetCurrentVillageUsersResponse], error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	stream, err := c.cc.NewStream(ctx, &VillageService_ServiceDesc.Streams[0], VillageService_GetCurrentVillageUsers_FullMethodName, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	x := &grpc.GenericClientStream[GetCurrentVillageUsersRequest, GetCurrentVillageUsersResponse]{ClientStream: stream}
+	if err := x.ClientStream.SendMsg(in); err != nil {
+		return nil, err
+	}
+	if err := x.ClientStream.CloseSend(); err != nil {
+		return nil, err
+	}
+	return x, nil
+}
+
+// This type alias is provided for backwards compatibility with existing code that references the prior non-generic stream type by name.
+type VillageService_GetCurrentVillageUsersClient = grpc.ServerStreamingClient[GetCurrentVillageUsersResponse]
+
 // VillageServiceServer is the server API for VillageService service.
 // All implementations must embed UnimplementedVillageServiceServer
 // for forward compatibility.
@@ -82,6 +103,7 @@ type VillageServiceServer interface {
 	CreateVillage(context.Context, *CreateVillageRequest) (*CreateVillageResponse, error)
 	ListVillages(context.Context, *ListVillagesRequest) (*ListVillagesResponse, error)
 	EnterVillage(context.Context, *EnterVillageRequest) (*EnterVillageResponse, error)
+	GetCurrentVillageUsers(*GetCurrentVillageUsersRequest, grpc.ServerStreamingServer[GetCurrentVillageUsersResponse]) error
 	mustEmbedUnimplementedVillageServiceServer()
 }
 
@@ -100,6 +122,9 @@ func (UnimplementedVillageServiceServer) ListVillages(context.Context, *ListVill
 }
 func (UnimplementedVillageServiceServer) EnterVillage(context.Context, *EnterVillageRequest) (*EnterVillageResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method EnterVillage not implemented")
+}
+func (UnimplementedVillageServiceServer) GetCurrentVillageUsers(*GetCurrentVillageUsersRequest, grpc.ServerStreamingServer[GetCurrentVillageUsersResponse]) error {
+	return status.Errorf(codes.Unimplemented, "method GetCurrentVillageUsers not implemented")
 }
 func (UnimplementedVillageServiceServer) mustEmbedUnimplementedVillageServiceServer() {}
 func (UnimplementedVillageServiceServer) testEmbeddedByValue()                        {}
@@ -176,6 +201,17 @@ func _VillageService_EnterVillage_Handler(srv interface{}, ctx context.Context, 
 	return interceptor(ctx, in, info, handler)
 }
 
+func _VillageService_GetCurrentVillageUsers_Handler(srv interface{}, stream grpc.ServerStream) error {
+	m := new(GetCurrentVillageUsersRequest)
+	if err := stream.RecvMsg(m); err != nil {
+		return err
+	}
+	return srv.(VillageServiceServer).GetCurrentVillageUsers(m, &grpc.GenericServerStream[GetCurrentVillageUsersRequest, GetCurrentVillageUsersResponse]{ServerStream: stream})
+}
+
+// This type alias is provided for backwards compatibility with existing code that references the prior non-generic stream type by name.
+type VillageService_GetCurrentVillageUsersServer = grpc.ServerStreamingServer[GetCurrentVillageUsersResponse]
+
 // VillageService_ServiceDesc is the grpc.ServiceDesc for VillageService service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -196,6 +232,12 @@ var VillageService_ServiceDesc = grpc.ServiceDesc{
 			Handler:    _VillageService_EnterVillage_Handler,
 		},
 	},
-	Streams:  []grpc.StreamDesc{},
+	Streams: []grpc.StreamDesc{
+		{
+			StreamName:    "GetCurrentVillageUsers",
+			Handler:       _VillageService_GetCurrentVillageUsers_Handler,
+			ServerStreams: true,
+		},
+	},
 	Metadata: "proto/village.proto",
 }

@@ -13,6 +13,7 @@ service VillageService {
   rpc CreateVillage(CreateVillageRequest) returns (CreateVillageResponse);
   rpc ListVillages(ListVillagesRequest) returns (ListVillagesResponse);
   rpc EnterVillage(EnterVillageRequest) returns (EnterVillageResponse);
+  rpc GetCurrentVillageUsers(GetCurrentVillageUsersRequest) returns (stream GetCurrentVillageUsersResponse);
 }
 
 // VillageRequest メッセージ
@@ -79,4 +80,22 @@ message EnterVillageRequest {
 message EnterVillageResponse {
     string village_id = 1;
     string user_id = 2;
+}
+
+// GetCurrentVillageUsersRequest メッセージ
+message GetCurrentVillageUsersRequest {
+    string village_id = 1;
+    string village_password = 2;
+    string user_id = 3;
+    string user_password = 4;
+}
+
+// GetCurrentVillageUsersResponse メッセージ
+message GetCurrentVillageUsersResponse {
+    string village_id = 1;
+    repeated CurrentUserResponse current_users = 2;
+}
+
+message CurrentUserResponse {
+    string user_name = 1;
 }
