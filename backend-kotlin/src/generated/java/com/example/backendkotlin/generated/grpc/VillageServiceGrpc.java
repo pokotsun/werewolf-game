@@ -8,7 +8,7 @@ import static io.grpc.MethodDescriptor.generateFullMethodName;
  * </pre>
  */
 @javax.annotation.Generated(
-    value = "by gRPC proto compiler (version 1.69.0)",
+    value = "by gRPC proto compiler (version 1.69.1)",
     comments = "Source: proto/village.proto")
 @io.grpc.stub.annotations.GrpcGenerated
 public final class VillageServiceGrpc {
@@ -111,6 +111,37 @@ public final class VillageServiceGrpc {
     return getEnterVillageMethod;
   }
 
+  private static volatile io.grpc.MethodDescriptor<com.example.backendkotlin.generated.grpc.GetCurrentVillageUsersRequest,
+      com.example.backendkotlin.generated.grpc.GetCurrentVillageUsersResponse> getGetCurrentVillageUsersMethod;
+
+  @io.grpc.stub.annotations.RpcMethod(
+      fullMethodName = SERVICE_NAME + '/' + "GetCurrentVillageUsers",
+      requestType = com.example.backendkotlin.generated.grpc.GetCurrentVillageUsersRequest.class,
+      responseType = com.example.backendkotlin.generated.grpc.GetCurrentVillageUsersResponse.class,
+      methodType = io.grpc.MethodDescriptor.MethodType.SERVER_STREAMING)
+  public static io.grpc.MethodDescriptor<com.example.backendkotlin.generated.grpc.GetCurrentVillageUsersRequest,
+      com.example.backendkotlin.generated.grpc.GetCurrentVillageUsersResponse> getGetCurrentVillageUsersMethod() {
+    io.grpc.MethodDescriptor<com.example.backendkotlin.generated.grpc.GetCurrentVillageUsersRequest, com.example.backendkotlin.generated.grpc.GetCurrentVillageUsersResponse> getGetCurrentVillageUsersMethod;
+    if ((getGetCurrentVillageUsersMethod = VillageServiceGrpc.getGetCurrentVillageUsersMethod) == null) {
+      synchronized (VillageServiceGrpc.class) {
+        if ((getGetCurrentVillageUsersMethod = VillageServiceGrpc.getGetCurrentVillageUsersMethod) == null) {
+          VillageServiceGrpc.getGetCurrentVillageUsersMethod = getGetCurrentVillageUsersMethod =
+              io.grpc.MethodDescriptor.<com.example.backendkotlin.generated.grpc.GetCurrentVillageUsersRequest, com.example.backendkotlin.generated.grpc.GetCurrentVillageUsersResponse>newBuilder()
+              .setType(io.grpc.MethodDescriptor.MethodType.SERVER_STREAMING)
+              .setFullMethodName(generateFullMethodName(SERVICE_NAME, "GetCurrentVillageUsers"))
+              .setSampledToLocalTracing(true)
+              .setRequestMarshaller(io.grpc.protobuf.ProtoUtils.marshaller(
+                  com.example.backendkotlin.generated.grpc.GetCurrentVillageUsersRequest.getDefaultInstance()))
+              .setResponseMarshaller(io.grpc.protobuf.ProtoUtils.marshaller(
+                  com.example.backendkotlin.generated.grpc.GetCurrentVillageUsersResponse.getDefaultInstance()))
+              .setSchemaDescriptor(new VillageServiceMethodDescriptorSupplier("GetCurrentVillageUsers"))
+              .build();
+        }
+      }
+    }
+    return getGetCurrentVillageUsersMethod;
+  }
+
   /**
    * Creates a new async stub that supports all call types for the service
    */
@@ -182,6 +213,13 @@ public final class VillageServiceGrpc {
         io.grpc.stub.StreamObserver<com.example.backendkotlin.generated.grpc.EnterVillageResponse> responseObserver) {
       io.grpc.stub.ServerCalls.asyncUnimplementedUnaryCall(getEnterVillageMethod(), responseObserver);
     }
+
+    /**
+     */
+    default void getCurrentVillageUsers(com.example.backendkotlin.generated.grpc.GetCurrentVillageUsersRequest request,
+        io.grpc.stub.StreamObserver<com.example.backendkotlin.generated.grpc.GetCurrentVillageUsersResponse> responseObserver) {
+      io.grpc.stub.ServerCalls.asyncUnimplementedUnaryCall(getGetCurrentVillageUsersMethod(), responseObserver);
+    }
   }
 
   /**
@@ -240,6 +278,14 @@ public final class VillageServiceGrpc {
       io.grpc.stub.ClientCalls.asyncUnaryCall(
           getChannel().newCall(getEnterVillageMethod(), getCallOptions()), request, responseObserver);
     }
+
+    /**
+     */
+    public void getCurrentVillageUsers(com.example.backendkotlin.generated.grpc.GetCurrentVillageUsersRequest request,
+        io.grpc.stub.StreamObserver<com.example.backendkotlin.generated.grpc.GetCurrentVillageUsersResponse> responseObserver) {
+      io.grpc.stub.ClientCalls.asyncServerStreamingCall(
+          getChannel().newCall(getGetCurrentVillageUsersMethod(), getCallOptions()), request, responseObserver);
+    }
   }
 
   /**
@@ -280,6 +326,14 @@ public final class VillageServiceGrpc {
     public com.example.backendkotlin.generated.grpc.EnterVillageResponse enterVillage(com.example.backendkotlin.generated.grpc.EnterVillageRequest request) {
       return io.grpc.stub.ClientCalls.blockingUnaryCall(
           getChannel(), getEnterVillageMethod(), getCallOptions(), request);
+    }
+
+    /**
+     */
+    public java.util.Iterator<com.example.backendkotlin.generated.grpc.GetCurrentVillageUsersResponse> getCurrentVillageUsers(
+        com.example.backendkotlin.generated.grpc.GetCurrentVillageUsersRequest request) {
+      return io.grpc.stub.ClientCalls.blockingServerStreamingCall(
+          getChannel(), getGetCurrentVillageUsersMethod(), getCallOptions(), request);
     }
   }
 
@@ -330,6 +384,7 @@ public final class VillageServiceGrpc {
   private static final int METHODID_CREATE_VILLAGE = 0;
   private static final int METHODID_LIST_VILLAGES = 1;
   private static final int METHODID_ENTER_VILLAGE = 2;
+  private static final int METHODID_GET_CURRENT_VILLAGE_USERS = 3;
 
   private static final class MethodHandlers<Req, Resp> implements
       io.grpc.stub.ServerCalls.UnaryMethod<Req, Resp>,
@@ -359,6 +414,10 @@ public final class VillageServiceGrpc {
         case METHODID_ENTER_VILLAGE:
           serviceImpl.enterVillage((com.example.backendkotlin.generated.grpc.EnterVillageRequest) request,
               (io.grpc.stub.StreamObserver<com.example.backendkotlin.generated.grpc.EnterVillageResponse>) responseObserver);
+          break;
+        case METHODID_GET_CURRENT_VILLAGE_USERS:
+          serviceImpl.getCurrentVillageUsers((com.example.backendkotlin.generated.grpc.GetCurrentVillageUsersRequest) request,
+              (io.grpc.stub.StreamObserver<com.example.backendkotlin.generated.grpc.GetCurrentVillageUsersResponse>) responseObserver);
           break;
         default:
           throw new AssertionError();
@@ -399,6 +458,13 @@ public final class VillageServiceGrpc {
               com.example.backendkotlin.generated.grpc.EnterVillageRequest,
               com.example.backendkotlin.generated.grpc.EnterVillageResponse>(
                 service, METHODID_ENTER_VILLAGE)))
+        .addMethod(
+          getGetCurrentVillageUsersMethod(),
+          io.grpc.stub.ServerCalls.asyncServerStreamingCall(
+            new MethodHandlers<
+              com.example.backendkotlin.generated.grpc.GetCurrentVillageUsersRequest,
+              com.example.backendkotlin.generated.grpc.GetCurrentVillageUsersResponse>(
+                service, METHODID_GET_CURRENT_VILLAGE_USERS)))
         .build();
   }
 
@@ -450,6 +516,7 @@ public final class VillageServiceGrpc {
               .addMethod(getCreateVillageMethod())
               .addMethod(getListVillagesMethod())
               .addMethod(getEnterVillageMethod())
+              .addMethod(getGetCurrentVillageUsersMethod())
               .build();
         }
       }

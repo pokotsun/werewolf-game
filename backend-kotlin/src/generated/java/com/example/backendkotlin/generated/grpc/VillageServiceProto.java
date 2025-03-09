@@ -60,6 +60,21 @@ public final class VillageServiceProto {
   static final 
     com.google.protobuf.GeneratedMessage.FieldAccessorTable
       internal_static_village_EnterVillageResponse_fieldAccessorTable;
+  static final com.google.protobuf.Descriptors.Descriptor
+    internal_static_village_GetCurrentVillageUsersRequest_descriptor;
+  static final 
+    com.google.protobuf.GeneratedMessage.FieldAccessorTable
+      internal_static_village_GetCurrentVillageUsersRequest_fieldAccessorTable;
+  static final com.google.protobuf.Descriptors.Descriptor
+    internal_static_village_GetCurrentVillageUsersResponse_descriptor;
+  static final 
+    com.google.protobuf.GeneratedMessage.FieldAccessorTable
+      internal_static_village_GetCurrentVillageUsersResponse_fieldAccessorTable;
+  static final com.google.protobuf.Descriptors.Descriptor
+    internal_static_village_CurrentUserResponse_descriptor;
+  static final 
+    com.google.protobuf.GeneratedMessage.FieldAccessorTable
+      internal_static_village_CurrentUserResponse_fieldAccessorTable;
 
   public static com.google.protobuf.Descriptors.FileDescriptor
       getDescriptor() {
@@ -98,16 +113,25 @@ public final class VillageServiceProto {
       "\n\020village_password\030\002 \001(\t\022\021\n\tuser_name\030\003 " +
       "\001(\t\022\025\n\ruser_password\030\004 \001(\t\";\n\024EnterVilla" +
       "geResponse\022\022\n\nvillage_id\030\001 \001(\t\022\017\n\007user_i" +
-      "d\030\002 \001(\t2\372\001\n\016VillageService\022N\n\rCreateVill" +
-      "age\022\035.village.CreateVillageRequest\032\036.vil" +
-      "lage.CreateVillageResponse\022K\n\014ListVillag" +
-      "es\022\034.village.ListVillagesRequest\032\035.villa" +
-      "ge.ListVillagesResponse\022K\n\014EnterVillage\022" +
-      "\034.village.EnterVillageRequest\032\035.village." +
-      "EnterVillageResponseBl\n(com.example.back" +
-      "endkotlin.generated.grpcB\023VillageService" +
-      "ProtoP\001Z)github.com/pokotsun/werewolf/gr" +
-      "pc/villageb\006proto3"
+      "d\030\002 \001(\t\"u\n\035GetCurrentVillageUsersRequest" +
+      "\022\022\n\nvillage_id\030\001 \001(\t\022\030\n\020village_password" +
+      "\030\002 \001(\t\022\017\n\007user_id\030\003 \001(\t\022\025\n\ruser_password" +
+      "\030\004 \001(\t\"i\n\036GetCurrentVillageUsersResponse" +
+      "\022\022\n\nvillage_id\030\001 \001(\t\0223\n\rcurrent_users\030\002 " +
+      "\003(\0132\034.village.CurrentUserResponse\"(\n\023Cur" +
+      "rentUserResponse\022\021\n\tuser_name\030\001 \001(\t2\347\002\n\016" +
+      "VillageService\022N\n\rCreateVillage\022\035.villag" +
+      "e.CreateVillageRequest\032\036.village.CreateV" +
+      "illageResponse\022K\n\014ListVillages\022\034.village" +
+      ".ListVillagesRequest\032\035.village.ListVilla" +
+      "gesResponse\022K\n\014EnterVillage\022\034.village.En" +
+      "terVillageRequest\032\035.village.EnterVillage" +
+      "Response\022k\n\026GetCurrentVillageUsers\022&.vil" +
+      "lage.GetCurrentVillageUsersRequest\032\'.vil" +
+      "lage.GetCurrentVillageUsersResponse0\001Bl\n" +
+      "(com.example.backendkotlin.generated.grp" +
+      "cB\023VillageServiceProtoP\001Z)github.com/pok" +
+      "otsun/werewolf/grpc/villageb\006proto3"
     };
     descriptor = com.google.protobuf.Descriptors.FileDescriptor
       .internalBuildGeneratedFileFrom(descriptorData,
@@ -155,6 +179,24 @@ public final class VillageServiceProto {
       com.google.protobuf.GeneratedMessage.FieldAccessorTable(
         internal_static_village_EnterVillageResponse_descriptor,
         new java.lang.String[] { "VillageId", "UserId", });
+    internal_static_village_GetCurrentVillageUsersRequest_descriptor =
+      getDescriptor().getMessageTypes().get(7);
+    internal_static_village_GetCurrentVillageUsersRequest_fieldAccessorTable = new
+      com.google.protobuf.GeneratedMessage.FieldAccessorTable(
+        internal_static_village_GetCurrentVillageUsersRequest_descriptor,
+        new java.lang.String[] { "VillageId", "VillagePassword", "UserId", "UserPassword", });
+    internal_static_village_GetCurrentVillageUsersResponse_descriptor =
+      getDescriptor().getMessageTypes().get(8);
+    internal_static_village_GetCurrentVillageUsersResponse_fieldAccessorTable = new
+      com.google.protobuf.GeneratedMessage.FieldAccessorTable(
+        internal_static_village_GetCurrentVillageUsersResponse_descriptor,
+        new java.lang.String[] { "VillageId", "CurrentUsers", });
+    internal_static_village_CurrentUserResponse_descriptor =
+      getDescriptor().getMessageTypes().get(9);
+    internal_static_village_CurrentUserResponse_fieldAccessorTable = new
+      com.google.protobuf.GeneratedMessage.FieldAccessorTable(
+        internal_static_village_CurrentUserResponse_descriptor,
+        new java.lang.String[] { "UserName", });
     descriptor.resolveAllFeaturesImmutable();
   }
 
