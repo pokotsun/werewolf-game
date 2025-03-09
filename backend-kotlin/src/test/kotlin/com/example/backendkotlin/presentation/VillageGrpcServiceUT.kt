@@ -362,77 +362,109 @@ class VillageGrpcServiceUT(
         }
 
         this.describe("GetVillage") {
-            it("正常系") {
-                // given:
-                val request = GetVillageRequest.newBuilder()
-                    .setVillageId("id")
-                    .build()
+            context("正常系") {
+                it("村を1つ取得できる") {
+                    // given:
+                    val request = GetVillageRequest.newBuilder()
+                        .setVillageId("id")
+                        .build()
 
-                val expected = Instancio.create(Village::class.java)
-                every { getVillageUseCase.invoke(request.villageId) } returns expected
+                    val expected = Instancio.create(Village::class.java)
+                    every { getVillageUseCase.invoke(request.villageId) } returns expected
 
-                val spiedResponseObserver = object : StreamObserver<GetVillageResponse> {
-                    override fun onNext(value: GetVillageResponse) {
-                        value.id shouldBe expected.id.value.toString()
-                        value.name shouldBe expected.name
-                        value.userNumber shouldBe expected.userNumber
-                        value.citizenCount shouldBe expected.citizenCount
-                        value.werewolfCount shouldBe expected.werewolfCount
-                        value.fortuneTellerCount shouldBe expected.fortuneTellerCount
-                        value.knightCount shouldBe expected.knightCount
-                        value.psychicCount shouldBe expected.psychicCount
-                        value.madmanCount shouldBe expected.madmanCount
-                        value.isInitialActionActive shouldBe expected.isInitialActionActive
-                        value.currentUserNumber shouldBe expected.currentUserNumber
+                    val spiedResponseObserver = object : StreamObserver<GetVillageResponse> {
+                        override fun onNext(value: GetVillageResponse) {
+                            value.id shouldBe expected.id.value.toString()
+                            value.name shouldBe expected.name
+                            value.userNumber shouldBe expected.userNumber
+                            value.citizenCount shouldBe expected.citizenCount
+                            value.werewolfCount shouldBe expected.werewolfCount
+                            value.fortuneTellerCount shouldBe expected.fortuneTellerCount
+                            value.knightCount shouldBe expected.knightCount
+                            value.psychicCount shouldBe expected.psychicCount
+                            value.madmanCount shouldBe expected.madmanCount
+                            value.isInitialActionActive shouldBe expected.isInitialActionActive
+                            value.currentUserNumber shouldBe expected.currentUserNumber
+                        }
+
+                        override fun onError(t: Throwable) {
+                            // do nothing
+                        }
+
+                        override fun onCompleted() {
+                            // do nothing
+                        }
+                    }.let { spyk(it) }
+
+                    // when:
+                    service.getVillage(request, spiedResponseObserver)
+
+                    // then:
+                    verify(exactly = 1) {
+                        getVillageUseCase.invoke(request.villageId)
+                        spiedResponseObserver.onCompleted()
                     }
-
-                    override fun onError(t: Throwable) {
-                        // do nothing
-                    }
-
-                    override fun onCompleted() {
-                        // do nothing
-                    }
-                }.let { spyk(it) }
-
-                // when:
-                service.getVillage(request, spiedResponseObserver)
-
-                // then:
-                verify(exactly = 1) {
-                    getVillageUseCase.invoke(request.villageId)
-                    spiedResponseObserver.onCompleted()
                 }
             }
-            it("usecase 層でエラーが発生") {
-                // given:
-                val request = GetVillageRequest.newBuilder()
-                    .setVillageId("id")
-                    .build()
+            context("異常系") {
+                it("村IDが存在していなかったらNOT_FOUNDを返す") {
+                    // given:
+                    val request = GetVillageRequest.newBuilder()
+                        .setVillageId("id")
+                        .build()
 
-                every { getVillageUseCase.invoke(request.villageId) } throws Status.UNKNOWN.asRuntimeException()
+                    every { getVillageUseCase.invoke(request.villageId) } throws WerewolfException(WerewolfErrorCode.RESOURCE_NOT_FOUND, "村が存在しません")
 
-                val spiedResponseObserver = object : StreamObserver<GetVillageResponse> {
-                    override fun onNext(value: GetVillageResponse) {
-                        // do nothing
-                    }
+                    val spiedResponseObserver = object : StreamObserver<GetVillageResponse> {
+                        override fun onNext(value: GetVillageResponse) {
+                            // do nothing
+                        }
 
-                    override fun onError(t: Throwable) {
-                        // do nothing
-                    }
+                        override fun onError(t: Throwable) {
+                            t.message shouldBe "NOT_FOUND: The village does not exist"
+                        }
 
-                    override fun onCompleted() {
-                        // do nothing
-                    }
-                }.let { spyk(it) }
+                        override fun onCompleted() {
+                            // do nothing
+                        }
+                    }.let { spyk(it) }
 
-                // when:
-                val e = shouldThrow<StatusRuntimeException> { service.getVillage(request, spiedResponseObserver) }
+                    // when:
+                    service.getVillage(request, spiedResponseObserver)
 
-                // then:
-                e.status shouldBe Status.UNKNOWN
-                verify(exactly = 1) { getVillageUseCase.invoke(request.villageId) }
-                verify(exactly = 0) { spiedResponseObserver.onCompleted() }
+                    // then:
+                    verify(exactly = 1) { getVillageUseCase.invoke(request.villageId) }
+                    verify(exactly = 0) { spiedResponseObserver.onCompleted() }
+                }
+                it("usecase層で想定外のエラーが発生") {
+                    // given:
+                    val request = GetVillageRequest.newBuilder()
+                        .setVillageId("id")
+                        .build()
+
+                    every { getVillageUseCase.invoke(request.villageId) } throws Exception("想定外のエラー")
+
+                    val spiedResponseObserver = object : StreamObserver<GetVillageResponse> {
+                        override fun onNext(value: GetVillageResponse) {
+                            // do nothing
+                        }
+
+                        override fun onError(t: Throwable) {
+                            t.message shouldBe "UNKNOWN: An error occurred"
+                        }
+
+                        override fun onCompleted() {
+                            // do nothing
+                        }
+                    }.let { spyk(it) }
+
+                    // when:
+                    service.getVillage(request, spiedResponseObserver)
+
+                    // then:
+                    verify(exactly = 1) { getVillageUseCase.invoke(request.villageId) }
+                    verify(exactly = 0) { spiedResponseObserver.onCompleted() }
+                }
             }
         }
 

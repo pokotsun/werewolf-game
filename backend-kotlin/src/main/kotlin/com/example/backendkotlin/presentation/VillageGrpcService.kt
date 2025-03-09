@@ -123,29 +123,31 @@ class VillageGrpcService(
      *
      * @return 村
      */
-    override fun getVillage(request: GetVillageRequest, responseObserver: StreamObserver<GetVillageResponse>?) {
-        // 村を取得
-        val village = getVillageUseCase.invoke(request.villageId)
+    override fun getVillage(request: GetVillageRequest, responseObserver: StreamObserver<GetVillageResponse>) {
+        handleException(responseObserver) {
+            // 村を取得
+            val village = getVillageUseCase.invoke(request.villageId)
 
-        // レスポンスを作成
-        val getVillageResponse = village.let { res ->
-            GetVillageResponse.newBuilder()
-                .setId(res.id.value.toString())
-                .setName(res.name)
-                .setUserNumber(res.userNumber)
-                .setCitizenCount(res.citizenCount)
-                .setWerewolfCount(res.werewolfCount)
-                .setFortuneTellerCount(res.fortuneTellerCount)
-                .setKnightCount(res.knightCount)
-                .setPsychicCount(res.psychicCount)
-                .setMadmanCount(res.madmanCount)
-                .setIsInitialActionActive(res.isInitialActionActive)
-                .setCurrentUserNumber(res.currentUserNumber)
-                .build()
-        }
-        responseObserver?.let { r ->
-            r.onNext(getVillageResponse)
-            r.onCompleted()
+            // レスポンスを作成
+            val getVillageResponse = village.let { res ->
+                GetVillageResponse.newBuilder()
+                    .setId(res.id.value.toString())
+                    .setName(res.name)
+                    .setUserNumber(res.userNumber)
+                    .setCitizenCount(res.citizenCount)
+                    .setWerewolfCount(res.werewolfCount)
+                    .setFortuneTellerCount(res.fortuneTellerCount)
+                    .setKnightCount(res.knightCount)
+                    .setPsychicCount(res.psychicCount)
+                    .setMadmanCount(res.madmanCount)
+                    .setIsInitialActionActive(res.isInitialActionActive)
+                    .setCurrentUserNumber(res.currentUserNumber)
+                    .build()
+            }
+            responseObserver?.let { r ->
+                r.onNext(getVillageResponse)
+                r.onCompleted()
+            }
         }
     }
 
