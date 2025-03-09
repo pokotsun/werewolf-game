@@ -2,13 +2,17 @@ package com.example.backendkotlin.presentation
 
 import com.example.backendkotlin.generated.grpc.CreateVillageRequest
 import com.example.backendkotlin.generated.grpc.CreateVillageResponse
+import com.example.backendkotlin.generated.grpc.CurrentUserResponse
 import com.example.backendkotlin.generated.grpc.EnterVillageRequest
 import com.example.backendkotlin.generated.grpc.EnterVillageResponse
+import com.example.backendkotlin.generated.grpc.GetCurrentVillageUsersRequest
+import com.example.backendkotlin.generated.grpc.GetCurrentVillageUsersResponse
 import com.example.backendkotlin.generated.grpc.ListVillagesRequest
 import com.example.backendkotlin.generated.grpc.ListVillagesResponse
 import com.example.backendkotlin.generated.grpc.VillageResponse
 import com.example.backendkotlin.generated.grpc.VillageServiceGrpc
 import com.example.backendkotlin.usecase.CreateVillageUseCase
+import com.example.backendkotlin.usecase.GetCurrentVillageUsersUseCase
 import com.example.backendkotlin.usecase.ListVillagesUseCase
 import io.grpc.stub.StreamObserver
 import net.devh.boot.grpc.server.service.GrpcService
@@ -20,6 +24,7 @@ import net.devh.boot.grpc.server.service.GrpcService
 class VillageGrpcService(
     private val listVillagesUseCase: ListVillagesUseCase,
     private val createVillageUseCase: CreateVillageUseCase,
+    private val getCurrentVillageUsersUseCase: GetCurrentVillageUsersUseCase,
 ) : VillageServiceGrpc.VillageServiceImplBase() {
     /**
      * 村を作成する
@@ -121,6 +126,44 @@ class VillageGrpcService(
         responseObserver.let { r ->
             r.onNext(enterVillageResponse)
             r.onCompleted()
+        }
+    }
+
+    /**
+     * 村のユーザー一覧を取得する
+     */
+    override fun getCurrentVillageUsers(
+        request: GetCurrentVillageUsersRequest,
+        responseObserver: StreamObserver<GetCurrentVillageUsersResponse>,
+    ) {
+        // 村の状態と現在の参加人数を取得する
+        // Todo: 村の現在の参加人数を取得する処理を実装する
+        val (village, currentUsers) = getCurrentVillageUsersUseCase.invoke(
+            request.villageId,
+            request.villagePassword,
+            request.userId,
+            request.userPassword,
+        )
+
+        // レスポンスを作成
+        val currentUsersResponseList = currentUsers.map { user ->
+            CurrentUserResponse.newBuilder()
+                .setUserName(user.name)
+                .build()
+        }
+        val getCurrentVillageUsersResponse = GetCurrentVillageUsersResponse.newBuilder()
+            .setVillageId(village.id.value.toString())
+            .addAllCurrentUsers(currentUsersResponseList)
+            .build()
+
+        // レスポンスを返す
+        responseObserver.let { r ->
+            r.onNext(getCurrentVillageUsersResponse)
+
+            // 村が募集中でない場合は処理を終了する
+            if (!village.isRecruited) {
+                r.onCompleted()
+            }
         }
     }
 }
