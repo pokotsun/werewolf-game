@@ -1,11 +1,15 @@
 package com.example.backendkotlin.presentation
 
+import com.example.backendkotlin.domain.User
 import com.example.backendkotlin.domain.Village
 import com.example.backendkotlin.generated.grpc.CreateVillageRequest
 import com.example.backendkotlin.generated.grpc.CreateVillageResponse
+import com.example.backendkotlin.generated.grpc.GetCurrentVillageUsersRequest
+import com.example.backendkotlin.generated.grpc.GetCurrentVillageUsersResponse
 import com.example.backendkotlin.generated.grpc.ListVillagesRequest
 import com.example.backendkotlin.generated.grpc.ListVillagesResponse
 import com.example.backendkotlin.usecase.CreateVillageUseCase
+import com.example.backendkotlin.usecase.GetCurrentVillageUsersUseCase
 import com.example.backendkotlin.usecase.ListVillagesUseCase
 import com.ninjasquad.springmockk.MockkBean
 import io.grpc.Status
@@ -30,6 +34,8 @@ class VillageGrpcServiceUT(
     private val listVillagesUseCase: ListVillagesUseCase,
     @MockkBean
     private val createVillageUseCase: CreateVillageUseCase,
+    @MockkBean
+    private val getCurrentVillageUsersUseCase: GetCurrentVillageUsersUseCase,
 ) : DescribeSpec() {
     @InjectMockKs
     private lateinit var service: VillageGrpcService
@@ -274,6 +280,67 @@ class VillageGrpcServiceUT(
                 e.status shouldBe Status.UNKNOWN
                 verify(exactly = 1) { listVillagesUseCase.invoke() }
                 verify(exactly = 0) { spiedResponseObserver.onCompleted() }
+            }
+        }
+
+        this.describe("GetCurrentVillageUsers") {
+            it("正常系") {
+                // given
+                val request = GetCurrentVillageUsersRequest.newBuilder()
+                    .setVillageId("1")
+                    .setVillagePassword("password")
+                    .setUserId("1")
+                    .setUserPassword("password")
+                    .build()
+
+                val expectedVillage = Instancio.create(Village::class.java)
+                val users = listOf(Instancio.create(User::class.java))
+                val expectedUserNames = users.map { it.name }
+
+                // and
+                every {
+                    getCurrentVillageUsersUseCase.invoke(
+                        villageIdString = "1",
+                        villagePassword = "password",
+                        userIdString = "1",
+                        userIdPassword = "password",
+                    )
+                } returns Pair(expectedVillage, users)
+
+                val spiedResponseObserver = object : StreamObserver<GetCurrentVillageUsersResponse> {
+                    override fun onNext(value: GetCurrentVillageUsersResponse) {
+                        value.villageId shouldBe expectedVillage.id.value.toString()
+
+                        val sortedExpectedUsers = expectedUserNames.sortedBy { it }
+                        val sortedActualUsers = value.currentUsersList.sortedBy { it.userName }
+                        sortedActualUsers
+                            .zip(sortedExpectedUsers)
+                            .forEach { (actual, expected) ->
+                                actual.userName shouldBe expected
+                            }
+                    }
+
+                    override fun onError(t: Throwable) {
+                        // do nothing
+                    }
+
+                    override fun onCompleted() {
+                        // do nothing
+                    }
+                }.let { spyk(it) }
+
+                // when
+                service.getCurrentVillageUsers(request, spiedResponseObserver)
+
+                // then
+                verify(exactly = 1) {
+                    getCurrentVillageUsersUseCase.invoke(
+                        villageIdString = "1",
+                        villagePassword = "password",
+                        userIdString = "1",
+                        userIdPassword = "password",
+                    )
+                }
             }
         }
     }
