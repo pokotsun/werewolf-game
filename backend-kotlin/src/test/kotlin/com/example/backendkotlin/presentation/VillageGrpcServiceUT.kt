@@ -12,11 +12,14 @@ import com.example.backendkotlin.generated.grpc.EnterVillageRequest
 import com.example.backendkotlin.generated.grpc.EnterVillageResponse
 import com.example.backendkotlin.generated.grpc.GetCurrentVillageUsersRequest
 import com.example.backendkotlin.generated.grpc.GetCurrentVillageUsersResponse
+import com.example.backendkotlin.generated.grpc.GetVillageRequest
+import com.example.backendkotlin.generated.grpc.GetVillageResponse
 import com.example.backendkotlin.generated.grpc.ListVillagesRequest
 import com.example.backendkotlin.generated.grpc.ListVillagesResponse
 import com.example.backendkotlin.usecase.CreateVillageUseCase
 import com.example.backendkotlin.usecase.EnterVillageUseCase
 import com.example.backendkotlin.usecase.GetCurrentVillageUsersUseCase
+import com.example.backendkotlin.usecase.GetVillageUseCase
 import com.example.backendkotlin.usecase.ListVillagesUseCase
 import com.ninjasquad.springmockk.MockkBean
 import io.grpc.Status
@@ -45,6 +48,8 @@ class VillageGrpcServiceUT(
     private val getCurrentVillageUsersUseCase: GetCurrentVillageUsersUseCase,
     @MockkBean
     private val enterVillageUseCase: EnterVillageUseCase,
+    @MockkBean
+    private val getVillageUseCase: GetVillageUseCase,
 ) : DescribeSpec() {
     @InjectMockKs
     private lateinit var service: VillageGrpcService
@@ -353,6 +358,81 @@ class VillageGrpcServiceUT(
                         userIdPassword = "password",
                     )
                 }
+            }
+        }
+
+        this.describe("GetVillage") {
+            it("正常系") {
+                // given:
+                val request = GetVillageRequest.newBuilder()
+                    .setVillageId("id")
+                    .build()
+
+                val expected = Instancio.create(Village::class.java)
+                every { getVillageUseCase.invoke(request.villageId) } returns expected
+
+                val spiedResponseObserver = object : StreamObserver<GetVillageResponse> {
+                    override fun onNext(value: GetVillageResponse) {
+                        value.id shouldBe expected.id.value.toString()
+                        value.name shouldBe expected.name
+                        value.userNumber shouldBe expected.userNumber
+                        value.citizenCount shouldBe expected.citizenCount
+                        value.werewolfCount shouldBe expected.werewolfCount
+                        value.fortuneTellerCount shouldBe expected.fortuneTellerCount
+                        value.knightCount shouldBe expected.knightCount
+                        value.psychicCount shouldBe expected.psychicCount
+                        value.madmanCount shouldBe expected.madmanCount
+                        value.isInitialActionActive shouldBe expected.isInitialActionActive
+                        value.currentUserNumber shouldBe expected.currentUserNumber
+                    }
+
+                    override fun onError(t: Throwable) {
+                        // do nothing
+                    }
+
+                    override fun onCompleted() {
+                        // do nothing
+                    }
+                }.let { spyk(it) }
+
+                // when:
+                service.getVillage(request, spiedResponseObserver)
+
+                // then:
+                verify(exactly = 1) {
+                    getVillageUseCase.invoke(request.villageId)
+                    spiedResponseObserver.onCompleted()
+                }
+            }
+            it("usecase 層でエラーが発生") {
+                // given:
+                val request = GetVillageRequest.newBuilder()
+                    .setVillageId("id")
+                    .build()
+
+                every { getVillageUseCase.invoke(request.villageId) } throws Status.UNKNOWN.asRuntimeException()
+
+                val spiedResponseObserver = object : StreamObserver<GetVillageResponse> {
+                    override fun onNext(value: GetVillageResponse) {
+                        // do nothing
+                    }
+
+                    override fun onError(t: Throwable) {
+                        // do nothing
+                    }
+
+                    override fun onCompleted() {
+                        // do nothing
+                    }
+                }.let { spyk(it) }
+
+                // when:
+                val e = shouldThrow<StatusRuntimeException> { service.getVillage(request, spiedResponseObserver) }
+
+                // then:
+                e.status shouldBe Status.UNKNOWN
+                verify(exactly = 1) { getVillageUseCase.invoke(request.villageId) }
+                verify(exactly = 0) { spiedResponseObserver.onCompleted() }
             }
         }
 
