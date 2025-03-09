@@ -21,6 +21,7 @@ const _ = grpc.SupportPackageIsVersion9
 const (
 	VillageService_CreateVillage_FullMethodName          = "/village.VillageService/CreateVillage"
 	VillageService_ListVillages_FullMethodName           = "/village.VillageService/ListVillages"
+	VillageService_GetVillage_FullMethodName             = "/village.VillageService/GetVillage"
 	VillageService_EnterVillage_FullMethodName           = "/village.VillageService/EnterVillage"
 	VillageService_GetCurrentVillageUsers_FullMethodName = "/village.VillageService/GetCurrentVillageUsers"
 )
@@ -33,6 +34,7 @@ const (
 type VillageServiceClient interface {
 	CreateVillage(ctx context.Context, in *CreateVillageRequest, opts ...grpc.CallOption) (*CreateVillageResponse, error)
 	ListVillages(ctx context.Context, in *ListVillagesRequest, opts ...grpc.CallOption) (*ListVillagesResponse, error)
+	GetVillage(ctx context.Context, in *GetVillageRequest, opts ...grpc.CallOption) (*GetVillageResponse, error)
 	EnterVillage(ctx context.Context, in *EnterVillageRequest, opts ...grpc.CallOption) (*EnterVillageResponse, error)
 	GetCurrentVillageUsers(ctx context.Context, in *GetCurrentVillageUsersRequest, opts ...grpc.CallOption) (grpc.ServerStreamingClient[GetCurrentVillageUsersResponse], error)
 }
@@ -59,6 +61,16 @@ func (c *villageServiceClient) ListVillages(ctx context.Context, in *ListVillage
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(ListVillagesResponse)
 	err := c.cc.Invoke(ctx, VillageService_ListVillages_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *villageServiceClient) GetVillage(ctx context.Context, in *GetVillageRequest, opts ...grpc.CallOption) (*GetVillageResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(GetVillageResponse)
+	err := c.cc.Invoke(ctx, VillageService_GetVillage_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
 	}
@@ -102,6 +114,7 @@ type VillageService_GetCurrentVillageUsersClient = grpc.ServerStreamingClient[Ge
 type VillageServiceServer interface {
 	CreateVillage(context.Context, *CreateVillageRequest) (*CreateVillageResponse, error)
 	ListVillages(context.Context, *ListVillagesRequest) (*ListVillagesResponse, error)
+	GetVillage(context.Context, *GetVillageRequest) (*GetVillageResponse, error)
 	EnterVillage(context.Context, *EnterVillageRequest) (*EnterVillageResponse, error)
 	GetCurrentVillageUsers(*GetCurrentVillageUsersRequest, grpc.ServerStreamingServer[GetCurrentVillageUsersResponse]) error
 	mustEmbedUnimplementedVillageServiceServer()
@@ -119,6 +132,9 @@ func (UnimplementedVillageServiceServer) CreateVillage(context.Context, *CreateV
 }
 func (UnimplementedVillageServiceServer) ListVillages(context.Context, *ListVillagesRequest) (*ListVillagesResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method ListVillages not implemented")
+}
+func (UnimplementedVillageServiceServer) GetVillage(context.Context, *GetVillageRequest) (*GetVillageResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetVillage not implemented")
 }
 func (UnimplementedVillageServiceServer) EnterVillage(context.Context, *EnterVillageRequest) (*EnterVillageResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method EnterVillage not implemented")
@@ -183,6 +199,24 @@ func _VillageService_ListVillages_Handler(srv interface{}, ctx context.Context, 
 	return interceptor(ctx, in, info, handler)
 }
 
+func _VillageService_GetVillage_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetVillageRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(VillageServiceServer).GetVillage(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: VillageService_GetVillage_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(VillageServiceServer).GetVillage(ctx, req.(*GetVillageRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 func _VillageService_EnterVillage_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(EnterVillageRequest)
 	if err := dec(in); err != nil {
@@ -226,6 +260,10 @@ var VillageService_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "ListVillages",
 			Handler:    _VillageService_ListVillages_Handler,
+		},
+		{
+			MethodName: "GetVillage",
+			Handler:    _VillageService_GetVillage_Handler,
 		},
 		{
 			MethodName: "EnterVillage",
