@@ -6,12 +6,15 @@ import com.example.backendkotlin.generated.grpc.CreateVillageRequest
 import com.example.backendkotlin.generated.grpc.CreateVillageResponse
 import com.example.backendkotlin.generated.grpc.EnterVillageRequest
 import com.example.backendkotlin.generated.grpc.EnterVillageResponse
+import com.example.backendkotlin.generated.grpc.GetVillageRequest
+import com.example.backendkotlin.generated.grpc.GetVillageResponse
 import com.example.backendkotlin.generated.grpc.ListVillagesRequest
 import com.example.backendkotlin.generated.grpc.ListVillagesResponse
 import com.example.backendkotlin.generated.grpc.VillageResponse
 import com.example.backendkotlin.generated.grpc.VillageServiceGrpc
 import com.example.backendkotlin.usecase.CreateVillageUseCase
 import com.example.backendkotlin.usecase.EnterVillageUseCase
+import com.example.backendkotlin.usecase.GetVillageUseCase
 import com.example.backendkotlin.usecase.ListVillagesUseCase
 import io.grpc.Status
 import io.grpc.stub.StreamObserver
@@ -26,6 +29,8 @@ class VillageGrpcService(
     private val listVillagesUseCase: ListVillagesUseCase,
     private val createVillageUseCase: CreateVillageUseCase,
     private val enterVillageUseCase: EnterVillageUseCase,
+    private val getVillageUseCase: GetVillageUseCase,
+
 ) : VillageServiceGrpc.VillageServiceImplBase() {
     /**
      * 村を作成する
@@ -106,6 +111,40 @@ class VillageGrpcService(
         val listVillagesResponse = ListVillagesResponse.newBuilder().addAllVillages(villageResponseList).build()
         responseObserver.let { r ->
             r.onNext(listVillagesResponse)
+            r.onCompleted()
+        }
+    }
+
+    /**
+     * 特定の村を取得する
+     *
+     * @param request 村取得リクエスト
+     * @param responseObserver レスポンス
+     *
+     * @return 村
+     */
+    override fun getVillage(request: GetVillageRequest, responseObserver: StreamObserver<GetVillageResponse>?) {
+        // 村を取得
+        val village = getVillageUseCase.invoke(request.villageId)
+
+        // レスポンスを作成
+        val getVillageResponse = village.let { res ->
+            GetVillageResponse.newBuilder()
+                .setId(res.id.value.toString())
+                .setName(res.name)
+                .setUserNumber(res.userNumber)
+                .setCitizenCount(res.citizenCount)
+                .setWerewolfCount(res.werewolfCount)
+                .setFortuneTellerCount(res.fortuneTellerCount)
+                .setKnightCount(res.knightCount)
+                .setPsychicCount(res.psychicCount)
+                .setMadmanCount(res.madmanCount)
+                .setIsInitialActionActive(res.isInitialActionActive)
+                .setCurrentUserNumber(res.currentUserNumber)
+                .build()
+        }
+        responseObserver?.let { r ->
+            r.onNext(getVillageResponse)
             r.onCompleted()
         }
     }
