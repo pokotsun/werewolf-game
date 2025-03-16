@@ -1,6 +1,8 @@
 package com.example.backendkotlin.usecase
 
+import com.example.backendkotlin.domain.HashedPassword
 import com.example.backendkotlin.domain.User
+import com.example.backendkotlin.domain.UserId
 import com.example.backendkotlin.domain.Village
 import com.example.backendkotlin.domain.VillageId
 import com.example.backendkotlin.domain.VillageRepository
@@ -33,13 +35,22 @@ class GetCurrentVillageUsersUseCase(
     ): Pair<Village, List<User>> {
         // 村とその村に参加しているユーザーを取得
         val villageId = VillageId.generate(villageIdString)
-        val (village, hashedPassword, userWithHashedPasswordList) = villageRepository.selectVillageWithCurrentUsersById(
+        val (village, villageHashedPassword, userWithHashedPasswordList) = villageRepository.selectVillageWithCurrentUsersById(
             villageId = villageId,
         ) ?: throw WerewolfException(WerewolfErrorCode.RESOURCE_NOT_FOUND, "村が存在しません")
 
         // 村パスワードが正しいかチェック
+        if (!HashedPassword.doesMatch(villagePassword, villageHashedPassword)) {
+            throw WerewolfException(WerewolfErrorCode.VILLAGE_PASSWORD_IS_WRONG, "村のパスワードが違います")
+        }
 
         // ユーザーIDとパスワードが正しいかチェック
+        val userId = UserId.generate(userIdString)
+        val (_, requestUserHashedPassword) = userWithHashedPasswordList.find { it.first.id == userId }
+            ?: throw WerewolfException(WerewolfErrorCode.RESOURCE_NOT_FOUND, "ユーザーが存在しません")
+        if (!HashedPassword.doesMatch(userIdPassword, requestUserHashedPassword)) {
+            throw WerewolfException(WerewolfErrorCode.USER_PASSWORD_IS_WRONG, "ユーザーパスワードが違います")
+        }
 
         // レスポンスを返却
         val users = userWithHashedPasswordList.map { it.first }
