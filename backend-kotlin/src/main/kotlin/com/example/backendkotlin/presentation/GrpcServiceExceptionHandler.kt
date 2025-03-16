@@ -20,6 +20,10 @@ interface GrpcServiceExceptionHandler {
                     val message = "The village password is wrong"
                     responseObserver.onError(Status.INVALID_ARGUMENT.withDescription(message).asRuntimeException())
                 }
+                WerewolfErrorCode.USER_PASSWORD_IS_WRONG -> {
+                    val message = "The user password is wrong"
+                    responseObserver.onError(Status.INVALID_ARGUMENT.withDescription(message).asRuntimeException())
+                }
             }
         } catch (e: Exception) {
             val message = "An error occurred"
