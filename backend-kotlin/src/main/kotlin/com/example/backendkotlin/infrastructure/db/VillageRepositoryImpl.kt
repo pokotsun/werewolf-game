@@ -101,6 +101,7 @@ class VillageRepositoryImpl() : VillageRepository {
                 VillageTable.madmanCount,
                 VillageTable.isInitialActionActive,
                 VillageTable.gameMasterUserId,
+                VillageTable.isRecruited,
             )
                 .where { VillageTable.id eq villageId.value }
                 .firstOrNull()
@@ -118,20 +119,9 @@ class VillageRepositoryImpl() : VillageRepository {
         val currentUserNumber = rUserVillageRecords.size
 
         // ドメインに変換する
+        val village = mapToVillage(villageRecord, currentUserNumber)
         return Pair(
-            Village(
-                id = VillageId(villageRecord[VillageTable.id].value),
-                name = villageRecord[VillageTable.name],
-                citizenCount = villageRecord[VillageTable.citizenCount],
-                werewolfCount = villageRecord[VillageTable.werewolfCount],
-                fortuneTellerCount = villageRecord[VillageTable.fortuneTellerCount],
-                knightCount = villageRecord[VillageTable.knightCount],
-                psychicCount = villageRecord[VillageTable.psychicCount],
-                madmanCount = villageRecord[VillageTable.madmanCount],
-                isInitialActionActive = villageRecord[VillageTable.isInitialActionActive],
-                gameMasterUserId = UserId(villageRecord[VillageTable.gameMasterUserId]),
-                currentUserNumber = currentUserNumber,
-            ),
+            village,
             HashedPassword(villageRecord[VillageTable.passwordHash]),
         )
     }
