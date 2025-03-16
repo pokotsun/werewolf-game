@@ -1,16 +1,20 @@
 package com.example.backendkotlin.usecase
 
 import com.example.backendkotlin.domain.User
-import com.example.backendkotlin.domain.UserId
 import com.example.backendkotlin.domain.Village
 import com.example.backendkotlin.domain.VillageId
+import com.example.backendkotlin.domain.VillageRepository
+import com.example.backendkotlin.domain.WerewolfErrorCode
+import com.example.backendkotlin.domain.WerewolfException
 import org.springframework.stereotype.Service
 
 /**
  * 村に参加しているユーザーを取得するユースケース
  */
 @Service
-class GetCurrentVillageUsersUseCase {
+class GetCurrentVillageUsersUseCase(
+    private val villageRepository: VillageRepository,
+) {
     /**
      * 村に参加しているユーザーを取得する
      *
@@ -27,28 +31,18 @@ class GetCurrentVillageUsersUseCase {
         userIdString: String,
         userIdPassword: String,
     ): Pair<Village, List<User>> {
-        // Todo: 村に参加しているユーザーを取得する処理を実装する
-        val village = Village(
-            id = VillageId.generate(),
-            name = "村名",
-            citizenCount = 10,
-            werewolfCount = 2,
-            fortuneTellerCount = 1,
-            knightCount = 1,
-            psychicCount = 1,
-            madmanCount = 1,
-            isInitialActionActive = true,
-            gameMasterUserId = UserId.generate(),
-            currentUserNumber = 1,
-            isRecruited = true,
-        )
-        val users = listOf(
-            User(
-                id = UserId.generate(),
-                name = "ユーザー1",
-                isActive = true,
-            ),
-        )
+        // 村とその村に参加しているユーザーを取得
+        val villageId = VillageId.generate(villageIdString)
+        val (village, hashedPassword, userWithHashedPasswordList) = villageRepository.selectVillageWithCurrentUsersById(
+            villageId = villageId,
+        ) ?: throw WerewolfException(WerewolfErrorCode.RESOURCE_NOT_FOUND, "村が存在しません")
+
+        // 村パスワードが正しいかチェック
+
+        // ユーザーIDとパスワードが正しいかチェック
+
+        // レスポンスを返却
+        val users = userWithHashedPasswordList.map { it.first }
         return Pair(village, users)
     }
 }

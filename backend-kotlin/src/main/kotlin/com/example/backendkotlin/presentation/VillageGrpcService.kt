@@ -202,7 +202,6 @@ class VillageGrpcService(
         responseObserver: StreamObserver<GetCurrentVillageUsersResponse>,
     ) {
         // 村の状態と現在の参加人数を取得する
-        // Todo: 村の現在の参加人数を取得する処理を実装する
         val (village, currentUsers) = getCurrentVillageUsersUseCase.invoke(
             request.villageId,
             request.villagePassword,
