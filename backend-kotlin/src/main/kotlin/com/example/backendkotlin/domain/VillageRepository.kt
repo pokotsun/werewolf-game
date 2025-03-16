@@ -24,6 +24,15 @@ interface VillageRepository {
     fun selectVillageById(villageId: VillageId): Pair<Village, HashedPassword>?
 
     /**
+     * 村とその村に参加しているユーザーを取得する
+     *
+     * @param villageId 村ID
+     *
+     * @return 村とその村に参加しているユーザー
+     */
+    fun selectVillageWithCurrentUsersById(villageId: VillageId): Triple<Village, HashedPassword, List<Pair<User, HashedPassword>>>?
+
+    /**
      * 村を作成する
      * @condition ゲームマスターがすでにUserTableに作成されていること
      *

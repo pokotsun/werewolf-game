@@ -13,11 +13,15 @@ interface GrpcServiceExceptionHandler {
         } catch (e: WerewolfException) {
             when (e.code) {
                 WerewolfErrorCode.RESOURCE_NOT_FOUND -> {
-                    val message = "The village does not exist"
+                    val message = "target does not exist"
                     responseObserver.onError(Status.NOT_FOUND.withDescription(message).asRuntimeException())
                 }
                 WerewolfErrorCode.VILLAGE_PASSWORD_IS_WRONG -> {
                     val message = "The village password is wrong"
+                    responseObserver.onError(Status.INVALID_ARGUMENT.withDescription(message).asRuntimeException())
+                }
+                WerewolfErrorCode.USER_PASSWORD_IS_WRONG -> {
+                    val message = "The user password is wrong"
                     responseObserver.onError(Status.INVALID_ARGUMENT.withDescription(message).asRuntimeException())
                 }
             }
