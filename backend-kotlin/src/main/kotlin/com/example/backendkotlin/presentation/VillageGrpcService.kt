@@ -201,32 +201,34 @@ class VillageGrpcService(
         request: GetCurrentVillageUsersRequest,
         responseObserver: StreamObserver<GetCurrentVillageUsersResponse>,
     ) {
-        // 村の状態と現在の参加人数を取得する
-        val (village, currentUsers) = getCurrentVillageUsersUseCase.invoke(
-            request.villageId,
-            request.villagePassword,
-            request.userId,
-            request.userPassword,
-        )
+        handleException(responseObserver) {
+            // 村の状態と現在の参加人数を取得する
+            val (village, currentUsers) = getCurrentVillageUsersUseCase.invoke(
+                request.villageId,
+                request.villagePassword,
+                request.userId,
+                request.userPassword,
+            )
 
-        // レスポンスを作成
-        val currentUsersResponseList = currentUsers.map { user ->
-            CurrentUserResponse.newBuilder()
-                .setUserName(user.name)
+            // レスポンスを作成
+            val currentUsersResponseList = currentUsers.map { user ->
+                CurrentUserResponse.newBuilder()
+                    .setUserName(user.name)
+                    .build()
+            }
+            val getCurrentVillageUsersResponse = GetCurrentVillageUsersResponse.newBuilder()
+                .setVillageId(village.id.value.toString())
+                .addAllCurrentUsers(currentUsersResponseList)
                 .build()
-        }
-        val getCurrentVillageUsersResponse = GetCurrentVillageUsersResponse.newBuilder()
-            .setVillageId(village.id.value.toString())
-            .addAllCurrentUsers(currentUsersResponseList)
-            .build()
 
-        // レスポンスを返す
-        responseObserver.let { r ->
-            r.onNext(getCurrentVillageUsersResponse)
+            // レスポンスを返す
+            responseObserver.let { r ->
+                r.onNext(getCurrentVillageUsersResponse)
 
-            // 村が募集中でない場合は処理を終了する
-            if (!village.isRecruited) {
-                r.onCompleted()
+                // 村が募集中でない場合は処理を終了する
+                if (!village.isRecruited) {
+                    r.onCompleted()
+                }
             }
         }
     }
