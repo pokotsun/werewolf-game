@@ -216,6 +216,81 @@ class VillageRepositoryImplIT(
             }
         }
 
+        this.describe(("SelectVillageWithCurrentUsersById")) {
+            context("正常系") {
+                it("指定したidの村とその村に所属するユーザーが取得できる") {
+                    // given
+                    val gameMaster = Instancio.of(User::class.java)
+                        .set(KSelect.field(User::isActive), true)
+                        .create()
+                    val gameMasterHashedPassword = Instancio.create(HashedPassword::class.java)
+                    val user1 = Instancio.of(User::class.java)
+                        .set(KSelect.field(User::isActive), true)
+                        .create()
+                    val user1HashedPassword = Instancio.create(HashedPassword::class.java)
+                    val user2 = Instancio.of(User::class.java)
+                        .set(KSelect.field(User::isActive), true)
+                        .create()
+                    val user2HashedPassword = Instancio.create(HashedPassword::class.java)
+                    val villageId = Instancio.create(VillageId::class.java)
+                    val village = Instancio.of(Village::class.java)
+                        .set(KSelect.field(Village::id), villageId)
+                        .set(KSelect.field(Village::citizenCount), 10)
+                        .set(KSelect.field(Village::werewolfCount), 2)
+                        .set(KSelect.field(Village::fortuneTellerCount), 1)
+                        .set(KSelect.field(Village::knightCount), 1)
+                        .set(KSelect.field(Village::psychicCount), 1)
+                        .set(KSelect.field(Village::madmanCount), 1)
+                        .set(KSelect.field(Village::isInitialActionActive), false)
+                        .set(KSelect.field(Village::gameMasterUserId), gameMaster.id)
+                        .set(KSelect.field(Village::currentUserNumber), 3)
+                        .set(KSelect.field(Village::isRecruited), true)
+                        .create()
+                    val villageHashedPassword = Instancio.create(HashedPassword::class.java)
+                    val expected = Triple(
+                        village,
+                        villageHashedPassword,
+                        listOf(
+                            Pair(gameMaster, gameMasterHashedPassword),
+                            Pair(user1, user1HashedPassword),
+                            Pair(user2, user2HashedPassword),
+                        ),
+                    )
+                    val anotherVillageId = Instancio.create(VillageId::class.java)
+                    val anotherVillage = Instancio.of(Village::class.java)
+                        .set(KSelect.field(Village::id), anotherVillageId)
+                        .set(KSelect.field(Village::citizenCount), 10)
+                        .set(KSelect.field(Village::werewolfCount), 2)
+                        .set(KSelect.field(Village::fortuneTellerCount), 1)
+                        .set(KSelect.field(Village::knightCount), 1)
+                        .set(KSelect.field(Village::psychicCount), 1)
+                        .set(KSelect.field(Village::madmanCount), 1)
+                        .set(KSelect.field(Village::isInitialActionActive), false)
+                        .set(KSelect.field(Village::gameMasterUserId), gameMaster.id)
+                        .set(KSelect.field(Village::currentUserNumber), 1)
+                        .set(KSelect.field(Village::isRecruited), true)
+                        .create()
+                    val anotherVillageHashedPassword = Instancio.create(HashedPassword::class.java)
+
+                    // and
+                    UserRecord(gameMaster, gameMasterHashedPassword).insert()
+                    UserRecord(user1, user1HashedPassword).insert()
+                    UserRecord(user2, user2HashedPassword).insert()
+                    VillageRecord(village, villageHashedPassword).insert()
+                    VillageRecord(anotherVillage, anotherVillageHashedPassword).insert()
+                    RUserVillageRecord(gameMaster.id, village.id).insert()
+                    RUserVillageRecord(user1.id, village.id).insert()
+                    RUserVillageRecord(user2.id, village.id).insert()
+
+                    // when
+                    val actual = villageRepository.selectVillageWithCurrentUsersById(villageId)
+
+                    // then
+                    actual shouldBe expected
+                }
+            }
+        }
+
         this.describe("CreateVillage") {
             context("正常系") {
                 it("村が作成される") {
