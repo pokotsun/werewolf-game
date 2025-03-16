@@ -359,6 +359,146 @@ class VillageGrpcServiceUT(
                     )
                 }
             }
+            context("異常系") {
+                it("RESOURCE_NOT_FOUNDのエラーが発生したらNOT_FOUNDを返す") {
+                    // given:
+                    val request = GetCurrentVillageUsersRequest.newBuilder()
+                        .setVillageId("1")
+                        .setVillagePassword("password")
+                        .setUserId("1")
+                        .setUserPassword("password")
+                        .build()
+
+                    every {
+                        getCurrentVillageUsersUseCase.invoke(
+                            villageIdString = "1",
+                            villagePassword = "password",
+                            userIdString = "1",
+                            userIdPassword = "password",
+                        )
+                    } throws WerewolfException(WerewolfErrorCode.RESOURCE_NOT_FOUND, "村が存在しません")
+
+                    val spiedResponseObserver = object : StreamObserver<GetCurrentVillageUsersResponse> {
+                        override fun onNext(value: GetCurrentVillageUsersResponse) {
+                            // do nothing
+                        }
+
+                        override fun onError(t: Throwable) {
+                            t.message shouldBe "NOT_FOUND: target does not exist"
+                        }
+
+                        override fun onCompleted() {
+                            // do nothing
+                        }
+                    }.let { spyk(it) }
+
+                    // when:
+                    service.getCurrentVillageUsers(request, spiedResponseObserver)
+
+                    // then:
+                    verify(exactly = 1) {
+                        getCurrentVillageUsersUseCase.invoke(
+                            villageIdString = "1",
+                            villagePassword = "password",
+                            userIdString = "1",
+                            userIdPassword = "password",
+                        )
+                    }
+                    verify(exactly = 0) { spiedResponseObserver.onCompleted() }
+                }
+                it("村のパスワードが違う場合INVALID_ARGUMENTを返す") {
+                    // given:
+                    val request = GetCurrentVillageUsersRequest.newBuilder()
+                        .setVillageId("1")
+                        .setVillagePassword("password")
+                        .setUserId("1")
+                        .setUserPassword("password")
+                        .build()
+
+                    every {
+                        getCurrentVillageUsersUseCase.invoke(
+                            villageIdString = "1",
+                            villagePassword = "password",
+                            userIdString = "1",
+                            userIdPassword = "password",
+                        )
+                    } throws WerewolfException(WerewolfErrorCode.VILLAGE_PASSWORD_IS_WRONG, "村のパスワードが違います")
+
+                    val spiedResponseObserver = object : StreamObserver<GetCurrentVillageUsersResponse> {
+                        override fun onNext(value: GetCurrentVillageUsersResponse) {
+                            // do nothing
+                        }
+
+                        override fun onError(t: Throwable) {
+                            t.message shouldBe "INVALID_ARGUMENT: The village password is wrong"
+                        }
+
+                        override fun onCompleted() {
+                            // do nothing
+                        }
+                    }.let { spyk(it) }
+
+                    // when:
+                    service.getCurrentVillageUsers(request, spiedResponseObserver)
+
+                    // then:
+                    verify(exactly = 1) {
+                        getCurrentVillageUsersUseCase.invoke(
+                            villageIdString = "1",
+                            villagePassword = "password",
+                            userIdString = "1",
+                            userIdPassword = "password",
+                        )
+                    }
+                    verify(exactly = 0) { spiedResponseObserver.onCompleted() }
+                }
+                it("ユーザーのパスワードが違う場合INVALID_ARGUMENTを返す") {
+                    // given:
+                    val request = GetCurrentVillageUsersRequest.newBuilder()
+                        .setVillageId("1")
+                        .setVillagePassword("password")
+                        .setUserId("1")
+                        .setUserPassword("password")
+                        .build()
+
+                    every {
+                        getCurrentVillageUsersUseCase.invoke(
+                            villageIdString = "1",
+                            villagePassword = "password",
+                            userIdString = "1",
+                            userIdPassword = "password",
+                        )
+                    } throws WerewolfException(WerewolfErrorCode.USER_PASSWORD_IS_WRONG, "ユーザーパスワードが違います")
+
+                    val spiedResponseObserver = object : StreamObserver<GetCurrentVillageUsersResponse> {
+                        override fun onNext(value: GetCurrentVillageUsersResponse) {
+                            // do nothing
+                        }
+
+                        override fun onError(t: Throwable) {
+                            t.message shouldBe "INVALID_ARGUMENT: The user password is wrong"
+                        }
+
+                        override fun onCompleted() {
+                            // do nothing
+                        }
+                    }.let { spyk(it) }
+
+                    // when:
+                    service.getCurrentVillageUsers(request, spiedResponseObserver)
+
+                    // then:
+                    verify(exactly = 1) {
+                        getCurrentVillageUsersUseCase.invoke(
+                            villageIdString = "1",
+                            villagePassword = "password",
+                            userIdString = "1",
+                            userIdPassword = "password",
+                        )
+                    }
+                    verify(exactly = 0) { spiedResponseObserver.onCompleted() }
+                }
+            }
         }
 
         this.describe("GetVillage") {
@@ -421,7 +561,7 @@ class VillageGrpcServiceUT(
                         }
 
                         override fun onError(t: Throwable) {
-                            t.message shouldBe "NOT_FOUND: The village does not exist"
+                            t.message shouldBe "NOT_FOUND: target does not exist"
                         }
 
                         override fun onCompleted() {
@@ -544,7 +684,7 @@ class VillageGrpcServiceUT(
                         }
 
                         override fun onError(t: Throwable) {
-                            t.message shouldBe "NOT_FOUND: The village does not exist"
+                            t.message shouldBe "NOT_FOUND: target does not exist"
                         }
 
                         override fun onCompleted() {
