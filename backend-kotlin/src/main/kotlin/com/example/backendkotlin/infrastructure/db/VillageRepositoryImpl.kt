@@ -1,6 +1,7 @@
 package com.example.backendkotlin.infrastructure.db
 
 import com.example.backendkotlin.domain.HashedPassword
+import com.example.backendkotlin.domain.User
 import com.example.backendkotlin.domain.UserId
 import com.example.backendkotlin.domain.Village
 import com.example.backendkotlin.domain.VillageId
@@ -130,6 +131,13 @@ class VillageRepositoryImpl() : VillageRepository {
             ),
             HashedPassword(villageRecord[VillageTable.passwordHash]),
         )
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    override fun selectVillageWithCurrentUsersById(villageId: VillageId): Triple<Village, HashedPassword, List<Pair<User, HashedPassword>>>? {
+        TODO("Not yet implemented")
     }
 
     /**
