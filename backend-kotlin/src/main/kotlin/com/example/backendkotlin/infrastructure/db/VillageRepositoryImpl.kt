@@ -7,7 +7,10 @@ import com.example.backendkotlin.domain.Village
 import com.example.backendkotlin.domain.VillageId
 import com.example.backendkotlin.domain.VillageRepository
 import com.example.backendkotlin.infrastructure.db.table.RUserVillageTable
+import com.example.backendkotlin.infrastructure.db.table.UserTable
 import com.example.backendkotlin.infrastructure.db.table.VillageTable
+import org.jetbrains.exposed.sql.JoinType
+import org.jetbrains.exposed.sql.ResultRow
 import org.jetbrains.exposed.sql.SqlExpressionBuilder.eq
 import org.jetbrains.exposed.sql.insert
 import org.jetbrains.exposed.sql.statements.DeleteStatement.Companion.where
@@ -137,7 +140,61 @@ class VillageRepositoryImpl() : VillageRepository {
      * {@inheritDoc}
      */
     override fun selectVillageWithCurrentUsersById(villageId: VillageId): Triple<Village, HashedPassword, List<Pair<User, HashedPassword>>>? {
-        TODO("Not yet implemented")
+        // villageテーブルから指定された村を取得する
+        val villageWithCurrentUsersRecords = transaction {
+            VillageTable
+                .join(
+                    RUserVillageTable,
+                    JoinType.LEFT,
+                    VillageTable.id,
+                    RUserVillageTable.villageId,
+                ).join(
+                    UserTable,
+                    JoinType.LEFT,
+                    RUserVillageTable.userId,
+                    UserTable.id,
+                ).select(
+                    VillageTable.id,
+                    VillageTable.name,
+                    VillageTable.passwordHash,
+                    VillageTable.citizenCount,
+                    VillageTable.werewolfCount,
+                    VillageTable.fortuneTellerCount,
+                    VillageTable.knightCount,
+                    VillageTable.psychicCount,
+                    VillageTable.madmanCount,
+                    VillageTable.isInitialActionActive,
+                    VillageTable.gameMasterUserId,
+                    VillageTable.isRecruited,
+                    UserTable.id,
+                    UserTable.name,
+                    UserTable.passwordHash,
+                    UserTable.isActive,
+                ).where { VillageTable.id eq villageId.value }
+                .toList()
+        }
+
+        // 指定された村が存在しない場合はnullを返す
+        if (villageWithCurrentUsersRecords.isEmpty()) {
+            return null
+        }
+        // 1つのvillageが取得できていることを確認
+        require(villageWithCurrentUsersRecords.groupBy { it[VillageTable.id].value == villageId.value }.size == 1) {
+            "village_idが一致しないレコードが混在しています"
+        }
+
+        // ドメインに変換する
+        val villageRecord = villageWithCurrentUsersRecords.first()
+        val currentUserNumber = villageWithCurrentUsersRecords.size
+        val village = mapToVillage(villageRecord, currentUserNumber)
+        val villageHashedPassword = HashedPassword(villageRecord[VillageTable.passwordHash])
+        val userWithHashedPasswordList = villageWithCurrentUsersRecords.map {
+            Pair(
+                mapToUser(it),
+                HashedPassword(it[UserTable.passwordHash]),
+            )
+        }
+        return Triple(village, villageHashedPassword, userWithHashedPasswordList)
     }
 
     /**
@@ -160,5 +217,45 @@ class VillageRepositoryImpl() : VillageRepository {
             }
         }
         return village
+    }
+
+    /**
+     * VillageTableの検索結果をVillageドメインに変換する
+     *
+     * @param villageRecord VillageTableの検索結果
+     * @param currentUserNumber 現在のユーザー数
+     *
+     * @return Villageドメイン
+     */
+    internal fun mapToVillage(villageRecord: ResultRow, currentUserNumber: Int): Village {
+        return Village(
+            id = VillageId(villageRecord[VillageTable.id].value),
+            name = villageRecord[VillageTable.name],
+            citizenCount = villageRecord[VillageTable.citizenCount],
+            werewolfCount = villageRecord[VillageTable.werewolfCount],
+            fortuneTellerCount = villageRecord[VillageTable.fortuneTellerCount],
+            knightCount = villageRecord[VillageTable.knightCount],
+            psychicCount = villageRecord[VillageTable.psychicCount],
+            madmanCount = villageRecord[VillageTable.madmanCount],
+            isInitialActionActive = villageRecord[VillageTable.isInitialActionActive],
+            gameMasterUserId = UserId(villageRecord[VillageTable.gameMasterUserId]),
+            currentUserNumber = currentUserNumber,
+            isRecruited = villageRecord[VillageTable.isRecruited],
+        )
+    }
+
+    /**
+     * UserTableの検索結果をUserドメインに変換する
+     *
+     * @param userRecord UserTableの検索結果
+     *
+     * @return Userドメイン
+     */
+    internal fun mapToUser(userRecord: ResultRow): User {
+        return User(
+            id = UserId(userRecord[UserTable.id].value),
+            name = userRecord[UserTable.name],
+            isActive = userRecord[UserTable.isActive],
+        )
     }
 }
