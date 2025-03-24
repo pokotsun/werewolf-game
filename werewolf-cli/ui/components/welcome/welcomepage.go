@@ -1,17 +1,15 @@
 package welcome
 
 import (
-	"fmt"
+	"github.com/charmbracelet/bubbles/list"
 	tea "github.com/charmbracelet/bubbletea"
 	"github.com/charmbracelet/lipgloss"
 	"strings"
 )
 
 var (
-	titleStyle        = lipgloss.NewStyle().MarginLeft(2)
-	selectedItemStyle = lipgloss.NewStyle().PaddingLeft(2).Foreground(lipgloss.Color("170"))
-	itemStyle         = lipgloss.NewStyle().PaddingLeft(4)
-	quitTextStyle     = lipgloss.NewStyle().Margin(1, 0, 2, 4)
+	titleStyle = lipgloss.NewStyle().MarginLeft(2).Bold(true)
+	docStyle   = lipgloss.NewStyle().Margin(1, 2)
 )
 
 type Choice int
@@ -21,9 +19,18 @@ const (
 	EnterVillage
 )
 
-var choices = []string{
-	"Create Village",
-	"Enter Village",
+type item struct {
+	title, desc string
+	choice      Choice
+}
+
+func (i item) Title() string       { return i.title }
+func (i item) Description() string { return i.desc }
+func (i item) FilterValue() string { return i.title }
+
+var items = []list.Item{
+	item{"Create Village", "ゲームマスターとして村を作成します", CreateVillage},
+	item{"Enter Village", "ゲームマスターが既に作成した村に村人として参加します", EnterVillage},
 }
 
 type Msg struct {
@@ -31,7 +38,17 @@ type Msg struct {
 }
 
 type Model struct {
-	choice Choice
+	list list.Model
+}
+
+func NewModel() Model {
+	l := list.New(items, list.NewDefaultDelegate(), 0, 0)
+	l.SetShowPagination(false)
+	l.SetFilteringEnabled(false)
+	l.SetShowTitle(false)
+	l.SetShowStatusBar(false)
+
+	return Model{list: l}
 }
 
 func (m Model) Init() tea.Cmd {
@@ -46,41 +63,25 @@ func (m Model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 			return m, tea.Quit
 		case "enter":
 			return m, func() tea.Msg {
-				return Msg{Choice: m.choice}
+				selectedChoice := m.list.SelectedItem().(item).choice
+				return Msg{Choice: selectedChoice}
 			}
-		case "down", "j":
-			m.choice++
-			if int(m.choice) >= len(choices) {
-				m.choice = 0
-			}
-			return m, nil
-
-		case "up", "k":
-			m.choice--
-			if m.choice < 0 {
-				m.choice = Choice(len(choices) - 1)
-			}
-			return m, nil
 		}
+	case tea.WindowSizeMsg:
+		h, v := docStyle.GetFrameSize()
+		m.list.SetSize(msg.Width-h, msg.Height-v-2)
 	}
-	return m, nil
+
+	var cmd tea.Cmd
+	m.list, cmd = m.list.Update(msg)
+	return m, cmd
 }
 
 func (m Model) View() string {
 	s := strings.Builder{}
 	s.WriteString(titleStyle.Render("Welcome to Werewolf Game CLI"))
 	s.WriteString("\n\n")
-
-	for i := 0; i < len(choices); i++ {
-		if int(m.choice) == i {
-			s.WriteString(selectedItemStyle.Render(fmt.Sprintf("> %v", choices[i])))
-		} else {
-			s.WriteString(itemStyle.Render(fmt.Sprintf("  %v", choices[i])))
-		}
-		s.WriteString("\n")
-	}
-
-	s.WriteString(quitTextStyle.Render("\n(press q to quit)\n"))
+	s.WriteString(docStyle.Render(m.list.View()))
 
 	return s.String()
 }
