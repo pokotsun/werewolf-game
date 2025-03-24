@@ -1,8 +1,17 @@
 package welcome
 
 import (
+	"fmt"
 	tea "github.com/charmbracelet/bubbletea"
+	"github.com/charmbracelet/lipgloss"
 	"strings"
+)
+
+var (
+	titleStyle        = lipgloss.NewStyle().MarginLeft(2)
+	selectedItemStyle = lipgloss.NewStyle().PaddingLeft(2).Foreground(lipgloss.Color("170"))
+	itemStyle         = lipgloss.NewStyle().PaddingLeft(4)
+	quitTextStyle     = lipgloss.NewStyle().Margin(1, 0, 2, 4)
 )
 
 type Choice int
@@ -17,7 +26,7 @@ var choices = []string{
 	"Enter Village",
 }
 
-type ChildMsg struct {
+type Msg struct {
 	Choice Choice
 }
 
@@ -37,7 +46,7 @@ func (m Model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 			return m, tea.Quit
 		case "enter":
 			return m, func() tea.Msg {
-				return ChildMsg{Choice: m.choice}
+				return Msg{Choice: m.choice}
 			}
 		case "down", "j":
 			m.choice++
@@ -59,19 +68,19 @@ func (m Model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 
 func (m Model) View() string {
 	s := strings.Builder{}
-	s.WriteString("Welcome to Werewolf Game CLI\n\n")
+	s.WriteString(titleStyle.Render("Welcome to Werewolf Game CLI"))
+	s.WriteString("\n\n")
 
 	for i := 0; i < len(choices); i++ {
 		if int(m.choice) == i {
-			s.WriteString("> ")
+			s.WriteString(selectedItemStyle.Render(fmt.Sprintf("> %v", choices[i])))
 		} else {
-			s.WriteString("  ")
+			s.WriteString(itemStyle.Render(fmt.Sprintf("  %v", choices[i])))
 		}
-		s.WriteString(choices[i])
 		s.WriteString("\n")
 	}
 
-	s.WriteString("\n(press q to quit)\n")
+	s.WriteString(quitTextStyle.Render("\n(press q to quit)\n"))
 
 	return s.String()
 }
