@@ -8,8 +8,12 @@ import (
 )
 
 func main() {
-	uiModel := ui.Model{}
-	if _, err := tea.NewProgram(uiModel).Run(); err != nil {
+	uiModel := ui.NewModel()
+	if _, err := tea.NewProgram(
+		uiModel,
+		tea.WithInput(os.Stdin),
+		tea.WithOutput(os.Stdout),
+	).Run(); err != nil {
 		fmt.Printf("error starting program: %v\n", err)
 		os.Exit(1)
 	}
