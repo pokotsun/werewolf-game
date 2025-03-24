@@ -49,8 +49,8 @@ func (m Model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 		case "q", "ctrl+c", "esc":
 			return m, tea.Quit
 		}
-	case welcome.ChildMsg:
-		switch msg.(welcome.ChildMsg).Choice {
+	case welcome.Msg:
+		switch msg.(welcome.Msg).Choice {
 		case welcome.CreateVillage:
 			m.viewState = CreateVillage
 		case welcome.EnterVillage:
