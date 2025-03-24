@@ -23,7 +23,7 @@ type Model struct {
 func NewModel() Model {
 	return Model{
 		viewState:   WelcomeView,
-		welcomePage: welcome.Model{},
+		welcomePage: welcome.NewModel(),
 	}
 }
 
