@@ -33,7 +33,7 @@ class EnterVillageUseCase(
      */
     fun invoke(villageIdString: String, villagePassword: String, userName: String, userPassword: String): Pair<UserId, VillageId> {
         // リクエストされた村が存在するか確認
-        val villageId = VillageId.generate(villageIdString)
+        val villageId = VillageId.from(villageIdString)
         val villageAndHashedPassword = villageRepository.selectVillageById(villageId) ?: throw WerewolfException(WerewolfErrorCode.RESOURCE_NOT_FOUND, "村が存在しません")
 
         // 取得した村のパスワードが正しいか確認

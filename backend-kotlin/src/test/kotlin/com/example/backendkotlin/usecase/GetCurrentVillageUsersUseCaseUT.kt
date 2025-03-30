@@ -77,7 +77,7 @@ class GetCurrentVillageUsersUseCaseUT(
                 val expected = Pair(village, listOf(gameMaster, user1))
 
                 // and
-                every { VillageId.generate(villageId.value.toString()) } returns villageId
+                every { VillageId.from(villageId.value.toString()) } returns villageId
                 every { villageRepository.selectVillageWithCurrentUsersById(villageId) } returns Triple(
                     village,
                     villageHashedPassword,
@@ -102,7 +102,7 @@ class GetCurrentVillageUsersUseCaseUT(
                 actual.first shouldBe expected.first
                 actual.second shouldContainExactlyInAnyOrder expected.second
                 verify(exactly = 1) {
-                    VillageId.generate(villageId.value.toString())
+                    VillageId.from(villageId.value.toString())
                     villageRepository.selectVillageWithCurrentUsersById(villageId)
                     HashedPassword.doesMatch(villagePassword, villageHashedPassword)
                     UserId.from(user1Id.value.toString())
@@ -115,7 +115,7 @@ class GetCurrentVillageUsersUseCaseUT(
                     val villageId = Instancio.create(VillageId::class.java)
 
                     // and
-                    every { VillageId.generate(villageId.value.toString()) } returns villageId
+                    every { VillageId.from(villageId.value.toString()) } returns villageId
                     every { villageRepository.selectVillageWithCurrentUsersById(villageId) } returns null
 
                     // when, then
@@ -125,7 +125,7 @@ class GetCurrentVillageUsersUseCaseUT(
                     exception.message shouldBe "村が存在しません"
 
                     verify(exactly = 1) {
-                        VillageId.generate(villageId.value.toString())
+                        VillageId.from(villageId.value.toString())
                         villageRepository.selectVillageWithCurrentUsersById(villageId)
                     }
                     verify(exactly = 0) {
@@ -156,7 +156,7 @@ class GetCurrentVillageUsersUseCaseUT(
                     val villageHashedPassword = Instancio.create(HashedPassword::class.java)
 
                     // and
-                    every { VillageId.generate(villageId.value.toString()) } returns villageId
+                    every { VillageId.from(villageId.value.toString()) } returns villageId
                     every { villageRepository.selectVillageWithCurrentUsersById(villageId) } returns Triple(
                         village,
                         villageHashedPassword,
@@ -179,7 +179,7 @@ class GetCurrentVillageUsersUseCaseUT(
                     exception.message shouldBe "村のパスワードが違います"
 
                     verify(exactly = 1) {
-                        VillageId.generate(villageId.value.toString())
+                        VillageId.from(villageId.value.toString())
                         villageRepository.selectVillageWithCurrentUsersById(villageId)
                         HashedPassword.doesMatch(villagePassword, villageHashedPassword)
                     }
@@ -211,7 +211,7 @@ class GetCurrentVillageUsersUseCaseUT(
                     val notExistUserId = Instancio.create(UserId::class.java)
 
                     // and
-                    every { VillageId.generate(villageId.value.toString()) } returns villageId
+                    every { VillageId.from(villageId.value.toString()) } returns villageId
                     every { villageRepository.selectVillageWithCurrentUsersById(villageId) } returns Triple(
                         village,
                         villageHashedPassword,
@@ -235,7 +235,7 @@ class GetCurrentVillageUsersUseCaseUT(
                     exception.message shouldBe "ユーザーが存在しません"
 
                     verify(exactly = 1) {
-                        VillageId.generate(villageId.value.toString())
+                        VillageId.from(villageId.value.toString())
                         villageRepository.selectVillageWithCurrentUsersById(villageId)
                         HashedPassword.doesMatch(villagePassword, villageHashedPassword)
                         UserId.from(notExistUserId.value.toString())
@@ -264,7 +264,7 @@ class GetCurrentVillageUsersUseCaseUT(
                     val villageHashedPassword = Instancio.create(HashedPassword::class.java)
 
                     // and
-                    every { VillageId.generate(villageId.value.toString()) } returns villageId
+                    every { VillageId.from(villageId.value.toString()) } returns villageId
                     every { villageRepository.selectVillageWithCurrentUsersById(villageId) } returns Triple(
                         village,
                         villageHashedPassword,
@@ -289,7 +289,7 @@ class GetCurrentVillageUsersUseCaseUT(
                     exception.message shouldBe "ユーザーパスワードが違います"
 
                     verify(exactly = 1) {
-                        VillageId.generate(villageId.value.toString())
+                        VillageId.from(villageId.value.toString())
                         villageRepository.selectVillageWithCurrentUsersById(villageId)
                         HashedPassword.doesMatch(villagePassword, villageHashedPassword)
                         UserId.from(user1Id.value.toString())

@@ -34,7 +34,7 @@ class GetCurrentVillageUsersUseCase(
         userIdPassword: String,
     ): Pair<Village, List<User>> {
         // 村とその村に参加しているユーザーを取得
-        val villageId = VillageId.generate(villageIdString)
+        val villageId = VillageId.from(villageIdString)
         val (village, villageHashedPassword, userWithHashedPasswordList) = villageRepository.selectVillageWithCurrentUsersById(
             villageId = villageId,
         ) ?: throw WerewolfException(WerewolfErrorCode.RESOURCE_NOT_FOUND, "村が存在しません")

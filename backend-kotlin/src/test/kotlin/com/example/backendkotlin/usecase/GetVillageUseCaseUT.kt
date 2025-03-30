@@ -56,7 +56,7 @@ class GetVillageUseCaseUT(
                     val villageId = Instancio.create(VillageId::class.java)
                     val village = Instancio.of(Village::class.java).create()
                     val villageHashedPassword = Instancio.create(HashedPassword::class.java)
-                    every { VillageId.generate(villageIdString) } returns villageId
+                    every { VillageId.from(villageIdString) } returns villageId
                     every { villageRepository.selectVillageById(villageId) } returns Pair(village, villageHashedPassword)
 
                     // when
@@ -72,7 +72,7 @@ class GetVillageUseCaseUT(
                     // given
                     val villageIdString = "00000000-0000-0000-0000-000000000000"
                     val villageId = Instancio.create(VillageId::class.java)
-                    every { VillageId.generate(villageIdString) } returns villageId
+                    every { VillageId.from(villageIdString) } returns villageId
                     every { villageRepository.selectVillageById(villageId) } returns null
 
                     // when, then
