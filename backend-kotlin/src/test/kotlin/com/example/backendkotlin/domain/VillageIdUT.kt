@@ -31,14 +31,14 @@ class VillageIdUT : DescribeSpec() {
             }
         }
 
-        describe("generate(value: String)") {
+        describe("from()") {
             it("UUIDの仕様に沿った文字列からオブジェクトを生成できる") {
                 // given
                 val value = "123e4567-e89b-12d3-a456-426614174000"
 
                 // when, then
                 shouldNotThrowAny {
-                    VillageId.generate(value)
+                    VillageId.from(value)
                 }
             }
 
@@ -48,7 +48,7 @@ class VillageIdUT : DescribeSpec() {
 
                 // when, then
                 shouldThrow<IllegalArgumentException> {
-                    VillageId.generate(value)
+                    VillageId.from(value)
                 }
             }
         }

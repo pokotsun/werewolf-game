@@ -19,7 +19,7 @@ data class VillageId(val value: UUID) {
          * @param value 村IDの文字列
          * @return 村ID
          */
-        fun generate(value: String): VillageId {
+        fun from(value: String): VillageId {
             return VillageId(UUID.fromString(value))
         }
     }

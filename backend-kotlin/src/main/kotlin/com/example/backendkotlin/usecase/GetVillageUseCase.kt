@@ -20,7 +20,7 @@ class GetVillageUseCase(
      */
     fun invoke(villageIdString: String): Village {
         // 村を取得
-        val villageId = VillageId.generate(villageIdString)
+        val villageId = VillageId.from(villageIdString)
         val villageAndPassword = villageRepository.selectVillageById(villageId)
             ?: throw WerewolfException(WerewolfErrorCode.RESOURCE_NOT_FOUND, "村が存在しません")
         val result = villageAndPassword.first

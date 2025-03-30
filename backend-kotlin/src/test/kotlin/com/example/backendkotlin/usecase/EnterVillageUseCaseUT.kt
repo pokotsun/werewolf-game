@@ -109,7 +109,7 @@ class EnterVillageUseCaseUT(
                     val expected = Pair(newUserId, villageId)
 
                     // and
-                    every { VillageId.generate(villageId.value.toString()) } returns villageId
+                    every { VillageId.from(villageId.value.toString()) } returns villageId
                     every { villageRepository.selectVillageById(villageId) } returns villageAndHashedPassword
                     every { HashedPassword.doesMatch(villagePassword, villageHashedPassword) } returns true
                     every { UserId.generate() } returns newUserId
@@ -138,7 +138,7 @@ class EnterVillageUseCaseUT(
                     val villageId = Instancio.create(VillageId::class.java)
 
                     // and
-                    every { VillageId.generate(villageId.value.toString()) } returns villageId
+                    every { VillageId.from(villageId.value.toString()) } returns villageId
                     every { villageRepository.selectVillageById(villageId) } returns null
 
                     // when, then
@@ -167,7 +167,7 @@ class EnterVillageUseCaseUT(
                     val villageAndHashedPassword = Pair(village, villageHashedPassword)
 
                     // and
-                    every { VillageId.generate(villageId.value.toString()) } returns villageId
+                    every { VillageId.from(villageId.value.toString()) } returns villageId
                     every { villageRepository.selectVillageById(villageId) } returns villageAndHashedPassword
                     every { HashedPassword.doesMatch(incorrectVillagePassword, villageHashedPassword) } returns false
 
