@@ -168,10 +168,6 @@ class VillageRepositoryImpl() : VillageRepository {
         if (villageWithCurrentUsersRecords.isEmpty()) {
             return null
         }
-        // 1つのvillageが取得できていることを確認
-        require(villageWithCurrentUsersRecords.groupBy { it[VillageTable.id].value == villageId.value }.size == 1) {
-            "village_idが一致しないレコードが混在しています"
-        }
 
         // ドメインに変換する
         val villageRecord = villageWithCurrentUsersRecords.first()
