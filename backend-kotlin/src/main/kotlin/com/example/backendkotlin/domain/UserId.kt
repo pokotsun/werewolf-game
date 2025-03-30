@@ -19,7 +19,7 @@ data class UserId(val value: UUID) {
          * @param userIdString ユーザーIDの文字列
          * @return ユーザーID
          */
-        fun generate(userIdString: String): UserId {
+        fun from(userIdString: String): UserId {
             return UserId(UUID.fromString(userIdString))
         }
     }

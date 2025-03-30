@@ -45,7 +45,7 @@ class GetCurrentVillageUsersUseCase(
         }
 
         // ユーザーIDとパスワードが正しいかチェック
-        val userId = UserId.generate(userIdString)
+        val userId = UserId.from(userIdString)
         val (_, requestUserHashedPassword) = userWithHashedPasswordList.find { it.first.id == userId }
             ?: throw WerewolfException(WerewolfErrorCode.RESOURCE_NOT_FOUND, "ユーザーが存在しません")
         if (!HashedPassword.doesMatch(userIdPassword, requestUserHashedPassword)) {
