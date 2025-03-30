@@ -217,7 +217,7 @@ class VillageRepositoryImpl() : VillageRepository {
      *
      * @return Villageドメイン
      */
-    internal fun mapToVillage(villageRecord: ResultRow, currentUserNumber: Int): Village {
+    private fun mapToVillage(villageRecord: ResultRow, currentUserNumber: Int): Village {
         return Village(
             id = VillageId(villageRecord[VillageTable.id].value),
             name = villageRecord[VillageTable.name],
@@ -241,7 +241,7 @@ class VillageRepositoryImpl() : VillageRepository {
      *
      * @return Userドメイン
      */
-    internal fun mapToUser(userRecord: ResultRow): User {
+    private fun mapToUser(userRecord: ResultRow): User {
         return User(
             id = UserId(userRecord[UserTable.id].value),
             name = userRecord[UserTable.name],
