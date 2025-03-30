@@ -87,7 +87,7 @@ class GetCurrentVillageUsersUseCaseUT(
                     ),
                 )
                 every { HashedPassword.doesMatch(villagePassword, villageHashedPassword) } returns true
-                every { UserId.generate(user1Id.value.toString()) } returns user1Id
+                every { UserId.from(user1Id.value.toString()) } returns user1Id
                 every { HashedPassword.doesMatch(user1Password, user1HashedPassword) } returns true
 
                 // when
@@ -105,7 +105,7 @@ class GetCurrentVillageUsersUseCaseUT(
                     VillageId.generate(villageId.value.toString())
                     villageRepository.selectVillageWithCurrentUsersById(villageId)
                     HashedPassword.doesMatch(villagePassword, villageHashedPassword)
-                    UserId.generate(user1Id.value.toString())
+                    UserId.from(user1Id.value.toString())
                     HashedPassword.doesMatch(user1Password, user1HashedPassword)
                 }
             }
@@ -130,7 +130,7 @@ class GetCurrentVillageUsersUseCaseUT(
                     }
                     verify(exactly = 0) {
                         HashedPassword.doesMatch(any(), any())
-                        UserId.generate(any())
+                        UserId.from(any())
                     }
                 }
                 it("村のパスワードが間違っている") {
@@ -184,7 +184,7 @@ class GetCurrentVillageUsersUseCaseUT(
                         HashedPassword.doesMatch(villagePassword, villageHashedPassword)
                     }
                     verify(exactly = 0) {
-                        UserId.generate(any())
+                        UserId.from(any())
                     }
                 }
                 it("ユーザーが存在しない") {
@@ -221,7 +221,7 @@ class GetCurrentVillageUsersUseCaseUT(
                         ),
                     )
                     every { HashedPassword.doesMatch(villagePassword, villageHashedPassword) } returns true
-                    every { UserId.generate(notExistUserId.value.toString()) } returns notExistUserId
+                    every { UserId.from(notExistUserId.value.toString()) } returns notExistUserId
 
                     // when, then
                     val exception = shouldThrow<WerewolfException> {
@@ -238,7 +238,7 @@ class GetCurrentVillageUsersUseCaseUT(
                         VillageId.generate(villageId.value.toString())
                         villageRepository.selectVillageWithCurrentUsersById(villageId)
                         HashedPassword.doesMatch(villagePassword, villageHashedPassword)
-                        UserId.generate(notExistUserId.value.toString())
+                        UserId.from(notExistUserId.value.toString())
                     }
                 }
                 it("ユーザーのパスワードが間違っている") {
@@ -274,7 +274,7 @@ class GetCurrentVillageUsersUseCaseUT(
                         ),
                     )
                     every { HashedPassword.doesMatch(villagePassword, villageHashedPassword) } returns true
-                    every { UserId.generate(user1Id.value.toString()) } returns user1Id
+                    every { UserId.from(user1Id.value.toString()) } returns user1Id
                     every { HashedPassword.doesMatch(user1Password, user1HashedPassword) } returns false
 
                     // when, then
@@ -292,7 +292,7 @@ class GetCurrentVillageUsersUseCaseUT(
                         VillageId.generate(villageId.value.toString())
                         villageRepository.selectVillageWithCurrentUsersById(villageId)
                         HashedPassword.doesMatch(villagePassword, villageHashedPassword)
-                        UserId.generate(user1Id.value.toString())
+                        UserId.from(user1Id.value.toString())
                         HashedPassword.doesMatch(user1Password, user1HashedPassword)
                     }
                 }
