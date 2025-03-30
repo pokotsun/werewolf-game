@@ -13,12 +13,15 @@ import com.example.backendkotlin.generated.grpc.ListVillagesRequest
 import com.example.backendkotlin.generated.grpc.ListVillagesResponse
 import com.example.backendkotlin.generated.grpc.VillageResponse
 import com.example.backendkotlin.generated.grpc.VillageServiceGrpc
+import com.example.backendkotlin.infrastructure.db.table.VillageTable.isRecruited
 import com.example.backendkotlin.usecase.CreateVillageUseCase
 import com.example.backendkotlin.usecase.EnterVillageUseCase
 import com.example.backendkotlin.usecase.GetCurrentVillageUsersUseCase
 import com.example.backendkotlin.usecase.GetVillageUseCase
 import com.example.backendkotlin.usecase.ListVillagesUseCase
 import com.github.michaelbull.result.fold
+import com.example.backendkotlin.utils.SleepUtil
+import com.github.michaelbull.result.mapBoth
 import io.grpc.stub.StreamObserver
 import net.devh.boot.grpc.server.service.GrpcService
 
@@ -201,35 +204,45 @@ class VillageGrpcService(
         request: GetCurrentVillageUsersRequest,
         responseObserver: StreamObserver<GetCurrentVillageUsersResponse>,
     ) {
-        handleException(responseObserver) {
-            // 村の状態と現在の参加人数を取得する
-            val (village, currentUsers) = getCurrentVillageUsersUseCase.invoke(
-                request.villageId,
-                request.villagePassword,
-                request.userId,
-                request.userPassword,
+        // SeverStreamingの実装。村が募集中の間はレスポンスし続ける。
+        do {
+            val result = handleException {
+                getCurrentVillageUsersUseCase.invoke(
+                    request.villageId,
+                    request.villagePassword,
+                    request.userId,
+                    request.userPassword,
+                )
+            }
+            val shouldContinue = result.mapBoth(
+                success = { (village, currentUsers) ->
+                    // レスポンスを作成
+                    val currentUsersResponseList = currentUsers.map { user ->
+                        CurrentUserResponse.newBuilder()
+                            .setUserName(user.name)
+                            .build()
+                    }
+                    val getCurrentVillageUsersResponse = GetCurrentVillageUsersResponse.newBuilder()
+                        .setVillageId(village.id.value.toString())
+                        .addAllCurrentUsers(currentUsersResponseList)
+                        .build()
+
+                    // レスポンスを返す
+                    responseObserver.onNext(getCurrentVillageUsersResponse)
+                    if (village.isRecruited) {
+                        SleepUtil.threadSleep(3000)
+                    } else {
+                        // 村が募集中でない場合は処理を終了する
+                        responseObserver.onCompleted()
+                    }
+                    village.isRecruited
+                },
+                failure = { e ->
+                    // エラーが発生した場合はエラーレスポンスを返す
+                    responseObserver.onError(e)
+                    false
+                },
             )
-
-            // レスポンスを作成
-            val currentUsersResponseList = currentUsers.map { user ->
-                CurrentUserResponse.newBuilder()
-                    .setUserName(user.name)
-                    .build()
-            }
-            val getCurrentVillageUsersResponse = GetCurrentVillageUsersResponse.newBuilder()
-                .setVillageId(village.id.value.toString())
-                .addAllCurrentUsers(currentUsersResponseList)
-                .build()
-
-            // レスポンスを返す
-            responseObserver.let { r ->
-                r.onNext(getCurrentVillageUsersResponse)
-
-                // 村が募集中でない場合は処理を終了する
-                if (!village.isRecruited) {
-                    r.onCompleted()
-                }
-            }
-        }
+        } while (shouldContinue)
     }
 }

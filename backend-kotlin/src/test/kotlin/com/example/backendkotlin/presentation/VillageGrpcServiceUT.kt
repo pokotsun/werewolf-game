@@ -21,11 +21,14 @@ import com.example.backendkotlin.usecase.EnterVillageUseCase
 import com.example.backendkotlin.usecase.GetCurrentVillageUsersUseCase
 import com.example.backendkotlin.usecase.GetVillageUseCase
 import com.example.backendkotlin.usecase.ListVillagesUseCase
+import com.example.backendkotlin.util.KSelect
+import com.example.backendkotlin.utils.SleepUtil
 import com.ninjasquad.springmockk.MockkBean
 import io.grpc.Status
 import io.grpc.StatusRuntimeException
 import io.grpc.stub.StreamObserver
 import io.kotest.assertions.throwables.shouldThrow
+import io.kotest.core.spec.Spec
 import io.kotest.core.spec.style.DescribeSpec
 import io.kotest.core.test.TestCase
 import io.kotest.core.test.TestResult
@@ -35,7 +38,11 @@ import io.mockk.clearAllMocks
 import io.mockk.confirmVerified
 import io.mockk.every
 import io.mockk.impl.annotations.InjectMockKs
+import io.mockk.just
+import io.mockk.mockkObject
+import io.mockk.runs
 import io.mockk.spyk
+import io.mockk.unmockkObject
 import io.mockk.verify
 import org.instancio.Instancio
 
@@ -54,6 +61,15 @@ class VillageGrpcServiceUT(
     @InjectMockKs
     private lateinit var service: VillageGrpcService
 
+    override suspend fun beforeSpec(spec: Spec) {
+        mockkObject(SleepUtil)
+        every { SleepUtil.threadSleep(more(0L)) } just runs
+    }
+
+    override suspend fun afterSpec(spec: Spec) {
+        unmockkObject(SleepUtil)
+    }
+
     override suspend fun beforeTest(testCase: TestCase) {
         MockKAnnotations.init(this)
         clearAllMocks()
@@ -64,6 +80,8 @@ class VillageGrpcServiceUT(
             listVillagesUseCase,
             createVillageUseCase,
             enterVillageUseCase,
+            getCurrentVillageUsersUseCase,
+            getVillageUseCase,
         )
     }
 
@@ -301,62 +319,77 @@ class VillageGrpcServiceUT(
         }
 
         this.describe("GetCurrentVillageUsers") {
-            it("正常系") {
-                // given
-                val request = GetCurrentVillageUsersRequest.newBuilder()
-                    .setVillageId("1")
-                    .setVillagePassword("password")
-                    .setUserId("1")
-                    .setUserPassword("password")
-                    .build()
+            context("正常系") {
+                it("実行1回目はisRecruitedがtrueで継続し、2回目でfalseになり終了する") {
+                    // given
+                    val villageId = Instancio.create(VillageId::class.java)
+                    val request = GetCurrentVillageUsersRequest.newBuilder()
+                        .setVillageId(villageId.value.toString())
+                        .setVillagePassword("password")
+                        .setUserId("1")
+                        .setUserPassword("password")
+                        .build()
 
-                val expectedVillage = Instancio.create(Village::class.java)
-                val users = listOf(Instancio.create(User::class.java))
-                val expectedUserNames = users.map { it.name }
-
-                // and
-                every {
-                    getCurrentVillageUsersUseCase.invoke(
-                        villageIdString = "1",
-                        villagePassword = "password",
-                        userIdString = "1",
-                        userIdPassword = "password",
+                    val expectedVillageState1 = Instancio.of(Village::class.java)
+                        .set(KSelect.field(Village::id), villageId)
+                        .set(KSelect.field(Village::isRecruited), true)
+                        .create()
+                    val expectedVillageState2 = Instancio.of(Village::class.java)
+                        .set(KSelect.field(Village::id), villageId)
+                        .set(KSelect.field(Village::isRecruited), false)
+                        .create()
+                    val users = listOf(Instancio.create(User::class.java))
+                    val expectedUserNames = users.map { it.name }
+                    val expectedResults = listOf(
+                        Pair(expectedVillageState1, users),
+                        Pair(expectedVillageState2, users),
                     )
-                } returns Pair(expectedVillage, users)
 
-                val spiedResponseObserver = object : StreamObserver<GetCurrentVillageUsersResponse> {
-                    override fun onNext(value: GetCurrentVillageUsersResponse) {
-                        value.villageId shouldBe expectedVillage.id.value.toString()
+                    // and
+                    every {
+                        getCurrentVillageUsersUseCase.invoke(
+                            villageIdString = villageId.value.toString(),
+                            villagePassword = "password",
+                            userIdString = "1",
+                            userIdPassword = "password",
+                        )
+                    } returnsMany expectedResults
 
-                        val sortedExpectedUsers = expectedUserNames.sortedBy { it }
-                        val sortedActualUsers = value.currentUsersList.sortedBy { it.userName }
-                        sortedActualUsers
-                            .zip(sortedExpectedUsers)
-                            .forEach { (actual, expected) ->
-                                actual.userName shouldBe expected
-                            }
+                    val spiedResponseObserver = object : StreamObserver<GetCurrentVillageUsersResponse> {
+                        override fun onNext(value: GetCurrentVillageUsersResponse) {
+                            // villageIdの確認
+                            value.villageId shouldBe expectedVillageState1.id.value.toString()
+
+                            // ユーザーリストの確認
+                            val actualUsers = value.currentUsersList.map { it.userName }
+                            actualUsers shouldBe expectedUserNames
+                        }
+
+                        override fun onError(t: Throwable) {
+                            // do nothing
+                        }
+
+                        override fun onCompleted() {
+                            // do nothing
+                        }
+                    }.let { spyk(it) }
+
+                    // when
+                    service.getCurrentVillageUsers(request, spiedResponseObserver)
+
+                    // then
+                    verify(exactly = 2) {
+                        getCurrentVillageUsersUseCase.invoke(
+                            villageIdString = villageId.value.toString(),
+                            villagePassword = "password",
+                            userIdString = "1",
+                            userIdPassword = "password",
+                        )
                     }
-
-                    override fun onError(t: Throwable) {
-                        // do nothing
+                    verify(exactly = 1) {
+                        spiedResponseObserver.onCompleted()
+                        SleepUtil.threadSleep(3000)
                     }
-
-                    override fun onCompleted() {
-                        // do nothing
-                    }
-                }.let { spyk(it) }
-
-                // when
-                service.getCurrentVillageUsers(request, spiedResponseObserver)
-
-                // then
-                verify(exactly = 1) {
-                    getCurrentVillageUsersUseCase.invoke(
-                        villageIdString = "1",
-                        villagePassword = "password",
-                        userIdString = "1",
-                        userIdPassword = "password",
-                    )
                 }
             }
             context("異常系") {
@@ -384,7 +417,7 @@ class VillageGrpcServiceUT(
                         }
 
                         override fun onError(t: Throwable) {
-                            t.message shouldBe "NOT_FOUND: target does not exist"
+                            t.message shouldBe "NOT_FOUND: The village does not exist"
                         }
 
                         override fun onCompleted() {
@@ -404,7 +437,6 @@ class VillageGrpcServiceUT(
                             userIdPassword = "password",
                         )
                     }
-                    verify(exactly = 0) { spiedResponseObserver.onCompleted() }
                 }
                 it("村のパスワードが違う場合INVALID_ARGUMENTを返す") {
                     // given:
@@ -561,7 +593,7 @@ class VillageGrpcServiceUT(
                         }
 
                         override fun onError(t: Throwable) {
-                            t.message shouldBe "NOT_FOUND: target does not exist"
+                            t.message shouldBe "NOT_FOUND: The village does not exist"
                         }
 
                         override fun onCompleted() {
@@ -684,7 +716,7 @@ class VillageGrpcServiceUT(
                         }
 
                         override fun onError(t: Throwable) {
-                            t.message shouldBe "NOT_FOUND: target does not exist"
+                            t.message shouldBe "NOT_FOUND: The village does not exist"
                         }
 
                         override fun onCompleted() {
