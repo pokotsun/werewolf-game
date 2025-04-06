@@ -18,6 +18,7 @@ import com.example.backendkotlin.usecase.EnterVillageUseCase
 import com.example.backendkotlin.usecase.GetCurrentVillageUsersUseCase
 import com.example.backendkotlin.usecase.GetVillageUseCase
 import com.example.backendkotlin.usecase.ListVillagesUseCase
+import com.github.michaelbull.result.fold
 import io.grpc.stub.StreamObserver
 import net.devh.boot.grpc.server.service.GrpcService
 
@@ -124,31 +125,36 @@ class VillageGrpcService(
      * @return 村
      */
     override fun getVillage(request: GetVillageRequest, responseObserver: StreamObserver<GetVillageResponse>) {
-        handleException(responseObserver) {
+        val result = handleException {
             // 村を取得
-            val village = getVillageUseCase.invoke(request.villageId)
-
-            // レスポンスを作成
-            val getVillageResponse = village.let { res ->
-                GetVillageResponse.newBuilder()
-                    .setId(res.id.value.toString())
-                    .setName(res.name)
-                    .setUserNumber(res.userNumber)
-                    .setCitizenCount(res.citizenCount)
-                    .setWerewolfCount(res.werewolfCount)
-                    .setFortuneTellerCount(res.fortuneTellerCount)
-                    .setKnightCount(res.knightCount)
-                    .setPsychicCount(res.psychicCount)
-                    .setMadmanCount(res.madmanCount)
-                    .setIsInitialActionActive(res.isInitialActionActive)
-                    .setCurrentUserNumber(res.currentUserNumber)
-                    .build()
-            }
-            responseObserver?.let { r ->
-                r.onNext(getVillageResponse)
-                r.onCompleted()
-            }
+            getVillageUseCase.invoke(request.villageId)
         }
+        result.fold(
+            success = { village ->
+                // レスポンスを作成
+                val getVillageResponse = GetVillageResponse.newBuilder()
+                    .setId(village.id.value.toString())
+                    .setName(village.name)
+                    .setUserNumber(village.userNumber)
+                    .setCitizenCount(village.citizenCount)
+                    .setWerewolfCount(village.werewolfCount)
+                    .setFortuneTellerCount(village.fortuneTellerCount)
+                    .setKnightCount(village.knightCount)
+                    .setPsychicCount(village.psychicCount)
+                    .setMadmanCount(village.madmanCount)
+                    .setIsInitialActionActive(village.isInitialActionActive)
+                    .setCurrentUserNumber(village.currentUserNumber)
+                    .build()
+                responseObserver.let { r ->
+                    r.onNext(getVillageResponse)
+                    r.onCompleted()
+                }
+            },
+            failure = { e ->
+                // エラーが発生した場合はエラーレスポンスを返す
+                responseObserver.onError(e)
+            },
+        )
     }
 
     /**
@@ -160,24 +166,32 @@ class VillageGrpcService(
      * @return 村、ユーザー情報
      */
     override fun enterVillage(request: EnterVillageRequest, responseObserver: StreamObserver<EnterVillageResponse>) {
-        handleException(responseObserver = responseObserver) {
+        val result = handleException {
             // 村に参加
-            val result = enterVillageUseCase.invoke(
+            enterVillageUseCase.invoke(
                 villageIdString = request.villageId,
                 villagePassword = request.villagePassword,
                 userName = request.userName,
                 userPassword = request.userPassword,
             )
-            // レスポンスを作成
-            val enterVillageResponse = EnterVillageResponse.newBuilder()
-                .setUserId(result.first.value.toString())
-                .setVillageId(result.second.value.toString())
-                .build()
-            responseObserver.let { r ->
-                r.onNext(enterVillageResponse)
-                r.onCompleted()
-            }
         }
+        result.fold(
+            success = { (userId, villageId) ->
+                // レスポンスを作成
+                val enterVillageResponse = EnterVillageResponse.newBuilder()
+                    .setUserId(userId.value.toString())
+                    .setVillageId(villageId.value.toString())
+                    .build()
+                responseObserver.let { r ->
+                    r.onNext(enterVillageResponse)
+                    r.onCompleted()
+                }
+            },
+            failure = { e ->
+                // エラーが発生した場合はエラーレスポンスを返す
+                responseObserver.onError(e)
+            },
+        )
     }
 
     /**
