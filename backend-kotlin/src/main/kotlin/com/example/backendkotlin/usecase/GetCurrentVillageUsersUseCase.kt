@@ -35,25 +35,31 @@ class GetCurrentVillageUsersUseCase(
     ): Pair<Village, List<User>> {
         // 村とその村に参加しているユーザーを取得
         val villageId = VillageId.from(villageIdString)
-        val (village, villageHashedPassword, userWithHashedPasswordList) = villageRepository.selectVillageWithCurrentUsersById(
+        val villageCredentialWithUserCredentials = villageRepository.selectVillageWithCurrentUsersById(
             villageId = villageId,
         ) ?: throw WerewolfException(WerewolfErrorCode.RESOURCE_NOT_FOUND, "村が存在しません")
 
         // 村パスワードが正しいかチェック
-        if (!HashedPassword.doesMatch(villagePassword, villageHashedPassword)) {
+        if (!HashedPassword.doesMatch(villagePassword, villageCredentialWithUserCredentials.villagePassword)) {
             throw WerewolfException(WerewolfErrorCode.VILLAGE_PASSWORD_IS_WRONG, "村のパスワードが違います")
         }
 
         // ユーザーIDとパスワードが正しいかチェック
         val userId = UserId.from(userIdString)
-        val (_, requestUserHashedPassword) = userWithHashedPasswordList.find { it.first.id == userId }
+        val requestUserHashedPassword = villageCredentialWithUserCredentials.userCredentials
+            .find { it.user.id == userId }
+            ?.userPassword
             ?: throw WerewolfException(WerewolfErrorCode.RESOURCE_NOT_FOUND, "ユーザーが存在しません")
         if (!HashedPassword.doesMatch(userIdPassword, requestUserHashedPassword)) {
             throw WerewolfException(WerewolfErrorCode.USER_PASSWORD_IS_WRONG, "ユーザーパスワードが違います")
         }
 
         // レスポンスを返却
-        val users = userWithHashedPasswordList.map { it.first }
-        return Pair(village, users)
+        return villageCredentialWithUserCredentials.let {
+            Pair(
+                it.village,
+                it.userCredentials.map { userCredential -> userCredential.user },
+            )
+        }
     }
 }

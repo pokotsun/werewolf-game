@@ -2,8 +2,10 @@ package com.example.backendkotlin.infrastructure.db
 
 import com.example.backendkotlin.domain.HashedPassword
 import com.example.backendkotlin.domain.User
+import com.example.backendkotlin.domain.UserCredential
 import com.example.backendkotlin.domain.UserId
 import com.example.backendkotlin.domain.Village
+import com.example.backendkotlin.domain.VillageCredentialWithUserCredentials
 import com.example.backendkotlin.domain.VillageId
 import com.example.backendkotlin.domain.VillageRepository
 import com.example.backendkotlin.infrastructure.db.table.RUserVillageTable
@@ -11,9 +13,7 @@ import com.example.backendkotlin.infrastructure.db.table.UserTable
 import com.example.backendkotlin.infrastructure.db.table.VillageTable
 import org.jetbrains.exposed.sql.JoinType
 import org.jetbrains.exposed.sql.ResultRow
-import org.jetbrains.exposed.sql.SqlExpressionBuilder.eq
 import org.jetbrains.exposed.sql.insert
-import org.jetbrains.exposed.sql.statements.DeleteStatement.Companion.where
 import org.jetbrains.exposed.sql.transactions.transaction
 import org.springframework.stereotype.Repository
 
@@ -129,7 +129,7 @@ class VillageRepositoryImpl() : VillageRepository {
     /**
      * {@inheritDoc}
      */
-    override fun selectVillageWithCurrentUsersById(villageId: VillageId): Triple<Village, HashedPassword, List<Pair<User, HashedPassword>>>? {
+    override fun selectVillageWithCurrentUsersById(villageId: VillageId): VillageCredentialWithUserCredentials? {
         // villageテーブルから指定された村を取得する
         val villageWithCurrentUsersRecords = transaction {
             VillageTable
@@ -174,13 +174,13 @@ class VillageRepositoryImpl() : VillageRepository {
         val currentUserNumber = villageWithCurrentUsersRecords.size
         val village = mapToVillage(villageRecord, currentUserNumber)
         val villageHashedPassword = HashedPassword(villageRecord[VillageTable.passwordHash])
-        val userWithHashedPasswordList = villageWithCurrentUsersRecords.map {
-            Pair(
+        val userCredentialList = villageWithCurrentUsersRecords.map {
+            UserCredential(
                 mapToUser(it),
                 HashedPassword(it[UserTable.passwordHash]),
             )
         }
-        return Triple(village, villageHashedPassword, userWithHashedPasswordList)
+        return VillageCredentialWithUserCredentials(village, villageHashedPassword, userCredentialList)
     }
 
     /**
