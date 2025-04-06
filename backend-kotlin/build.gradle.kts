@@ -73,6 +73,9 @@ dependencies {
     implementation("net.devh:grpc-spring-boot-starter:3.1.0.RELEASE")
     implementation("javax.annotation:javax.annotation-api:1.3.2")
 
+    // result型
+    implementation("com.michael-bull.kotlin-result:kotlin-result:2.0.1")
+
     testImplementation("org.springframework.boot:spring-boot-starter-test")
 
     testImplementation("io.kotest:kotest-runner-junit5")
