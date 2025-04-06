@@ -19,8 +19,8 @@ import com.example.backendkotlin.usecase.EnterVillageUseCase
 import com.example.backendkotlin.usecase.GetCurrentVillageUsersUseCase
 import com.example.backendkotlin.usecase.GetVillageUseCase
 import com.example.backendkotlin.usecase.ListVillagesUseCase
-import com.github.michaelbull.result.fold
 import com.example.backendkotlin.utils.SleepUtil
+import com.github.michaelbull.result.fold
 import com.github.michaelbull.result.mapBoth
 import io.grpc.stub.StreamObserver
 import net.devh.boot.grpc.server.service.GrpcService
@@ -235,11 +235,15 @@ class VillageGrpcService(
                         // 村が募集中でない場合は処理を終了する
                         responseObserver.onCompleted()
                     }
+
+                    // 村が募集中の場合は処理を続ける
                     village.isRecruited
                 },
                 failure = { e ->
                     // エラーが発生した場合はエラーレスポンスを返す
                     responseObserver.onError(e)
+
+                    // 処理を終了する
                     false
                 },
             )

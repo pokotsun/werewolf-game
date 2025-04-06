@@ -30,7 +30,7 @@ interface VillageRepository {
      *
      * @return 村とその村に参加しているユーザー
      */
-    fun selectVillageWithCurrentUsersById(villageId: VillageId): Triple<Village, HashedPassword, List<Pair<User, HashedPassword>>>?
+    fun selectVillageWithCurrentUsersById(villageId: VillageId): VillageCredentialWithUserCredentials?
 
     /**
      * 村を作成する

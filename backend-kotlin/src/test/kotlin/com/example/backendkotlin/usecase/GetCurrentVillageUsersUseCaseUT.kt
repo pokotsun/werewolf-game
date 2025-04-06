@@ -2,8 +2,10 @@ package com.example.backendkotlin.usecase
 
 import com.example.backendkotlin.domain.HashedPassword
 import com.example.backendkotlin.domain.User
+import com.example.backendkotlin.domain.UserCredential
 import com.example.backendkotlin.domain.UserId
 import com.example.backendkotlin.domain.Village
+import com.example.backendkotlin.domain.VillageCredentialWithUserCredentials
 import com.example.backendkotlin.domain.VillageId
 import com.example.backendkotlin.domain.VillageRepository
 import com.example.backendkotlin.domain.WerewolfException
@@ -78,12 +80,12 @@ class GetCurrentVillageUsersUseCaseUT(
 
                 // and
                 every { VillageId.from(villageId.value.toString()) } returns villageId
-                every { villageRepository.selectVillageWithCurrentUsersById(villageId) } returns Triple(
+                every { villageRepository.selectVillageWithCurrentUsersById(villageId) } returns VillageCredentialWithUserCredentials(
                     village,
                     villageHashedPassword,
                     listOf(
-                        Pair(gameMaster, gameMasterHashedPassword),
-                        Pair(user1, user1HashedPassword),
+                        UserCredential(gameMaster, gameMasterHashedPassword),
+                        UserCredential(user1, user1HashedPassword),
                     ),
                 )
                 every { HashedPassword.doesMatch(villagePassword, villageHashedPassword) } returns true
@@ -157,12 +159,12 @@ class GetCurrentVillageUsersUseCaseUT(
 
                     // and
                     every { VillageId.from(villageId.value.toString()) } returns villageId
-                    every { villageRepository.selectVillageWithCurrentUsersById(villageId) } returns Triple(
+                    every { villageRepository.selectVillageWithCurrentUsersById(villageId) } returns VillageCredentialWithUserCredentials(
                         village,
                         villageHashedPassword,
                         listOf(
-                            Pair(gameMaster, gameMasterHashedPassword),
-                            Pair(user1, user1HashedPassword),
+                            UserCredential(gameMaster, gameMasterHashedPassword),
+                            UserCredential(user1, user1HashedPassword),
                         ),
                     )
                     every { HashedPassword.doesMatch(villagePassword, villageHashedPassword) } returns false
@@ -212,12 +214,12 @@ class GetCurrentVillageUsersUseCaseUT(
 
                     // and
                     every { VillageId.from(villageId.value.toString()) } returns villageId
-                    every { villageRepository.selectVillageWithCurrentUsersById(villageId) } returns Triple(
+                    every { villageRepository.selectVillageWithCurrentUsersById(villageId) } returns VillageCredentialWithUserCredentials(
                         village,
                         villageHashedPassword,
                         listOf(
-                            Pair(gameMaster, gameMasterHashedPassword),
-                            Pair(user1, user1HashedPassword),
+                            UserCredential(gameMaster, gameMasterHashedPassword),
+                            UserCredential(user1, user1HashedPassword),
                         ),
                     )
                     every { HashedPassword.doesMatch(villagePassword, villageHashedPassword) } returns true
@@ -265,12 +267,12 @@ class GetCurrentVillageUsersUseCaseUT(
 
                     // and
                     every { VillageId.from(villageId.value.toString()) } returns villageId
-                    every { villageRepository.selectVillageWithCurrentUsersById(villageId) } returns Triple(
+                    every { villageRepository.selectVillageWithCurrentUsersById(villageId) } returns VillageCredentialWithUserCredentials(
                         village,
                         villageHashedPassword,
                         listOf(
-                            Pair(gameMaster, gameMasterHashedPassword),
-                            Pair(user1, user1HashedPassword),
+                            UserCredential(gameMaster, gameMasterHashedPassword),
+                            UserCredential(user1, user1HashedPassword),
                         ),
                     )
                     every { HashedPassword.doesMatch(villagePassword, villageHashedPassword) } returns true

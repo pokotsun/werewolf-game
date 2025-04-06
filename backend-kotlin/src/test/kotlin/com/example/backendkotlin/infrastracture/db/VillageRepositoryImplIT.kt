@@ -2,8 +2,10 @@ package com.example.backendkotlin.infrastracture.db
 
 import com.example.backendkotlin.domain.HashedPassword
 import com.example.backendkotlin.domain.User
+import com.example.backendkotlin.domain.UserCredential
 import com.example.backendkotlin.domain.UserId
 import com.example.backendkotlin.domain.Village
+import com.example.backendkotlin.domain.VillageCredentialWithUserCredentials
 import com.example.backendkotlin.domain.VillageId
 import com.example.backendkotlin.infrastracture.db.record.RUserVillageRecord
 import com.example.backendkotlin.infrastracture.db.record.UserRecord
@@ -247,13 +249,13 @@ class VillageRepositoryImplIT(
                         .set(KSelect.field(Village::isRecruited), true)
                         .create()
                     val villageHashedPassword = Instancio.create(HashedPassword::class.java)
-                    val expected = Triple(
-                        village,
-                        villageHashedPassword,
-                        listOf(
-                            Pair(gameMaster, gameMasterHashedPassword),
-                            Pair(user1, user1HashedPassword),
-                            Pair(user2, user2HashedPassword),
+                    val expected = VillageCredentialWithUserCredentials(
+                        village = village,
+                        villagePassword = villageHashedPassword,
+                        userCredentials = listOf(
+                            UserCredential(gameMaster, gameMasterHashedPassword),
+                            UserCredential(user1, user1HashedPassword),
+                            UserCredential(user2, user2HashedPassword),
                         ),
                     )
                     val anotherVillageId = Instancio.create(VillageId::class.java)
