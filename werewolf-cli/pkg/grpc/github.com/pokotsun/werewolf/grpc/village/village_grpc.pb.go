@@ -24,6 +24,7 @@ const (
 	VillageService_GetVillage_FullMethodName             = "/village.VillageService/GetVillage"
 	VillageService_EnterVillage_FullMethodName           = "/village.VillageService/EnterVillage"
 	VillageService_GetCurrentVillageUsers_FullMethodName = "/village.VillageService/GetCurrentVillageUsers"
+	VillageService_StartGame_FullMethodName              = "/village.VillageService/StartGame"
 )
 
 // VillageServiceClient is the client API for VillageService service.
@@ -37,6 +38,7 @@ type VillageServiceClient interface {
 	GetVillage(ctx context.Context, in *GetVillageRequest, opts ...grpc.CallOption) (*GetVillageResponse, error)
 	EnterVillage(ctx context.Context, in *EnterVillageRequest, opts ...grpc.CallOption) (*EnterVillageResponse, error)
 	GetCurrentVillageUsers(ctx context.Context, in *GetCurrentVillageUsersRequest, opts ...grpc.CallOption) (grpc.ServerStreamingClient[GetCurrentVillageUsersResponse], error)
+	StartGame(ctx context.Context, in *StartGameRequest, opts ...grpc.CallOption) (*StartGameResponse, error)
 }
 
 type villageServiceClient struct {
@@ -106,6 +108,16 @@ func (c *villageServiceClient) GetCurrentVillageUsers(ctx context.Context, in *G
 // This type alias is provided for backwards compatibility with existing code that references the prior non-generic stream type by name.
 type VillageService_GetCurrentVillageUsersClient = grpc.ServerStreamingClient[GetCurrentVillageUsersResponse]
 
+func (c *villageServiceClient) StartGame(ctx context.Context, in *StartGameRequest, opts ...grpc.CallOption) (*StartGameResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(StartGameResponse)
+	err := c.cc.Invoke(ctx, VillageService_StartGame_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // VillageServiceServer is the server API for VillageService service.
 // All implementations must embed UnimplementedVillageServiceServer
 // for forward compatibility.
@@ -117,6 +129,7 @@ type VillageServiceServer interface {
 	GetVillage(context.Context, *GetVillageRequest) (*GetVillageResponse, error)
 	EnterVillage(context.Context, *EnterVillageRequest) (*EnterVillageResponse, error)
 	GetCurrentVillageUsers(*GetCurrentVillageUsersRequest, grpc.ServerStreamingServer[GetCurrentVillageUsersResponse]) error
+	StartGame(context.Context, *StartGameRequest) (*StartGameResponse, error)
 	mustEmbedUnimplementedVillageServiceServer()
 }
 
@@ -141,6 +154,9 @@ func (UnimplementedVillageServiceServer) EnterVillage(context.Context, *EnterVil
 }
 func (UnimplementedVillageServiceServer) GetCurrentVillageUsers(*GetCurrentVillageUsersRequest, grpc.ServerStreamingServer[GetCurrentVillageUsersResponse]) error {
 	return status.Errorf(codes.Unimplemented, "method GetCurrentVillageUsers not implemented")
+}
+func (UnimplementedVillageServiceServer) StartGame(context.Context, *StartGameRequest) (*StartGameResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method StartGame not implemented")
 }
 func (UnimplementedVillageServiceServer) mustEmbedUnimplementedVillageServiceServer() {}
 func (UnimplementedVillageServiceServer) testEmbeddedByValue()                        {}
@@ -246,6 +262,24 @@ func _VillageService_GetCurrentVillageUsers_Handler(srv interface{}, stream grpc
 // This type alias is provided for backwards compatibility with existing code that references the prior non-generic stream type by name.
 type VillageService_GetCurrentVillageUsersServer = grpc.ServerStreamingServer[GetCurrentVillageUsersResponse]
 
+func _VillageService_StartGame_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(StartGameRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(VillageServiceServer).StartGame(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: VillageService_StartGame_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(VillageServiceServer).StartGame(ctx, req.(*StartGameRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // VillageService_ServiceDesc is the grpc.ServiceDesc for VillageService service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -268,6 +302,10 @@ var VillageService_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "EnterVillage",
 			Handler:    _VillageService_EnterVillage_Handler,
+		},
+		{
+			MethodName: "StartGame",
+			Handler:    _VillageService_StartGame_Handler,
 		},
 	},
 	Streams: []grpc.StreamDesc{
