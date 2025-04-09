@@ -15,6 +15,7 @@ service VillageService {
   rpc GetVillage(GetVillageRequest) returns (GetVillageResponse);
   rpc EnterVillage(EnterVillageRequest) returns (EnterVillageResponse);
   rpc GetCurrentVillageUsers(GetCurrentVillageUsersRequest) returns (stream GetCurrentVillageUsersResponse);
+  rpc StartGame(StartGameRequest) returns (StartGameResponse);
 }
 
 // VillageRequest メッセージ
@@ -121,4 +122,23 @@ message GetCurrentVillageUsersResponse {
 
 message CurrentUserResponse {
     string user_name = 1;
+}
+
+// StartGameRequest メッセージ
+message StartGameRequest {
+    string village_id = 1;
+    string village_password = 2;
+    string game_master_id = 3;
+    string game_master_password = 4;
+}
+
+// StartGameResponse メッセージ
+message StartGameResponse {
+    string game_id = 1;
+    repeated PlayersResponse players = 2;
+}
+
+message PlayersResponse {
+    string id = 1;
+    string name = 2;
 }
