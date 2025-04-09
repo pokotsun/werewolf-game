@@ -11,14 +11,17 @@ import com.example.backendkotlin.generated.grpc.GetVillageRequest
 import com.example.backendkotlin.generated.grpc.GetVillageResponse
 import com.example.backendkotlin.generated.grpc.ListVillagesRequest
 import com.example.backendkotlin.generated.grpc.ListVillagesResponse
+import com.example.backendkotlin.generated.grpc.PlayersResponse
+import com.example.backendkotlin.generated.grpc.StartGameRequest
+import com.example.backendkotlin.generated.grpc.StartGameResponse
 import com.example.backendkotlin.generated.grpc.VillageResponse
 import com.example.backendkotlin.generated.grpc.VillageServiceGrpc
-import com.example.backendkotlin.infrastructure.db.table.VillageTable.isRecruited
 import com.example.backendkotlin.usecase.CreateVillageUseCase
 import com.example.backendkotlin.usecase.EnterVillageUseCase
 import com.example.backendkotlin.usecase.GetCurrentVillageUsersUseCase
 import com.example.backendkotlin.usecase.GetVillageUseCase
 import com.example.backendkotlin.usecase.ListVillagesUseCase
+import com.example.backendkotlin.usecase.StartGameUseCase
 import com.example.backendkotlin.utils.SleepUtil
 import com.github.michaelbull.result.fold
 import com.github.michaelbull.result.mapBoth
@@ -35,6 +38,7 @@ class VillageGrpcService(
     private val getCurrentVillageUsersUseCase: GetCurrentVillageUsersUseCase,
     private val enterVillageUseCase: EnterVillageUseCase,
     private val getVillageUseCase: GetVillageUseCase,
+    private val startGameUseCase: StartGameUseCase,
 ) : VillageServiceGrpc.VillageServiceImplBase(), GrpcServiceExceptionHandler {
     /**
      * 村を作成する
@@ -248,5 +252,46 @@ class VillageGrpcService(
                 },
             )
         } while (shouldContinue)
+    }
+
+    /**
+     * ゲームを開始する
+     *
+     * @param request ゲーム開始リクエスト
+     * @param responseObserver レスポンス
+     */
+    override fun startGame(request: StartGameRequest, responseObserver: StreamObserver<StartGameResponse>) {
+        val result = handleException {
+            // ゲームを開始
+            startGameUseCase.invoke(
+                villageIdString = request.villageId,
+                villagePassword = request.villagePassword,
+                gameMasterIdString = request.gameMasterId,
+                gameMasterPassword = request.gameMasterPassword,
+            )
+        }
+        result.fold(
+            success = { (gameId, players) ->
+                // レスポンスを作成
+                val playersResponse = players.map { player ->
+                    PlayersResponse.newBuilder()
+                        .setId(player.first)
+                        .setName(player.second)
+                        .build()
+                }
+                val startGameResponse = StartGameResponse.newBuilder()
+                    .setGameId(gameId)
+                    .addAllPlayers(playersResponse)
+                    .build()
+                responseObserver.let { r ->
+                    r.onNext(startGameResponse)
+                    r.onCompleted()
+                }
+            },
+            failure = { e ->
+                // エラーが発生した場合はエラーレスポンスを返す
+                responseObserver.onError(e)
+            },
+        )
     }
 }
