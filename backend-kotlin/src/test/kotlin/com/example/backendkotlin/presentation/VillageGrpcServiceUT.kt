@@ -16,11 +16,14 @@ import com.example.backendkotlin.generated.grpc.GetVillageRequest
 import com.example.backendkotlin.generated.grpc.GetVillageResponse
 import com.example.backendkotlin.generated.grpc.ListVillagesRequest
 import com.example.backendkotlin.generated.grpc.ListVillagesResponse
+import com.example.backendkotlin.generated.grpc.StartGameRequest
+import com.example.backendkotlin.generated.grpc.StartGameResponse
 import com.example.backendkotlin.usecase.CreateVillageUseCase
 import com.example.backendkotlin.usecase.EnterVillageUseCase
 import com.example.backendkotlin.usecase.GetCurrentVillageUsersUseCase
 import com.example.backendkotlin.usecase.GetVillageUseCase
 import com.example.backendkotlin.usecase.ListVillagesUseCase
+import com.example.backendkotlin.usecase.StartGameUseCase
 import com.example.backendkotlin.util.KSelect
 import com.example.backendkotlin.utils.SleepUtil
 import com.ninjasquad.springmockk.MockkBean
@@ -32,6 +35,7 @@ import io.kotest.core.spec.Spec
 import io.kotest.core.spec.style.DescribeSpec
 import io.kotest.core.test.TestCase
 import io.kotest.core.test.TestResult
+import io.kotest.matchers.collections.shouldContainExactlyInAnyOrder
 import io.kotest.matchers.shouldBe
 import io.mockk.MockKAnnotations
 import io.mockk.clearAllMocks
@@ -57,6 +61,8 @@ class VillageGrpcServiceUT(
     private val enterVillageUseCase: EnterVillageUseCase,
     @MockkBean
     private val getVillageUseCase: GetVillageUseCase,
+    @MockkBean
+    private val startGameUseCase: StartGameUseCase,
 ) : DescribeSpec() {
     @InjectMockKs
     private lateinit var service: VillageGrpcService
@@ -783,6 +789,59 @@ class VillageGrpcServiceUT(
                         )
                     }
                     verify(exactly = 0) { spiedResponseObserver.onCompleted() }
+                }
+            }
+        }
+
+        this.describe("startGame") {
+            context("正常系") {
+                it("ゲームを開始できる") {
+                    // given:
+                    val request = StartGameRequest.newBuilder()
+                        .setVillageId("村ID")
+                        .setVillagePassword("password")
+                        .setGameMasterId("GMID")
+                        .setGameMasterPassword("password")
+                        .build()
+
+                    val expected = Pair(VillageId.generate(), listOf(User(UserId.generate(), "user1", true)))
+                    every {
+                        startGameUseCase.invoke(
+                            villageIdString = "村ID",
+                            villagePassword = "password",
+                            gameMasterIdString = "GMID",
+                            gameMasterPassword = "password",
+                        )
+                    } returns expected
+
+                    val spiedResponseObserver = object : StreamObserver<StartGameResponse> {
+                        override fun onNext(value: StartGameResponse) {
+                            value.villageId shouldBe expected.first.value.toString()
+                            value.userNameList.map { it.userName } shouldContainExactlyInAnyOrder  expected.second.map { it.name }
+                        }
+
+                        override fun onError(t: Throwable) {
+                            // do nothing
+                        }
+
+                        override fun onCompleted() {
+                            // do nothing
+                        }
+                    }.let { spyk(it) }
+
+                    // when:
+                    service.startGame(request, spiedResponseObserver)
+
+                    // then:
+                    verify(exactly = 1) {
+                        startGameUseCase.invoke(
+                            villageIdString = "村ID",
+                            villagePassword = "password",
+                            gameMasterIdString = "GMID",
+                            gameMasterPassword = "password",
+                        )
+                        spiedResponseObserver.onCompleted()
+                    }
                 }
             }
         }
