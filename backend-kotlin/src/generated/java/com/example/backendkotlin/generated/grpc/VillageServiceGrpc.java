@@ -173,6 +173,37 @@ public final class VillageServiceGrpc {
     return getGetCurrentVillageUsersMethod;
   }
 
+  private static volatile io.grpc.MethodDescriptor<com.example.backendkotlin.generated.grpc.StartGameRequest,
+      com.example.backendkotlin.generated.grpc.StartGameResponse> getStartGameMethod;
+
+  @io.grpc.stub.annotations.RpcMethod(
+      fullMethodName = SERVICE_NAME + '/' + "StartGame",
+      requestType = com.example.backendkotlin.generated.grpc.StartGameRequest.class,
+      responseType = com.example.backendkotlin.generated.grpc.StartGameResponse.class,
+      methodType = io.grpc.MethodDescriptor.MethodType.UNARY)
+  public static io.grpc.MethodDescriptor<com.example.backendkotlin.generated.grpc.StartGameRequest,
+      com.example.backendkotlin.generated.grpc.StartGameResponse> getStartGameMethod() {
+    io.grpc.MethodDescriptor<com.example.backendkotlin.generated.grpc.StartGameRequest, com.example.backendkotlin.generated.grpc.StartGameResponse> getStartGameMethod;
+    if ((getStartGameMethod = VillageServiceGrpc.getStartGameMethod) == null) {
+      synchronized (VillageServiceGrpc.class) {
+        if ((getStartGameMethod = VillageServiceGrpc.getStartGameMethod) == null) {
+          VillageServiceGrpc.getStartGameMethod = getStartGameMethod =
+              io.grpc.MethodDescriptor.<com.example.backendkotlin.generated.grpc.StartGameRequest, com.example.backendkotlin.generated.grpc.StartGameResponse>newBuilder()
+              .setType(io.grpc.MethodDescriptor.MethodType.UNARY)
+              .setFullMethodName(generateFullMethodName(SERVICE_NAME, "StartGame"))
+              .setSampledToLocalTracing(true)
+              .setRequestMarshaller(io.grpc.protobuf.ProtoUtils.marshaller(
+                  com.example.backendkotlin.generated.grpc.StartGameRequest.getDefaultInstance()))
+              .setResponseMarshaller(io.grpc.protobuf.ProtoUtils.marshaller(
+                  com.example.backendkotlin.generated.grpc.StartGameResponse.getDefaultInstance()))
+              .setSchemaDescriptor(new VillageServiceMethodDescriptorSupplier("StartGame"))
+              .build();
+        }
+      }
+    }
+    return getStartGameMethod;
+  }
+
   /**
    * Creates a new async stub that supports all call types for the service
    */
@@ -258,6 +289,13 @@ public final class VillageServiceGrpc {
         io.grpc.stub.StreamObserver<com.example.backendkotlin.generated.grpc.GetCurrentVillageUsersResponse> responseObserver) {
       io.grpc.stub.ServerCalls.asyncUnimplementedUnaryCall(getGetCurrentVillageUsersMethod(), responseObserver);
     }
+
+    /**
+     */
+    default void startGame(com.example.backendkotlin.generated.grpc.StartGameRequest request,
+        io.grpc.stub.StreamObserver<com.example.backendkotlin.generated.grpc.StartGameResponse> responseObserver) {
+      io.grpc.stub.ServerCalls.asyncUnimplementedUnaryCall(getStartGameMethod(), responseObserver);
+    }
   }
 
   /**
@@ -332,6 +370,14 @@ public final class VillageServiceGrpc {
       io.grpc.stub.ClientCalls.asyncServerStreamingCall(
           getChannel().newCall(getGetCurrentVillageUsersMethod(), getCallOptions()), request, responseObserver);
     }
+
+    /**
+     */
+    public void startGame(com.example.backendkotlin.generated.grpc.StartGameRequest request,
+        io.grpc.stub.StreamObserver<com.example.backendkotlin.generated.grpc.StartGameResponse> responseObserver) {
+      io.grpc.stub.ClientCalls.asyncUnaryCall(
+          getChannel().newCall(getStartGameMethod(), getCallOptions()), request, responseObserver);
+    }
   }
 
   /**
@@ -388,6 +434,13 @@ public final class VillageServiceGrpc {
       return io.grpc.stub.ClientCalls.blockingServerStreamingCall(
           getChannel(), getGetCurrentVillageUsersMethod(), getCallOptions(), request);
     }
+
+    /**
+     */
+    public com.example.backendkotlin.generated.grpc.StartGameResponse startGame(com.example.backendkotlin.generated.grpc.StartGameRequest request) {
+      return io.grpc.stub.ClientCalls.blockingUnaryCall(
+          getChannel(), getStartGameMethod(), getCallOptions(), request);
+    }
   }
 
   /**
@@ -440,6 +493,14 @@ public final class VillageServiceGrpc {
       return io.grpc.stub.ClientCalls.futureUnaryCall(
           getChannel().newCall(getEnterVillageMethod(), getCallOptions()), request);
     }
+
+    /**
+     */
+    public com.google.common.util.concurrent.ListenableFuture<com.example.backendkotlin.generated.grpc.StartGameResponse> startGame(
+        com.example.backendkotlin.generated.grpc.StartGameRequest request) {
+      return io.grpc.stub.ClientCalls.futureUnaryCall(
+          getChannel().newCall(getStartGameMethod(), getCallOptions()), request);
+    }
   }
 
   private static final int METHODID_CREATE_VILLAGE = 0;
@@ -447,6 +508,7 @@ public final class VillageServiceGrpc {
   private static final int METHODID_GET_VILLAGE = 2;
   private static final int METHODID_ENTER_VILLAGE = 3;
   private static final int METHODID_GET_CURRENT_VILLAGE_USERS = 4;
+  private static final int METHODID_START_GAME = 5;
 
   private static final class MethodHandlers<Req, Resp> implements
       io.grpc.stub.ServerCalls.UnaryMethod<Req, Resp>,
@@ -484,6 +546,10 @@ public final class VillageServiceGrpc {
         case METHODID_GET_CURRENT_VILLAGE_USERS:
           serviceImpl.getCurrentVillageUsers((com.example.backendkotlin.generated.grpc.GetCurrentVillageUsersRequest) request,
               (io.grpc.stub.StreamObserver<com.example.backendkotlin.generated.grpc.GetCurrentVillageUsersResponse>) responseObserver);
+          break;
+        case METHODID_START_GAME:
+          serviceImpl.startGame((com.example.backendkotlin.generated.grpc.StartGameRequest) request,
+              (io.grpc.stub.StreamObserver<com.example.backendkotlin.generated.grpc.StartGameResponse>) responseObserver);
           break;
         default:
           throw new AssertionError();
@@ -538,6 +604,13 @@ public final class VillageServiceGrpc {
               com.example.backendkotlin.generated.grpc.GetCurrentVillageUsersRequest,
               com.example.backendkotlin.generated.grpc.GetCurrentVillageUsersResponse>(
                 service, METHODID_GET_CURRENT_VILLAGE_USERS)))
+        .addMethod(
+          getStartGameMethod(),
+          io.grpc.stub.ServerCalls.asyncUnaryCall(
+            new MethodHandlers<
+              com.example.backendkotlin.generated.grpc.StartGameRequest,
+              com.example.backendkotlin.generated.grpc.StartGameResponse>(
+                service, METHODID_START_GAME)))
         .build();
   }
 
@@ -591,6 +664,7 @@ public final class VillageServiceGrpc {
               .addMethod(getGetVillageMethod())
               .addMethod(getEnterVillageMethod())
               .addMethod(getGetCurrentVillageUsersMethod())
+              .addMethod(getStartGameMethod())
               .build();
         }
       }

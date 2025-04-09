@@ -85,6 +85,21 @@ public final class VillageServiceProto {
   static final 
     com.google.protobuf.GeneratedMessage.FieldAccessorTable
       internal_static_village_CurrentUserResponse_fieldAccessorTable;
+  static final com.google.protobuf.Descriptors.Descriptor
+    internal_static_village_StartGameRequest_descriptor;
+  static final 
+    com.google.protobuf.GeneratedMessage.FieldAccessorTable
+      internal_static_village_StartGameRequest_fieldAccessorTable;
+  static final com.google.protobuf.Descriptors.Descriptor
+    internal_static_village_StartGameResponse_descriptor;
+  static final 
+    com.google.protobuf.GeneratedMessage.FieldAccessorTable
+      internal_static_village_StartGameResponse_fieldAccessorTable;
+  static final com.google.protobuf.Descriptors.Descriptor
+    internal_static_village_PlayersResponse_descriptor;
+  static final 
+    com.google.protobuf.GeneratedMessage.FieldAccessorTable
+      internal_static_village_PlayersResponse_fieldAccessorTable;
 
   public static com.google.protobuf.Descriptors.FileDescriptor
       getDescriptor() {
@@ -138,21 +153,29 @@ public final class VillageServiceProto {
       "rrentVillageUsersResponse\022\022\n\nvillage_id\030" +
       "\001 \001(\t\0223\n\rcurrent_users\030\002 \003(\0132\034.village.C" +
       "urrentUserResponse\"(\n\023CurrentUserRespons" +
-      "e\022\021\n\tuser_name\030\001 \001(\t2\256\003\n\016VillageService\022" +
-      "N\n\rCreateVillage\022\035.village.CreateVillage" +
-      "Request\032\036.village.CreateVillageResponse\022" +
-      "K\n\014ListVillages\022\034.village.ListVillagesRe" +
-      "quest\032\035.village.ListVillagesResponse\022E\n\n" +
-      "GetVillage\022\032.village.GetVillageRequest\032\033" +
-      ".village.GetVillageResponse\022K\n\014EnterVill" +
-      "age\022\034.village.EnterVillageRequest\032\035.vill" +
-      "age.EnterVillageResponse\022k\n\026GetCurrentVi" +
-      "llageUsers\022&.village.GetCurrentVillageUs" +
-      "ersRequest\032\'.village.GetCurrentVillageUs" +
-      "ersResponse0\001Bl\n(com.example.backendkotl" +
-      "in.generated.grpcB\023VillageServiceProtoP\001" +
-      "Z)github.com/pokotsun/werewolf/grpc/vill" +
-      "ageb\006proto3"
+      "e\022\021\n\tuser_name\030\001 \001(\t\"v\n\020StartGameRequest" +
+      "\022\022\n\nvillage_id\030\001 \001(\t\022\030\n\020village_password" +
+      "\030\002 \001(\t\022\026\n\016game_master_id\030\003 \001(\t\022\034\n\024game_m" +
+      "aster_password\030\004 \001(\t\"O\n\021StartGameRespons" +
+      "e\022\017\n\007game_id\030\001 \001(\t\022)\n\007players\030\002 \003(\0132\030.vi" +
+      "llage.PlayersResponse\"+\n\017PlayersResponse" +
+      "\022\n\n\002id\030\001 \001(\t\022\014\n\004name\030\002 \001(\t2\362\003\n\016VillageSe" +
+      "rvice\022N\n\rCreateVillage\022\035.village.CreateV" +
+      "illageRequest\032\036.village.CreateVillageRes" +
+      "ponse\022K\n\014ListVillages\022\034.village.ListVill" +
+      "agesRequest\032\035.village.ListVillagesRespon" +
+      "se\022E\n\nGetVillage\022\032.village.GetVillageReq" +
+      "uest\032\033.village.GetVillageResponse\022K\n\014Ent" +
+      "erVillage\022\034.village.EnterVillageRequest\032" +
+      "\035.village.EnterVillageResponse\022k\n\026GetCur" +
+      "rentVillageUsers\022&.village.GetCurrentVil" +
+      "lageUsersRequest\032\'.village.GetCurrentVil" +
+      "lageUsersResponse0\001\022B\n\tStartGame\022\031.villa" +
+      "ge.StartGameRequest\032\032.village.StartGameR" +
+      "esponseBl\n(com.example.backendkotlin.gen" +
+      "erated.grpcB\023VillageServiceProtoP\001Z)gith" +
+      "ub.com/pokotsun/werewolf/grpc/villageb\006p" +
+      "roto3"
     };
     descriptor = com.google.protobuf.Descriptors.FileDescriptor
       .internalBuildGeneratedFileFrom(descriptorData,
@@ -230,6 +253,24 @@ public final class VillageServiceProto {
       com.google.protobuf.GeneratedMessage.FieldAccessorTable(
         internal_static_village_CurrentUserResponse_descriptor,
         new java.lang.String[] { "UserName", });
+    internal_static_village_StartGameRequest_descriptor =
+      getDescriptor().getMessageTypes().get(12);
+    internal_static_village_StartGameRequest_fieldAccessorTable = new
+      com.google.protobuf.GeneratedMessage.FieldAccessorTable(
+        internal_static_village_StartGameRequest_descriptor,
+        new java.lang.String[] { "VillageId", "VillagePassword", "GameMasterId", "GameMasterPassword", });
+    internal_static_village_StartGameResponse_descriptor =
+      getDescriptor().getMessageTypes().get(13);
+    internal_static_village_StartGameResponse_fieldAccessorTable = new
+      com.google.protobuf.GeneratedMessage.FieldAccessorTable(
+        internal_static_village_StartGameResponse_descriptor,
+        new java.lang.String[] { "GameId", "Players", });
+    internal_static_village_PlayersResponse_descriptor =
+      getDescriptor().getMessageTypes().get(14);
+    internal_static_village_PlayersResponse_fieldAccessorTable = new
+      com.google.protobuf.GeneratedMessage.FieldAccessorTable(
+        internal_static_village_PlayersResponse_descriptor,
+        new java.lang.String[] { "Id", "Name", });
     descriptor.resolveAllFeaturesImmutable();
   }
 
