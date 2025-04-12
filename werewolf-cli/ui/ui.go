@@ -3,6 +3,7 @@ package ui
 import (
 	"fmt"
 	tea "github.com/charmbracelet/bubbletea"
+	"github.com/pokotsun/werewolf-game/ui/components/createvillage"
 	"github.com/pokotsun/werewolf-game/ui/components/welcome"
 	"strings"
 )
@@ -16,14 +17,16 @@ const (
 )
 
 type Model struct {
-	viewState   ViewState
-	welcomePage welcome.Model
+	viewState     ViewState
+	welcomePage   welcome.Model
+	createVillage createvillage.Model
 }
 
 func NewModel() Model {
 	return Model{
-		viewState:   WelcomeView,
-		welcomePage: welcome.NewModel(),
+		viewState:     WelcomeView,
+		welcomePage:   welcome.NewModel(),
+		createVillage: createvillage.NewModel(),
 	}
 }
 
@@ -34,6 +37,8 @@ func (m Model) Init() tea.Cmd {
 	switch m.viewState {
 	case WelcomeView:
 		cmds = append(cmds, m.welcomePage.Init())
+	case CreateVillage:
+		cmds = append(cmds, m.createVillage.Init())
 	default:
 		panic("unhandled default case")
 	}
@@ -64,6 +69,10 @@ func (m Model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 		model, cmd := m.welcomePage.Update(msg)
 		m.welcomePage = model.(welcome.Model)
 		return m, cmd
+	case CreateVillage:
+		model, cmd := m.createVillage.Update(msg)
+		m.createVillage = model.(createvillage.Model)
+		return m, cmd
 	}
 	return m, nil
 }
@@ -72,6 +81,8 @@ func (m Model) View() string {
 	switch m.viewState {
 	case WelcomeView:
 		return m.welcomePage.View()
+	case CreateVillage:
+		return m.createVillage.View()
 	default:
 		s := strings.Builder{}
 		s.WriteString("Selected Village\n\n")
