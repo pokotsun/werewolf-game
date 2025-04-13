@@ -2,10 +2,10 @@ package createvillage
 
 import (
 	"fmt"
+	"github.com/charmbracelet/bubbles/cursor"
 	"github.com/charmbracelet/bubbles/textinput"
 	tea "github.com/charmbracelet/bubbletea"
 	"github.com/charmbracelet/lipgloss"
-	"strconv"
 	"strings"
 )
 
@@ -14,109 +14,54 @@ var (
 	docStyle   = lipgloss.NewStyle().Margin(1, 2)
 )
 
+var (
+	focusedStyle        = lipgloss.NewStyle().Foreground(lipgloss.Color("205"))
+	blurredStyle        = lipgloss.NewStyle().Foreground(lipgloss.Color("240"))
+	cursorStyle         = focusedStyle
+	noStyle             = lipgloss.NewStyle()
+	helpStyle           = blurredStyle
+	cursorModeHelpStyle = lipgloss.NewStyle().Foreground(lipgloss.Color("244"))
+
+	focusedButton = focusedStyle.Render("[ Submit ]")
+	blurredButton = fmt.Sprintf("[ %s ]", blurredStyle.Render("Submit"))
+)
+
 type Model struct {
-	inputs  []textinput.Model
-	focused int
-	err     error
+	focusIndex int
+	inputs     []textinput.Model
+	cursorMode cursor.Mode
 }
 
 func NewModel() Model {
-	var inputs []textinput.Model = make([]textinput.Model, 3)
-	inputs[ccn] = textinput.New()
-	inputs[ccn].Placeholder = "4505 **** **** 1234"
-	inputs[ccn].Focus()
-	inputs[ccn].CharLimit = 20
-	inputs[ccn].Width = 30
-	inputs[ccn].Prompt = ""
-	inputs[ccn].Validate = ccnValidator
-
-	inputs[exp] = textinput.New()
-	inputs[exp].Placeholder = "MM/YY "
-	inputs[exp].CharLimit = 5
-	inputs[exp].Width = 5
-	inputs[exp].Prompt = ""
-	inputs[exp].Validate = expValidator
-
-	inputs[cvv] = textinput.New()
-	inputs[cvv].Placeholder = "XXX"
-	inputs[cvv].CharLimit = 3
-	inputs[cvv].Width = 5
-	inputs[cvv].Prompt = ""
-	inputs[cvv].Validate = cvvValidator
-
-	return Model{
-		inputs:  inputs,
-		focused: 0,
-		err:     nil,
-	}
-}
-
-type errMsg error
-
-const (
-	ccn = iota
-	exp
-	cvv
-)
-
-const (
-	hotPink  = lipgloss.Color("#FF06B7")
-	darkGray = lipgloss.Color("#767676")
-)
-
-var (
-	inputStyle    = lipgloss.NewStyle().Foreground(hotPink)
-	continueStyle = lipgloss.NewStyle().Foreground(darkGray)
-)
-
-// Validator functions to ensure valid input
-func ccnValidator(s string) error {
-	// Credit Card Number should a string less than 20 digits
-	// It should include 16 integers and 3 spaces
-	if len(s) > 16+3 {
-		return fmt.Errorf("CCN is too long")
+	m := Model{
+		inputs: make([]textinput.Model, 3),
 	}
 
-	if len(s) == 0 || len(s)%5 != 0 && (s[len(s)-1] < '0' || s[len(s)-1] > '9') {
-		return fmt.Errorf("CCN is invalid")
+	var t textinput.Model
+	for i := range m.inputs {
+		t = textinput.New()
+		t.Cursor.Style = cursorStyle
+		t.CharLimit = 32
+
+		switch i {
+		case 0:
+			t.Placeholder = "Nickname"
+			t.Focus()
+			t.PromptStyle = focusedStyle
+			t.TextStyle = focusedStyle
+		case 1:
+			t.Placeholder = "Email"
+			t.CharLimit = 64
+		case 2:
+			t.Placeholder = "Password"
+			t.EchoMode = textinput.EchoPassword
+			t.EchoCharacter = '•'
+		}
+
+		m.inputs[i] = t
 	}
 
-	// The last digit should be a number unless it is a multiple of 4 in which
-	// case it should be a space
-	if len(s)%5 == 0 && s[len(s)-1] != ' ' {
-		return fmt.Errorf("CCN must separate groups with spaces")
-	}
-
-	// The remaining digits should be integers
-	c := strings.ReplaceAll(s, " ", "")
-	_, err := strconv.ParseInt(c, 10, 64)
-
-	return err
-}
-
-func expValidator(s string) error {
-	// The 3 character should be a slash (/)
-	// The rest should be numbers
-	e := strings.ReplaceAll(s, "/", "")
-	_, err := strconv.ParseInt(e, 10, 64)
-	if err != nil {
-		return fmt.Errorf("EXP is invalid")
-	}
-
-	// There should be only one slash and it should be in the 2nd index (3rd character)
-	if len(s) >= 3 && (strings.Index(s, "/") != 2 || strings.LastIndex(s, "/") != 2) {
-		return fmt.Errorf("EXP is invalid")
-	}
-
-	return nil
-}
-
-func cvvValidator(s string) error {
-	// The CVV should be a number of 3 digits
-	// Since the input will already ensure that the CVV is a string of length 3,
-	// All we need to do is check that it is a number
-	_, err := strconv.ParseInt(s, 10, 64)
-	return err
+	return m
 }
 
 func (m Model) Init() tea.Cmd {
@@ -124,72 +69,103 @@ func (m Model) Init() tea.Cmd {
 }
 
 func (m Model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
-	var cmds []tea.Cmd = make([]tea.Cmd, len(m.inputs))
-
 	switch msg := msg.(type) {
 	case tea.KeyMsg:
-		switch msg.Type {
-		case tea.KeyEnter:
-			if m.focused == len(m.inputs)-1 {
+		switch msg.String() {
+		case "ctrl+c", "esc":
+			return m, tea.Quit
+
+		// Change cursor mode
+		case "ctrl+r":
+			m.cursorMode++
+			if m.cursorMode > cursor.CursorHide {
+				m.cursorMode = cursor.CursorBlink
+			}
+			cmds := make([]tea.Cmd, len(m.inputs))
+			for i := range m.inputs {
+				cmds[i] = m.inputs[i].Cursor.SetMode(m.cursorMode)
+			}
+			return m, tea.Batch(cmds...)
+
+		// Set focus to next input
+		case "tab", "shift+tab", "enter", "up", "down":
+			s := msg.String()
+
+			// Did the user press enter while the submit button was focused?
+			// If so, exit.
+			if s == "enter" && m.focusIndex == len(m.inputs) {
 				return m, tea.Quit
 			}
-			m.nextInput()
-		case tea.KeyCtrlC, tea.KeyEsc:
-			return m, tea.Quit
-		case tea.KeyShiftTab, tea.KeyCtrlP:
-			m.prevInput()
-		case tea.KeyTab, tea.KeyCtrlN:
-			m.nextInput()
-		}
-		for i := range m.inputs {
-			m.inputs[i].Blur()
-		}
-		m.inputs[m.focused].Focus()
 
-	// We handle errors just like any other message
-	case errMsg:
-		m.err = msg
-		return m, nil
+			// Cycle indexes
+			if s == "up" || s == "shift+tab" {
+				m.focusIndex--
+			} else {
+				m.focusIndex++
+			}
+
+			if m.focusIndex > len(m.inputs) {
+				m.focusIndex = 0
+			} else if m.focusIndex < 0 {
+				m.focusIndex = len(m.inputs)
+			}
+
+			cmds := make([]tea.Cmd, len(m.inputs))
+			for i := 0; i <= len(m.inputs)-1; i++ {
+				if i == m.focusIndex {
+					// Set focused state
+					cmds[i] = m.inputs[i].Focus()
+					m.inputs[i].PromptStyle = focusedStyle
+					m.inputs[i].TextStyle = focusedStyle
+					continue
+				}
+				// Remove focused state
+				m.inputs[i].Blur()
+				m.inputs[i].PromptStyle = noStyle
+				m.inputs[i].TextStyle = noStyle
+			}
+
+			return m, tea.Batch(cmds...)
+		}
 	}
 
+	// Handle character input and blinking
+	cmd := m.updateInputs(msg)
+
+	return m, cmd
+}
+
+func (m *Model) updateInputs(msg tea.Msg) tea.Cmd {
+	cmds := make([]tea.Cmd, len(m.inputs))
+
+	// Only text inputs with Focus() set will respond, so it's safe to simply
+	// update all of them here without any further logic.
 	for i := range m.inputs {
 		m.inputs[i], cmds[i] = m.inputs[i].Update(msg)
 	}
-	return m, tea.Batch(cmds...)
+
+	return tea.Batch(cmds...)
 }
 
 func (m Model) View() string {
-	return fmt.Sprintf(
-		` Total: $21.50:
+	var b strings.Builder
 
- %s
- %s
-
- %s  %s
- %s  %s
-
- %s
-`,
-		inputStyle.Width(30).Render("Card Number"),
-		m.inputs[ccn].View(),
-		inputStyle.Width(6).Render("EXP"),
-		inputStyle.Width(6).Render("CVV"),
-		m.inputs[exp].View(),
-		m.inputs[cvv].View(),
-		continueStyle.Render("Continue ->"),
-	) + "\n"
-}
-
-// nextInput focuses the next input field
-func (m *Model) nextInput() {
-	m.focused = (m.focused + 1) % len(m.inputs)
-}
-
-// prevInput focuses the previous input field
-func (m *Model) prevInput() {
-	m.focused--
-	// Wrap around
-	if m.focused < 0 {
-		m.focused = len(m.inputs) - 1
+	for i := range m.inputs {
+		b.WriteString(m.inputs[i].View())
+		if i < len(m.inputs)-1 {
+			b.WriteRune('\n')
+		}
 	}
+
+	button := &blurredButton
+	if m.focusIndex == len(m.inputs) {
+		button = &focusedButton
+	}
+	fmt.Fprintf(&b, "\n\n%s\n\n", *button)
+
+	b.WriteString(helpStyle.Render("cursor mode is "))
+	b.WriteString(cursorModeHelpStyle.Render(m.cursorMode.String()))
+	b.WriteString(helpStyle.Render(" (ctrl+r to change style)"))
+
+	return b.String()
 }
