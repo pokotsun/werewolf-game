@@ -3,13 +3,8 @@ package welcome
 import (
 	"github.com/charmbracelet/bubbles/list"
 	tea "github.com/charmbracelet/bubbletea"
-	"github.com/charmbracelet/lipgloss"
+	"github.com/pokotsun/werewolf-game/ui/constants"
 	"strings"
-)
-
-var (
-	titleStyle = lipgloss.NewStyle().MarginLeft(2).Bold(true)
-	docStyle   = lipgloss.NewStyle().Margin(1, 2)
 )
 
 type Choice int
@@ -68,7 +63,7 @@ func (m Model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 			}
 		}
 	case tea.WindowSizeMsg:
-		h, v := docStyle.GetFrameSize()
+		h, v := constants.DocStyle.GetFrameSize()
 		m.list.SetSize(msg.Width-h, msg.Height-v-2)
 	}
 
@@ -79,9 +74,9 @@ func (m Model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 
 func (m Model) View() string {
 	s := strings.Builder{}
-	s.WriteString(titleStyle.Render("Welcome to Werewolf Game CLI"))
+	s.WriteString(constants.TitleStyle.Render("Welcome to Werewolf Game CLI"))
 	s.WriteString("\n\n")
-	s.WriteString(docStyle.Render(m.list.View()))
+	s.WriteString(constants.DocStyle.Render(m.list.View()))
 
 	return s.String()
 }

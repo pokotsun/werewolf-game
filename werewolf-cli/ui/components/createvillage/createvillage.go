@@ -10,11 +10,6 @@ import (
 )
 
 var (
-	titleStyle = lipgloss.NewStyle().MarginLeft(2).Bold(true)
-	docStyle   = lipgloss.NewStyle().Margin(1, 2)
-)
-
-var (
 	focusedStyle        = lipgloss.NewStyle().Foreground(lipgloss.Color("205"))
 	blurredStyle        = lipgloss.NewStyle().Foreground(lipgloss.Color("240"))
 	cursorStyle         = focusedStyle
@@ -161,6 +156,7 @@ func (m Model) View() string {
 	if m.focusIndex == len(m.inputs) {
 		button = &focusedButton
 	}
+	fmt.Fprintf(&b, "%s")
 	fmt.Fprintf(&b, "\n\n%s\n\n", *button)
 
 	b.WriteString(helpStyle.Render("cursor mode is "))
