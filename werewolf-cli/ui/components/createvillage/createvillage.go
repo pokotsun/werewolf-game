@@ -212,7 +212,9 @@ func (m Model) View() string {
 	if m.focusIndex == len(m.inputs) {
 		button = &focusedButton
 	}
-	fmt.Fprintf(&b, "\n\n%s\n\n", *button)
+	b.WriteString("\n\n")
+	b.WriteString(*button)
+	b.WriteString("\n\n")
 
 	return b.String()
 }
