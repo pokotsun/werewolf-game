@@ -26,6 +26,10 @@ interface GrpcServiceExceptionHandler {
                     val message = "The user password is wrong"
                     return Err(Status.INVALID_ARGUMENT.withDescription(message).asRuntimeException())
                 }
+                WerewolfErrorCode.LACK_VILLAGE_USER -> {
+                    val message = "The number of users in the village is insufficient"
+                    return Err(Status.FAILED_PRECONDITION.withDescription(message).asRuntimeException())
+                }
             }
         } catch (e: Exception) {
             val message = "An error occurred"

@@ -275,12 +275,12 @@ class VillageGrpcService(
                 // レスポンスを作成
                 val playersResponse = players.map { player ->
                     PlayersResponse.newBuilder()
-                        .setId(player.first)
-                        .setName(player.second)
+                        .setId(player.id.value.toString())
+                        .setName(player.user.name)
                         .build()
                 }
                 val startGameResponse = StartGameResponse.newBuilder()
-                    .setGameId(gameId)
+                    .setGameId(gameId.value.toString())
                     .addAllPlayers(playersResponse)
                     .build()
                 responseObserver.let { r ->
