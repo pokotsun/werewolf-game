@@ -1,5 +1,7 @@
 package com.example.backendkotlin.presentation
 
+import com.example.backendkotlin.domain.GameId
+import com.example.backendkotlin.domain.Player
 import com.example.backendkotlin.domain.User
 import com.example.backendkotlin.domain.UserId
 import com.example.backendkotlin.domain.Village
@@ -803,13 +805,16 @@ class VillageGrpcServiceUT(
                         .setGameMasterId("GMID")
                         .setGameMasterPassword("password")
                         .build()
+                    val gameId = Instancio.create(GameId::class.java)
+                    val players = listOf(
+                        Instancio.create(Player::class.java),
+                        Instancio.create(Player::class.java),
+                        Instancio.create(Player::class.java),
+                    )
 
                     val expected = Pair(
-                        "gameId",
-                        listOf(
-                            Pair("player1_id", "player1_name"),
-                            Pair("player2_id", "player2_name"),
-                        ),
+                        gameId,
+                        players,
                     )
                     every {
                         startGameUseCase.invoke(
@@ -822,8 +827,8 @@ class VillageGrpcServiceUT(
 
                     val spiedResponseObserver = object : StreamObserver<StartGameResponse> {
                         override fun onNext(value: StartGameResponse) {
-                            value.gameId shouldBe expected.first
-                            value.playersList.map { it.id } shouldContainExactlyInAnyOrder expected.second.map { it.first }
+                            value.gameId shouldBe expected.first.value.toString()
+                            value.playersList.map { it.id } shouldContainExactlyInAnyOrder expected.second.map { it.id.value.toString() }
                         }
 
                         override fun onError(t: Throwable) {

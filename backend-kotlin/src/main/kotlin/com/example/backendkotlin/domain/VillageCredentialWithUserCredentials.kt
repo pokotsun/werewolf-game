@@ -11,4 +11,14 @@ data class VillageCredentialWithUserCredentials(
     val village: Village,
     val villagePassword: HashedPassword,
     val userCredentials: List<UserCredential>,
-)
+) {
+    /**
+     * 村に全員参加しているかを確認する関数
+     * @return true: 村に全員参加している false: 村に全員参加していない
+     */
+    fun doesJoinAllUsers(): Boolean {
+        val userCount = village.userNumber
+        val joinedUsers = userCredentials.size
+        return userCount == joinedUsers
+    }
+}
