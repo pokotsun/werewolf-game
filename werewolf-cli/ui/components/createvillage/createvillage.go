@@ -13,13 +13,11 @@ import (
 )
 
 var (
-	focusedStyle        = lipgloss.NewStyle().Foreground(lipgloss.Color("205"))
-	blurredStyle        = lipgloss.NewStyle().Foreground(lipgloss.Color("240"))
-	cursorStyle         = focusedStyle
-	noStyle             = lipgloss.NewStyle()
-	errStyle            = lipgloss.NewStyle().Foreground(lipgloss.Color("110")).PaddingLeft(2)
-	helpStyle           = blurredStyle
-	cursorModeHelpStyle = lipgloss.NewStyle().Foreground(lipgloss.Color("244"))
+	focusedStyle = lipgloss.NewStyle().Foreground(lipgloss.Color("205"))
+	blurredStyle = lipgloss.NewStyle().Foreground(lipgloss.Color("240"))
+	cursorStyle  = focusedStyle
+	noStyle      = lipgloss.NewStyle()
+	errStyle     = lipgloss.NewStyle().Foreground(lipgloss.Color("110")).PaddingLeft(2)
 
 	focusedButton = focusedStyle.Render("[ Submit ]")
 	blurredButton = fmt.Sprintf("[ %s ]", blurredStyle.Render("Submit"))
@@ -27,6 +25,7 @@ var (
 
 type Msg struct {
 	Village            domain.Village
+	VillagePassword    string
 	GameMasterName     string
 	GameMasterPassword string
 }
@@ -52,7 +51,8 @@ func validateNumber(input string) error {
 
 func NewModel() Model {
 	m := Model{
-		inputs: make([]textinput.Model, 9),
+		focusIndex: 0,
+		inputs:     make([]textinput.Model, 9),
 	}
 
 	var t textinput.Model
@@ -69,7 +69,7 @@ func NewModel() Model {
 			t.PromptStyle = focusedStyle
 			t.TextStyle = focusedStyle
 		case 1:
-			t.Placeholder = "GameMaster Password"
+			t.Placeholder = "Village Password"
 			t.EchoMode = textinput.EchoPassword
 			t.EchoCharacter = '•'
 			t.Validate = validatePassword
@@ -136,7 +136,34 @@ func (m Model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 					}
 				}
 				if erroredFocusIndex < 0 {
-					return m, tea.Quit
+					villageName := m.inputs[0].Value()
+					villagePassword := m.inputs[1].Value()
+					citizenCount, _ := strconv.Atoi(m.inputs[2].Value())
+					werewolfCount, _ := strconv.Atoi(m.inputs[3].Value())
+					fortuneTellerCount, _ := strconv.Atoi(m.inputs[4].Value())
+					knightCount, _ := strconv.Atoi(m.inputs[5].Value())
+					madmanCount, _ := strconv.Atoi(m.inputs[6].Value())
+					gameMasterName := m.inputs[7].Value()
+					gameMasterPassword := m.inputs[8].Value()
+
+					msg := Msg{
+						Village: domain.Village{
+							Name:                  &villageName,
+							CitizenCount:          int32(citizenCount),
+							WerewolfCount:         int32(werewolfCount),
+							FortuneTellerCount:    int32(fortuneTellerCount),
+							KnightCount:           int32(knightCount),
+							MadmanCount:           int32(madmanCount),
+							IsInitialActionActive: true,
+						},
+						VillagePassword:    villagePassword,
+						GameMasterName:     gameMasterName,
+						GameMasterPassword: gameMasterPassword,
+					}
+
+					return m, func() tea.Msg {
+						return msg
+					}
 				}
 			}
 
