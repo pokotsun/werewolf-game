@@ -58,6 +58,11 @@ func TestSuccessOnVillageCreatorServerIntegration(t *testing.T) {
 		log.Fatalf("could not get village info: %v", err)
 	}
 
+	res, err = client.CreateVillage(req)
+	if err != nil {
+		log.Fatalf("could not get village info: %v", err)
+	}
+
 	// レスポンスを表示
 	assert.Equal(t, name, *res.Name)
 	assert.Equal(t, int32(7), res.CitizenCount)

@@ -3,8 +3,10 @@ package ui
 import (
 	"fmt"
 	tea "github.com/charmbracelet/bubbletea"
+	"github.com/pokotsun/werewolf-game/pkg/client"
 	"github.com/pokotsun/werewolf-game/ui/components/createvillage"
 	"github.com/pokotsun/werewolf-game/ui/components/welcome"
+	"github.com/pokotsun/werewolf-game/ui/context"
 	"strings"
 )
 
@@ -18,15 +20,17 @@ const (
 
 type Model struct {
 	viewState     ViewState
+	context       *context.ProgramContext
 	welcomePage   welcome.Model
 	createVillage createvillage.Model
 }
 
-func NewModel() Model {
+func NewModel(serverClient *client.WerewolfServerClient) Model {
+	context := context.NewProgramContext(serverClient)
 	return Model{
 		viewState:     WelcomeView,
-		welcomePage:   welcome.NewModel(),
-		createVillage: createvillage.NewModel(),
+		welcomePage:   welcome.NewModel(context),
+		createVillage: createvillage.NewModel(context),
 	}
 }
 

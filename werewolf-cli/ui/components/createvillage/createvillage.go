@@ -7,7 +7,9 @@ import (
 	"github.com/charmbracelet/bubbles/textinput"
 	tea "github.com/charmbracelet/bubbletea"
 	"github.com/charmbracelet/lipgloss"
+	client "github.com/pokotsun/werewolf-game/pkg/client/createvillage"
 	"github.com/pokotsun/werewolf-game/pkg/domain"
+	"github.com/pokotsun/werewolf-game/ui/context"
 	"strconv"
 	"strings"
 )
@@ -31,6 +33,7 @@ type Msg struct {
 }
 
 type Model struct {
+	ctx        *context.ProgramContext
 	focusIndex int
 	inputs     []textinput.Model
 }
@@ -49,8 +52,9 @@ func validateNumber(input string) error {
 	return nil
 }
 
-func NewModel() Model {
+func NewModel(ctx *context.ProgramContext) Model {
 	m := Model{
+		ctx:        ctx,
 		focusIndex: 0,
 		inputs:     make([]textinput.Model, 9),
 	}
@@ -145,6 +149,25 @@ func (m Model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 					madmanCount, _ := strconv.Atoi(m.inputs[6].Value())
 					gameMasterName := m.inputs[7].Value()
 					gameMasterPassword := m.inputs[8].Value()
+
+					// Create village
+					req := client.CreateVillageRequest{
+						Name:               &villageName,
+						CitizenCount:       int32(citizenCount),
+						WerewolfCount:      int32(werewolfCount),
+						FortuneTellerCount: int32(fortuneTellerCount),
+						KnightCount:        int32(knightCount),
+						MadmanCount:        int32(madmanCount),
+						Password:           &villagePassword,
+						GameMasterName:     &gameMasterName,
+						GameMasterPassword: &gameMasterPassword,
+					}
+					v, err := m.ctx.WerewolfClient.CreateVillage(req)
+					if err != nil {
+						panic("えらーおっかーど" + err.Error())
+					}
+
+					println("村が作成されました " + *v.Id)
 
 					msg := Msg{
 						Village: domain.Village{

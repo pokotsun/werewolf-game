@@ -4,6 +4,7 @@ import (
 	"fmt"
 	tea "github.com/charmbracelet/bubbletea"
 	"github.com/pokotsun/werewolf-game/ui/components/welcome"
+	"github.com/pokotsun/werewolf-game/ui/context"
 	"os"
 )
 
@@ -47,8 +48,11 @@ func (m model) View() string {
 }
 
 func main() {
+	c := context.ProgramContext{
+		WerewolfClient: nil,
+	}
 	m := model{
-		page: welcome.NewModel(),
+		page: welcome.NewModel(&c),
 	}
 
 	if _, err := tea.NewProgram(

@@ -1,10 +1,16 @@
 package main
 
 import (
+	"context"
 	"fmt"
 	tea "github.com/charmbracelet/bubbletea"
+	"github.com/pokotsun/werewolf-game/pkg/client"
 	"github.com/pokotsun/werewolf-game/ui/components/createvillage"
+	context2 "github.com/pokotsun/werewolf-game/ui/context"
+	"google.golang.org/grpc"
+	"log"
 	"os"
+	"time"
 )
 
 type createModel struct {
@@ -40,8 +46,30 @@ func (m createModel) View() string {
 }
 
 func main() {
+	// given:
+	// コンテキストを作成し、タイムアウトを設定
+	ctx, cancel := context.WithTimeout(context.Background(), time.Second*10)
+	defer cancel()
+
+	// grpc.DialContext を使用して接続を確立
+	conn, err := grpc.DialContext(ctx, "localhost:9090", grpc.WithInsecure(), grpc.WithBlock())
+	if err != nil {
+		log.Fatalf("did not connect: %v", err)
+	}
+	defer func(conn *grpc.ClientConn) {
+		err := conn.Close()
+		if err != nil {
+			log.Fatalf("could not close connection: %v", err)
+		}
+	}(conn)
+
+	c := client.NewWerewolfServerClient(&ctx, conn)
+
+	programContext := context2.ProgramContext{
+		WerewolfClient: c,
+	}
 	m := createModel{
-		page: createvillage.NewModel(),
+		page: createvillage.NewModel(&programContext),
 	}
 
 	if _, err := tea.NewProgram(

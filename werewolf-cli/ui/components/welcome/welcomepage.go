@@ -4,6 +4,7 @@ import (
 	"github.com/charmbracelet/bubbles/list"
 	tea "github.com/charmbracelet/bubbletea"
 	"github.com/pokotsun/werewolf-game/ui/constants"
+	"github.com/pokotsun/werewolf-game/ui/context"
 	"strings"
 )
 
@@ -33,17 +34,18 @@ type Msg struct {
 }
 
 type Model struct {
+	ctx  *context.ProgramContext
 	list list.Model
 }
 
-func NewModel() Model {
+func NewModel(ctx *context.ProgramContext) Model {
 	l := list.New(items, list.NewDefaultDelegate(), 0, 0)
 	l.SetShowPagination(false)
 	l.SetFilteringEnabled(false)
 	l.SetShowTitle(false)
 	l.SetShowStatusBar(false)
 
-	return Model{list: l}
+	return Model{ctx: ctx, list: l}
 }
 
 func (m Model) Init() tea.Cmd {
