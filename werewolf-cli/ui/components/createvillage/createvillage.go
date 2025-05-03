@@ -9,9 +9,11 @@ import (
 	"github.com/charmbracelet/lipgloss"
 	client "github.com/pokotsun/werewolf-game/pkg/client/createvillage"
 	"github.com/pokotsun/werewolf-game/pkg/domain"
+	"github.com/pokotsun/werewolf-game/ui/components/errormsg"
 	"github.com/pokotsun/werewolf-game/ui/context"
 	"strconv"
 	"strings"
+	"time"
 )
 
 var (
@@ -36,6 +38,7 @@ type Model struct {
 	ctx        *context.ProgramContext
 	focusIndex int
 	inputs     []textinput.Model
+	errorMsg   *errormsg.ErrorMessage
 }
 
 func validatePassword(input string) error {
@@ -121,6 +124,9 @@ func (m Model) Init() tea.Cmd {
 
 func (m Model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 	switch msg := msg.(type) {
+	case errormsg.ClearErrorMsg:
+		m.errorMsg = nil
+		return m, nil
 	case tea.KeyMsg:
 		switch msg.String() {
 		case "ctrl+c", "esc":
@@ -164,10 +170,11 @@ func (m Model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 					}
 					v, err := m.ctx.WerewolfClient.CreateVillage(req)
 					if err != nil {
-						panic("えらーおっかーど" + err.Error())
+						m.errorMsg = errormsg.NewErrorMessage(err.Error())
+						return m, tea.Tick(5*time.Second, func(_ time.Time) tea.Msg {
+							return errormsg.ClearErrorMsg{}
+						})
 					}
-
-					println("村が作成されました " + *v.Id)
 
 					msg := Msg{
 						Village: domain.Village{
@@ -184,9 +191,15 @@ func (m Model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 						GameMasterPassword: gameMasterPassword,
 					}
 
-					return m, func() tea.Msg {
-						return msg
-					}
+					m.errorMsg = errormsg.NewErrorMessage("Village: " + *v.Id + " created successfully!")
+					return m, tea.Batch(
+						tea.Tick(5*time.Second, func(_ time.Time) tea.Msg {
+							return errormsg.ClearErrorMsg{}
+						}),
+						func() tea.Msg {
+							return msg
+						},
+					)
 				}
 			}
 
@@ -265,6 +278,10 @@ func (m Model) View() string {
 	b.WriteString("\n\n")
 	b.WriteString(*button)
 	b.WriteString("\n\n")
+	if m.errorMsg != nil {
+		b.WriteString("\n")
+		b.WriteString(m.errorMsg.Render())
+	}
 
 	return b.String()
 }
