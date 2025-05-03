@@ -63,7 +63,7 @@ func main() {
 		}
 	}(conn)
 
-	c := client.NewWerewolfServerClient(&ctx, conn)
+	c := client.NewWerewolfServerClient(conn)
 
 	programContext := context2.ProgramContext{
 		WerewolfClient: c,

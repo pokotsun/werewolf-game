@@ -30,7 +30,7 @@ func TestSuccessOnVillageListMakerServerIntegration(t *testing.T) {
 		}
 	}(conn)
 
-	client := NewWerewolfServerClient(&ctx, conn)
+	client := NewWerewolfServerClient(conn)
 
 	// when:
 	res, err := client.ListVillages()

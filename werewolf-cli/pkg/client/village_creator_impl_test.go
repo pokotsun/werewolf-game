@@ -31,7 +31,7 @@ func TestSuccessOnVillageCreatorServerIntegration(t *testing.T) {
 		}
 	}(conn)
 
-	client := NewWerewolfServerClient(&ctx, conn)
+	client := NewWerewolfServerClient(conn)
 
 	// リクエスト作成
 	name := "Test Village 1st"

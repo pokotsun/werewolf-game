@@ -6,18 +6,17 @@ import (
 	"github.com/pokotsun/werewolf-game/pkg/domain"
 	"github.com/pokotsun/werewolf-game/pkg/grpc/github.com/pokotsun/werewolf/grpc/village"
 	"google.golang.org/grpc"
+	"time"
 )
 
 type WerewolfServerClient struct {
-	ctx                  *context.Context
 	conn                 *grpc.ClientConn
 	villageServiceClient *village.VillageServiceClient
 }
 
-func NewWerewolfServerClient(ctx *context.Context, conn *grpc.ClientConn) *WerewolfServerClient {
+func NewWerewolfServerClient(conn *grpc.ClientConn) *WerewolfServerClient {
 	villageServiceClient := village.NewVillageServiceClient(conn)
 	return &WerewolfServerClient{
-		ctx:                  ctx,
 		conn:                 conn,
 		villageServiceClient: &villageServiceClient,
 	}
@@ -38,9 +37,12 @@ func (c *WerewolfServerClient) CreateVillage(request client.CreateVillageRequest
 		GameMasterPassword:    *request.GameMasterPassword,
 	}
 
-	// サーバーにリクエストを送信
+	// コンテキストを作成し、タイムアウトを設定
+	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
+	defer cancel()
 
-	res, err := (*c.villageServiceClient).CreateVillage(*c.ctx, &req)
+	// サーバーにリクエストを送信
+	res, err := (*c.villageServiceClient).CreateVillage(ctx, &req)
 	if err != nil {
 		return nil, err
 	}
@@ -62,9 +64,13 @@ func (c *WerewolfServerClient) CreateVillage(request client.CreateVillageRequest
 }
 
 func (c *WerewolfServerClient) ListVillages() ([]*domain.Village, error) {
+	// コンテキストを作成し、タイムアウトを設定
+	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
+	defer cancel()
+
 	// サーバーにリクエストを送信
 	req := village.ListVillagesRequest{}
-	res, err := (*c.villageServiceClient).ListVillages(*c.ctx, &req)
+	res, err := (*c.villageServiceClient).ListVillages(ctx, &req)
 	if err != nil {
 		return nil, err
 	}
