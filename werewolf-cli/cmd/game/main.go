@@ -8,7 +8,7 @@ import (
 )
 
 func main() {
-	uiModel := ui.NewModel()
+	uiModel := ui.NewModel(nil)
 	if _, err := tea.NewProgram(
 		uiModel,
 		tea.WithInput(os.Stdin),

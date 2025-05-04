@@ -7,30 +7,23 @@ import (
 	"github.com/pokotsun/werewolf-game/ui/components/createvillage"
 	"github.com/pokotsun/werewolf-game/ui/components/welcome"
 	"github.com/pokotsun/werewolf-game/ui/context"
+	"github.com/pokotsun/werewolf-game/ui/navigation"
 	"strings"
 )
 
-type ViewState int
-
-const (
-	WelcomeView = iota
-	CreateVillage
-	EnterVillage
-)
-
 type Model struct {
-	viewState     ViewState
+	viewState     navigation.ViewState
 	context       *context.ProgramContext
 	welcomePage   welcome.Model
 	createVillage createvillage.Model
 }
 
 func NewModel(serverClient *client.WerewolfServerClient) Model {
-	context := context.NewProgramContext(serverClient)
+	ctxt := context.NewProgramContext(serverClient)
 	return Model{
-		viewState:     WelcomeView,
-		welcomePage:   welcome.NewModel(context),
-		createVillage: createvillage.NewModel(context),
+		viewState:     navigation.WelcomeView,
+		welcomePage:   welcome.NewModel(ctxt),
+		createVillage: createvillage.NewModel(ctxt),
 	}
 }
 
@@ -39,9 +32,9 @@ func (m Model) Init() tea.Cmd {
 	cmds = append(cmds, tea.SetWindowTitle("Werewolf Game CLI"))
 
 	switch m.viewState {
-	case WelcomeView:
+	case navigation.WelcomeView:
 		cmds = append(cmds, m.welcomePage.Init())
-	case CreateVillage:
+	case navigation.CreateVillage:
 		cmds = append(cmds, m.createVillage.Init())
 	default:
 		panic("unhandled default case")
@@ -58,22 +51,16 @@ func (m Model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 		case "q", "ctrl+c", "esc":
 			return m, tea.Quit
 		}
-	case welcome.Msg:
-		switch msg.(welcome.Msg).Choice {
-		case welcome.CreateVillage:
-			m.viewState = CreateVillage
-		case welcome.EnterVillage:
-			m.viewState = EnterVillage
-		default:
-			panic("unhandled default case")
-		}
+	case navigation.Msg:
+		m.viewState = msg.(navigation.Msg).Destination
 	}
+
 	switch m.viewState {
-	case WelcomeView:
+	case navigation.WelcomeView:
 		model, cmd := m.welcomePage.Update(msg)
 		m.welcomePage = model.(welcome.Model)
 		return m, cmd
-	case CreateVillage:
+	case navigation.CreateVillage:
 		model, cmd := m.createVillage.Update(msg)
 		m.createVillage = model.(createvillage.Model)
 		return m, cmd
@@ -83,9 +70,9 @@ func (m Model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 
 func (m Model) View() string {
 	switch m.viewState {
-	case WelcomeView:
+	case navigation.WelcomeView:
 		return m.welcomePage.View()
-	case CreateVillage:
+	case navigation.CreateVillage:
 		return m.createVillage.View()
 	default:
 		s := strings.Builder{}

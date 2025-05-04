@@ -146,60 +146,62 @@ func (m Model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 					}
 				}
 				if erroredFocusIndex < 0 {
-					villageName := m.inputs[0].Value()
-					villagePassword := m.inputs[1].Value()
-					citizenCount, _ := strconv.Atoi(m.inputs[2].Value())
-					werewolfCount, _ := strconv.Atoi(m.inputs[3].Value())
-					fortuneTellerCount, _ := strconv.Atoi(m.inputs[4].Value())
-					knightCount, _ := strconv.Atoi(m.inputs[5].Value())
-					madmanCount, _ := strconv.Atoi(m.inputs[6].Value())
-					gameMasterName := m.inputs[7].Value()
-					gameMasterPassword := m.inputs[8].Value()
+					return m, func() tea.Msg {
+						villageName := m.inputs[0].Value()
+						villagePassword := m.inputs[1].Value()
+						citizenCount, _ := strconv.Atoi(m.inputs[2].Value())
+						werewolfCount, _ := strconv.Atoi(m.inputs[3].Value())
+						fortuneTellerCount, _ := strconv.Atoi(m.inputs[4].Value())
+						knightCount, _ := strconv.Atoi(m.inputs[5].Value())
+						madmanCount, _ := strconv.Atoi(m.inputs[6].Value())
+						gameMasterName := m.inputs[7].Value()
+						gameMasterPassword := m.inputs[8].Value()
 
-					// Create village
-					req := client.CreateVillageRequest{
-						Name:               &villageName,
-						CitizenCount:       int32(citizenCount),
-						WerewolfCount:      int32(werewolfCount),
-						FortuneTellerCount: int32(fortuneTellerCount),
-						KnightCount:        int32(knightCount),
-						MadmanCount:        int32(madmanCount),
-						Password:           &villagePassword,
-						GameMasterName:     &gameMasterName,
-						GameMasterPassword: &gameMasterPassword,
-					}
-					v, err := m.ctx.WerewolfClient.CreateVillage(req)
-					if err != nil {
-						m.errorMsg = errormsg.NewErrorMessage(err.Error())
-						return m, tea.Tick(5*time.Second, func(_ time.Time) tea.Msg {
-							return errormsg.ClearErrorMsg{}
-						})
-					}
+						// Create village
+						req := client.CreateVillageRequest{
+							Name:               &villageName,
+							CitizenCount:       int32(citizenCount),
+							WerewolfCount:      int32(werewolfCount),
+							FortuneTellerCount: int32(fortuneTellerCount),
+							KnightCount:        int32(knightCount),
+							MadmanCount:        int32(madmanCount),
+							Password:           &villagePassword,
+							GameMasterName:     &gameMasterName,
+							GameMasterPassword: &gameMasterPassword,
+						}
+						v, err := m.ctx.WerewolfClient.CreateVillage(req)
+						if err != nil {
+							m.errorMsg = errormsg.NewErrorMessage(err.Error())
+							return tea.Tick(5*time.Second, func(_ time.Time) tea.Msg {
+								return errormsg.ClearErrorMsg{}
+							})
+						}
 
-					msg := Msg{
-						Village: domain.Village{
-							Name:                  &villageName,
-							CitizenCount:          int32(citizenCount),
-							WerewolfCount:         int32(werewolfCount),
-							FortuneTellerCount:    int32(fortuneTellerCount),
-							KnightCount:           int32(knightCount),
-							MadmanCount:           int32(madmanCount),
-							IsInitialActionActive: true,
-						},
-						VillagePassword:    villagePassword,
-						GameMasterName:     gameMasterName,
-						GameMasterPassword: gameMasterPassword,
-					}
+						msg := Msg{
+							Village: domain.Village{
+								Name:                  &villageName,
+								CitizenCount:          int32(citizenCount),
+								WerewolfCount:         int32(werewolfCount),
+								FortuneTellerCount:    int32(fortuneTellerCount),
+								KnightCount:           int32(knightCount),
+								MadmanCount:           int32(madmanCount),
+								IsInitialActionActive: true,
+							},
+							VillagePassword:    villagePassword,
+							GameMasterName:     gameMasterName,
+							GameMasterPassword: gameMasterPassword,
+						}
 
-					m.errorMsg = errormsg.NewErrorMessage("Village: " + *v.Id + " created successfully!")
-					return m, tea.Batch(
-						tea.Tick(5*time.Second, func(_ time.Time) tea.Msg {
-							return errormsg.ClearErrorMsg{}
-						}),
-						func() tea.Msg {
-							return msg
-						},
-					)
+						m.errorMsg = errormsg.NewErrorMessage("Village: " + *v.Id + " created successfully!")
+						return tea.Batch(
+							tea.Tick(5*time.Second, func(_ time.Time) tea.Msg {
+								return errormsg.ClearErrorMsg{}
+							}),
+							func() tea.Msg {
+								return msg
+							},
+						)
+					}
 				}
 			}
 
