@@ -25,7 +25,7 @@ type Model struct {
 }
 
 func NewModel(serverClient *client.WerewolfServerClient) Model {
-	ctxt := context.NewProgramContext(serverClient)
+	ctxt := context.NewProgramContext()
 	var villageCreator cc.VillageCreator = serverClient
 	var villageListMaker lvmc.VillageListMaker = serverClient
 	return Model{

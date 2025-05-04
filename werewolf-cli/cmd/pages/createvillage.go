@@ -67,9 +67,7 @@ func main() {
 	c := client.NewWerewolfServerClient(conn)
 	var vc vcc.VillageCreator = c
 
-	programContext := uictxt.ProgramContext{
-		WerewolfClient: c,
-	}
+	programContext := uictxt.ProgramContext{}
 	m := createModel{
 		page: createvillage.NewModel(&programContext, vc),
 	}
