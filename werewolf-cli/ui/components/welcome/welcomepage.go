@@ -64,7 +64,8 @@ func (m Model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 				case CreateVillage:
 					dest = navigation.CreateVillage
 				case EnterVillage:
-					dest = navigation.EnterVillage
+					// 村人として参加する場合は、まず村のリストを表示する
+					dest = navigation.ListVillages
 				}
 
 				return navigation.Msg{

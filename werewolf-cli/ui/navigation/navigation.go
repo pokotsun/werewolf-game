@@ -5,7 +5,7 @@ type ViewState int
 const (
 	WelcomeView = iota
 	CreateVillage
-	EnterVillage
+	ListVillages
 )
 
 type Msg struct {

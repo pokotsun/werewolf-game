@@ -69,6 +69,7 @@ func NewModel(ctx *context.ProgramContext) Model {
 }
 
 func (m Model) Init() tea.Cmd {
+	fmt.Println("村一覧を取得中...")
 	return fetchCurrentVillageListCmd(m.ctx)
 }
 
@@ -82,7 +83,7 @@ func (m Model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 		m.list.SetItems(msg.items)
 		cmds = append(cmds,
 			// 10秒ごとに村一覧を更新する関数を実行
-			tea.Tick(10*time.Second, func(t time.Time) tea.Msg {
+			tea.Tick(1*time.Second, func(t time.Time) tea.Msg {
 				return fetchCurrentVillageListCmd(m.ctx)()
 			}),
 		)
