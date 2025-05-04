@@ -10,6 +10,8 @@ import (
 	"time"
 )
 
+var _ client.VillageCreator = (*WerewolfServerClient)(nil)
+
 type WerewolfServerClient struct {
 	conn                 *grpc.ClientConn
 	villageServiceClient *village.VillageServiceClient

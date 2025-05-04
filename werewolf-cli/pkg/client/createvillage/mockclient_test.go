@@ -28,7 +28,7 @@ func TestSuccess(t *testing.T) {
 	}
 
 	// when:
-	actual, err := mockVillageCreator.createVillage(req)
+	actual, err := mockVillageCreator.CreateVillage(req)
 
 	// then:
 	assert.Equal(t, nil, err)

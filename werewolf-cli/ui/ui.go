@@ -4,6 +4,7 @@ import (
 	"fmt"
 	tea "github.com/charmbracelet/bubbletea"
 	"github.com/pokotsun/werewolf-game/pkg/client"
+	cc "github.com/pokotsun/werewolf-game/pkg/client/createvillage"
 	"github.com/pokotsun/werewolf-game/ui/components/createvillage"
 	"github.com/pokotsun/werewolf-game/ui/components/listvillages"
 	loggertype "github.com/pokotsun/werewolf-game/ui/components/logger"
@@ -24,10 +25,11 @@ type Model struct {
 
 func NewModel(serverClient *client.WerewolfServerClient) Model {
 	ctxt := context.NewProgramContext(serverClient)
+	var villageCreator cc.VillageCreator = serverClient
 	return Model{
 		viewState:         navigation.WelcomeView, // 初期状態
 		welcomePage:       welcome.NewModel(ctxt),
-		createVillagePage: createvillage.NewModel(ctxt),
+		createVillagePage: createvillage.NewModel(ctxt, villageCreator),
 		listVillagesPage:  listvillages.NewModel(ctxt),
 		logger:            loggertype.NewModel(),
 	}

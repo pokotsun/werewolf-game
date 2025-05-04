@@ -5,8 +5,9 @@ import (
 	"fmt"
 	tea "github.com/charmbracelet/bubbletea"
 	"github.com/pokotsun/werewolf-game/pkg/client"
+	vcc "github.com/pokotsun/werewolf-game/pkg/client/createvillage"
 	"github.com/pokotsun/werewolf-game/ui/components/createvillage"
-	context2 "github.com/pokotsun/werewolf-game/ui/context"
+	uictxt "github.com/pokotsun/werewolf-game/ui/context"
 	"google.golang.org/grpc"
 	"log"
 	"os"
@@ -64,12 +65,13 @@ func main() {
 	}(conn)
 
 	c := client.NewWerewolfServerClient(conn)
+	var vc vcc.VillageCreator = c
 
-	programContext := context2.ProgramContext{
+	programContext := uictxt.ProgramContext{
 		WerewolfClient: c,
 	}
 	m := createModel{
-		page: createvillage.NewModel(&programContext),
+		page: createvillage.NewModel(&programContext, vc),
 	}
 
 	if _, err := tea.NewProgram(
