@@ -28,6 +28,7 @@ var (
 	blurredButton = fmt.Sprintf("[ %s ]", blurredStyle.Render("Submit"))
 )
 
+// Msg TODO #74 加入した村の状態を ProgramContext に保存する
 type Msg struct {
 	Village            domain.Village
 	VillagePassword    string
