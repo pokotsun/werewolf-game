@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"github.com/charmbracelet/bubbles/list"
 	tea "github.com/charmbracelet/bubbletea"
+	client "github.com/pokotsun/werewolf-game/pkg/client/listvillages"
 	"github.com/pokotsun/werewolf-game/pkg/domain"
 	loggertype "github.com/pokotsun/werewolf-game/ui/components/logger"
 	"github.com/pokotsun/werewolf-game/ui/constants"
@@ -50,11 +51,12 @@ func (i item) FilterValue() string {
 }
 
 type Model struct {
-	ctx  *context.ProgramContext
-	list list.Model
+	ctx              *context.ProgramContext
+	villageListMaker client.VillageListMaker
+	list             list.Model
 }
 
-func NewModel(ctx *context.ProgramContext) Model {
+func NewModel(ctx *context.ProgramContext, villageListMaker client.VillageListMaker) Model {
 	delegate := list.NewDefaultDelegate()
 	// 複数行の表示を有効にする
 	delegate.Styles.SelectedDesc.Height(3)
@@ -65,12 +67,15 @@ func NewModel(ctx *context.ProgramContext) Model {
 	l.Title = "Your join able Villages"
 	l.SetStatusBarItemName("village", "villages")
 
-	return Model{ctx: ctx, list: l}
+	return Model{
+		ctx:              ctx,
+		villageListMaker: villageListMaker,
+		list:             l,
+	}
 }
 
 func (m Model) Init() tea.Cmd {
-	fmt.Println("村一覧を取得中...")
-	return fetchCurrentVillageListCmd(m.ctx)
+	return fetchCurrentVillageListCmd(m.villageListMaker)
 }
 
 func (m Model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
@@ -84,7 +89,7 @@ func (m Model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 		cmds = append(cmds,
 			// 10秒ごとに村一覧を更新する関数を実行
 			tea.Tick(1*time.Second, func(t time.Time) tea.Msg {
-				return fetchCurrentVillageListCmd(m.ctx)()
+				return fetchCurrentVillageListCmd(m.villageListMaker)()
 			}),
 		)
 	}
@@ -102,9 +107,9 @@ func (m Model) View() string {
 	return s.String()
 }
 
-func fetchCurrentVillageListCmd(ctx *context.ProgramContext) tea.Cmd {
+func fetchCurrentVillageListCmd(villageListMaker client.VillageListMaker) tea.Cmd {
 	return func() tea.Msg {
-		villages, err := ctx.WerewolfClient.ListVillages()
+		villages, err := villageListMaker.ListVillages()
 		if err != nil {
 			return loggertype.LogMsg{
 				Entry: loggertype.LogEntry{

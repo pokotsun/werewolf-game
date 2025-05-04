@@ -5,6 +5,7 @@ import (
 	tea "github.com/charmbracelet/bubbletea"
 	"github.com/pokotsun/werewolf-game/pkg/client"
 	cc "github.com/pokotsun/werewolf-game/pkg/client/createvillage"
+	lvmc "github.com/pokotsun/werewolf-game/pkg/client/listvillages"
 	"github.com/pokotsun/werewolf-game/ui/components/createvillage"
 	"github.com/pokotsun/werewolf-game/ui/components/listvillages"
 	loggertype "github.com/pokotsun/werewolf-game/ui/components/logger"
@@ -26,11 +27,12 @@ type Model struct {
 func NewModel(serverClient *client.WerewolfServerClient) Model {
 	ctxt := context.NewProgramContext(serverClient)
 	var villageCreator cc.VillageCreator = serverClient
+	var villageListMaker lvmc.VillageListMaker = serverClient
 	return Model{
 		viewState:         navigation.WelcomeView, // 初期状態
 		welcomePage:       welcome.NewModel(ctxt),
 		createVillagePage: createvillage.NewModel(ctxt, villageCreator),
-		listVillagesPage:  listvillages.NewModel(ctxt),
+		listVillagesPage:  listvillages.NewModel(ctxt, villageListMaker),
 		logger:            loggertype.NewModel(),
 	}
 }

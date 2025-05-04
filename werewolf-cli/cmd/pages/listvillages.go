@@ -5,6 +5,7 @@ import (
 	"fmt"
 	tea "github.com/charmbracelet/bubbletea"
 	"github.com/pokotsun/werewolf-game/pkg/client"
+	lvmc "github.com/pokotsun/werewolf-game/pkg/client/listvillages"
 	"github.com/pokotsun/werewolf-game/ui/components/listvillages"
 	context2 "github.com/pokotsun/werewolf-game/ui/context"
 	"google.golang.org/grpc"
@@ -68,8 +69,9 @@ func main() {
 	programContext := context2.ProgramContext{
 		WerewolfClient: c,
 	}
+	var listVillageMaker lvmc.VillageListMaker = c
 	m := listVillagesModel{
-		page: listvillages.NewModel(&programContext),
+		page: listvillages.NewModel(&programContext, listVillageMaker),
 	}
 
 	if _, err := tea.NewProgram(
