@@ -10,6 +10,7 @@ import (
 	client "github.com/pokotsun/werewolf-game/pkg/client/createvillage"
 	"github.com/pokotsun/werewolf-game/pkg/domain"
 	"github.com/pokotsun/werewolf-game/ui/components/errormsg"
+	loggertype "github.com/pokotsun/werewolf-game/ui/components/logger"
 	"github.com/pokotsun/werewolf-game/ui/context"
 	"strconv"
 	"strings"
@@ -179,6 +180,7 @@ func (m Model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 
 						msg := Msg{
 							Village: domain.Village{
+								Id:                    v.Id,
 								Name:                  &villageName,
 								CitizenCount:          int32(citizenCount),
 								WerewolfCount:         int32(werewolfCount),
@@ -193,14 +195,12 @@ func (m Model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 						}
 
 						m.errorMsg = errormsg.NewErrorMessage("Village: " + *v.Id + " created successfully!")
-						return tea.Batch(
-							tea.Tick(5*time.Second, func(_ time.Time) tea.Msg {
-								return errormsg.ClearErrorMsg{}
-							}),
-							func() tea.Msg {
-								return msg
+						return loggertype.LogMsg{
+							Entry: loggertype.LogEntry{
+								Message: fmt.Sprintf("Village %v created successfully!", msg.Village.Id),
+								Level:   loggertype.Info,
 							},
-						)
+						}
 					}
 				}
 			}
