@@ -3,17 +3,17 @@ package client
 import "github.com/pokotsun/werewolf-game/pkg/domain"
 
 type CreateVillageRequest struct {
-	Name                  *string
-	CitizenCount          int32
-	WerewolfCount         int32
-	FortuneTellerCount    int32
-	KnightCount           int32
-	PsychicCount          int32
-	MadmanCount           int32
+	Name                  string
+	CitizenCount          int
+	WerewolfCount         int
+	FortuneTellerCount    int
+	KnightCount           int
+	PsychicCount          int
+	MadmanCount           int
 	IsInitialActionActive bool
-	Password              *string
-	GameMasterName        *string
-	GameMasterPassword    *string
+	Password              string
+	GameMasterName        string
+	GameMasterPassword    string
 }
 
 type VillageCreator interface {

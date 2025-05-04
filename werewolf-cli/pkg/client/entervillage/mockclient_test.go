@@ -14,10 +14,10 @@ func TestSuccess(t *testing.T) {
 	userName := "GameMaster"
 	userPassword := "GameMasterPassword"
 	req := EnterVillageRequest{
-		VillageId:       &villageId,
-		VillagePassword: &villagePassword,
-		UserName:        &userName,
-		UserPassword:    &userPassword,
+		VillageId:       villageId,
+		VillagePassword: villagePassword,
+		UserName:        userName,
+		UserPassword:    userPassword,
 	}
 
 	// when:

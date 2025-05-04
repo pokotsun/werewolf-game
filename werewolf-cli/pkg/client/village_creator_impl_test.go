@@ -39,7 +39,7 @@ func TestSuccessOnVillageCreatorServerIntegration(t *testing.T) {
 	gameMasterName := "GameMaster"
 	gameMasterPassword := "GameMasterPassword"
 	req := serverClient.CreateVillageRequest{
-		Name:                  &name,
+		Name:                  name,
 		CitizenCount:          7,
 		WerewolfCount:         2,
 		FortuneTellerCount:    1,
@@ -47,9 +47,9 @@ func TestSuccessOnVillageCreatorServerIntegration(t *testing.T) {
 		PsychicCount:          1,
 		MadmanCount:           1,
 		IsInitialActionActive: true,
-		Password:              &password,
-		GameMasterName:        &gameMasterName,
-		GameMasterPassword:    &gameMasterPassword,
+		Password:              password,
+		GameMasterName:        gameMasterName,
+		GameMasterPassword:    gameMasterPassword,
 	}
 
 	// when:
@@ -64,13 +64,13 @@ func TestSuccessOnVillageCreatorServerIntegration(t *testing.T) {
 	}
 
 	// レスポンスを表示
-	assert.Equal(t, name, *res.Name)
-	assert.Equal(t, int32(7), res.CitizenCount)
-	assert.Equal(t, int32(2), res.WerewolfCount)
-	assert.Equal(t, int32(1), res.FortuneTellerCount)
-	assert.Equal(t, int32(1), res.KnightCount)
-	assert.Equal(t, int32(1), res.PsychicCount)
-	assert.Equal(t, int32(1), res.MadmanCount)
+	assert.Equal(t, name, res.Name)
+	assert.Equal(t, 7, res.CitizenCount)
+	assert.Equal(t, 2, res.WerewolfCount)
+	assert.Equal(t, 1, res.FortuneTellerCount)
+	assert.Equal(t, 1, res.KnightCount)
+	assert.Equal(t, 1, res.PsychicCount)
+	assert.Equal(t, 1, res.MadmanCount)
 	assert.Equal(t, true, res.IsInitialActionActive)
-	assert.Equal(t, int32(1), res.CurrentUserNumber)
+	assert.Equal(t, 1, res.CurrentUserNumber)
 }

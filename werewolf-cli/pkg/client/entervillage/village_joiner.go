@@ -1,10 +1,10 @@
 package client
 
 type EnterVillageRequest struct {
-	VillageId       *string
-	VillagePassword *string
-	UserName        *string
-	UserPassword    *string
+	VillageId       string
+	VillagePassword string
+	UserName        string
+	UserPassword    string
 }
 
 type EnterVillageResponse struct {

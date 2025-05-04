@@ -160,15 +160,15 @@ func (m Model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 
 						// Create village
 						req := client.CreateVillageRequest{
-							Name:               &villageName,
-							CitizenCount:       int32(citizenCount),
-							WerewolfCount:      int32(werewolfCount),
-							FortuneTellerCount: int32(fortuneTellerCount),
-							KnightCount:        int32(knightCount),
-							MadmanCount:        int32(madmanCount),
-							Password:           &villagePassword,
-							GameMasterName:     &gameMasterName,
-							GameMasterPassword: &gameMasterPassword,
+							Name:               villageName,
+							CitizenCount:       citizenCount,
+							WerewolfCount:      werewolfCount,
+							FortuneTellerCount: fortuneTellerCount,
+							KnightCount:        knightCount,
+							MadmanCount:        madmanCount,
+							Password:           villagePassword,
+							GameMasterName:     gameMasterName,
+							GameMasterPassword: gameMasterPassword,
 						}
 						v, err := m.ctx.WerewolfClient.CreateVillage(req)
 						if err != nil {
@@ -181,12 +181,12 @@ func (m Model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 						msg := Msg{
 							Village: domain.Village{
 								Id:                    v.Id,
-								Name:                  &villageName,
-								CitizenCount:          int32(citizenCount),
-								WerewolfCount:         int32(werewolfCount),
-								FortuneTellerCount:    int32(fortuneTellerCount),
-								KnightCount:           int32(knightCount),
-								MadmanCount:           int32(madmanCount),
+								Name:                  villageName,
+								CitizenCount:          citizenCount,
+								WerewolfCount:         werewolfCount,
+								FortuneTellerCount:    fortuneTellerCount,
+								KnightCount:           knightCount,
+								MadmanCount:           madmanCount,
 								IsInitialActionActive: true,
 							},
 							VillagePassword:    villagePassword,
@@ -194,7 +194,7 @@ func (m Model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 							GameMasterPassword: gameMasterPassword,
 						}
 
-						m.errorMsg = errormsg.NewErrorMessage("Village: " + *v.Id + " created successfully!")
+						m.errorMsg = errormsg.NewErrorMessage("Village: " + v.Id + " created successfully!")
 						return loggertype.LogMsg{
 							Entry: loggertype.LogEntry{
 								Message: fmt.Sprintf("Village %v created successfully!", msg.Village.Id),

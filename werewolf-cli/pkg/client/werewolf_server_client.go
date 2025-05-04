@@ -25,17 +25,17 @@ func NewWerewolfServerClient(conn *grpc.ClientConn) *WerewolfServerClient {
 
 func (c *WerewolfServerClient) CreateVillage(request client.CreateVillageRequest) (*domain.Village, error) {
 	req := village.CreateVillageRequest{
-		Name:                  *request.Name,
-		CitizenCount:          request.CitizenCount,
-		WerewolfCount:         request.WerewolfCount,
-		FortuneTellerCount:    request.FortuneTellerCount,
-		KnightCount:           request.KnightCount,
-		PsychicCount:          request.PsychicCount,
-		MadmanCount:           request.MadmanCount,
+		Name:                  request.Name,
+		CitizenCount:          int32(request.CitizenCount),
+		WerewolfCount:         int32(request.WerewolfCount),
+		FortuneTellerCount:    int32(request.FortuneTellerCount),
+		KnightCount:           int32(request.KnightCount),
+		PsychicCount:          int32(request.PsychicCount),
+		MadmanCount:           int32(request.MadmanCount),
 		IsInitialActionActive: request.IsInitialActionActive,
-		Password:              *request.Password,
-		GameMasterName:        *request.GameMasterName,
-		GameMasterPassword:    *request.GameMasterPassword,
+		Password:              request.Password,
+		GameMasterName:        request.GameMasterName,
+		GameMasterPassword:    request.GameMasterPassword,
 	}
 
 	// コンテキストを作成し、タイムアウトを設定
@@ -49,16 +49,16 @@ func (c *WerewolfServerClient) CreateVillage(request client.CreateVillageRequest
 	}
 
 	response := domain.Village{
-		Id:                    &res.Id,
-		Name:                  &res.Name,
-		CitizenCount:          res.CitizenCount,
-		WerewolfCount:         res.WerewolfCount,
+		Id:                    res.Id,
+		Name:                  res.Name,
+		CitizenCount:          int(res.CitizenCount),
+		WerewolfCount:         int(res.WerewolfCount),
 		FortuneTellerCount:    request.FortuneTellerCount,
 		KnightCount:           request.KnightCount,
 		PsychicCount:          request.PsychicCount,
 		MadmanCount:           request.MadmanCount,
 		IsInitialActionActive: true,
-		CurrentUserNumber:     res.CurrentUserNumber,
+		CurrentUserNumber:     int(res.CurrentUserNumber),
 	}
 
 	return &response, nil
@@ -79,16 +79,16 @@ func (c *WerewolfServerClient) ListVillages() ([]*domain.Village, error) {
 	var targetList []*domain.Village
 	for _, villageResponse := range res.Villages {
 		target := domain.Village{
-			Id:                    &villageResponse.Id,
-			Name:                  &villageResponse.Name,
-			CitizenCount:          villageResponse.CitizenCount,
-			WerewolfCount:         villageResponse.WerewolfCount,
-			FortuneTellerCount:    villageResponse.FortuneTellerCount,
-			KnightCount:           villageResponse.KnightCount,
-			PsychicCount:          villageResponse.PsychicCount,
-			MadmanCount:           villageResponse.MadmanCount,
+			Id:                    villageResponse.Id,
+			Name:                  villageResponse.Name,
+			CitizenCount:          int(villageResponse.CitizenCount),
+			WerewolfCount:         int(villageResponse.WerewolfCount),
+			FortuneTellerCount:    int(villageResponse.FortuneTellerCount),
+			KnightCount:           int(villageResponse.KnightCount),
+			PsychicCount:          int(villageResponse.PsychicCount),
+			MadmanCount:           int(villageResponse.MadmanCount),
 			IsInitialActionActive: true,
-			CurrentUserNumber:     villageResponse.CurrentUserNumber,
+			CurrentUserNumber:     int(villageResponse.CurrentUserNumber),
 		}
 		targetList = append(targetList, &target)
 	}
@@ -102,10 +102,10 @@ func (c *WerewolfServerClient) EnterVillage(request client2.EnterVillageRequest)
 	defer cancel()
 
 	req := village.EnterVillageRequest{
-		VillageId:       *request.VillageId,
-		VillagePassword: *request.VillagePassword,
-		UserName:        *request.UserName,
-		UserPassword:    *request.UserPassword,
+		VillageId:       request.VillageId,
+		VillagePassword: request.VillagePassword,
+		UserName:        request.UserName,
+		UserPassword:    request.UserPassword,
 	}
 
 	// サーバーにリクエストを送信
