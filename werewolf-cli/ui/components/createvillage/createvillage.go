@@ -227,12 +227,12 @@ func (m Model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 					cmds[i] = m.inputs[i].Focus()
 					m.inputs[i].PromptStyle = focusedStyle
 					m.inputs[i].TextStyle = focusedStyle
-					continue
+				} else {
+					// Remove focused state
+					m.inputs[i].Blur()
+					m.inputs[i].PromptStyle = noStyle
+					m.inputs[i].TextStyle = noStyle
 				}
-				// Remove focused state
-				m.inputs[i].Blur()
-				m.inputs[i].PromptStyle = noStyle
-				m.inputs[i].TextStyle = noStyle
 			}
 
 			return m, tea.Batch(cmds...)
@@ -240,12 +240,6 @@ func (m Model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 	}
 
 	// Handle character input and blinking
-	cmd := m.updateInputs(msg)
-
-	return m, cmd
-}
-
-func (m *Model) updateInputs(msg tea.Msg) tea.Cmd {
 	cmds := make([]tea.Cmd, len(m.inputs))
 
 	// Only text inputs with Focus() set will respond, so it's safe to simply
@@ -254,7 +248,7 @@ func (m *Model) updateInputs(msg tea.Msg) tea.Cmd {
 		m.inputs[i], cmds[i] = m.inputs[i].Update(msg)
 	}
 
-	return tea.Batch(cmds...)
+	return m, tea.Batch(cmds...)
 }
 
 func (m Model) View() string {
