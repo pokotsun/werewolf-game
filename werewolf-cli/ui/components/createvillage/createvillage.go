@@ -18,11 +18,21 @@ import (
 )
 
 var (
-	focusedStyle = lipgloss.NewStyle().Foreground(lipgloss.Color("205"))
-	blurredStyle = lipgloss.NewStyle().Foreground(lipgloss.Color("240"))
-	cursorStyle  = focusedStyle
-	noStyle      = lipgloss.NewStyle()
-	errStyle     = lipgloss.NewStyle().Foreground(lipgloss.Color("110")).PaddingLeft(2)
+	headingStyle = lipgloss.NewStyle().
+			Bold(true).
+			PaddingBottom(1)
+
+	focusedStyle = lipgloss.NewStyle().
+			Foreground(lipgloss.Color("205"))
+	blurredStyle = lipgloss.NewStyle().
+			Foreground(lipgloss.Color("240"))
+	cursorStyle = focusedStyle
+	noStyle     = lipgloss.NewStyle()
+
+	// エラーメッセージのスタイル
+	errStyle = lipgloss.NewStyle().
+			Foreground(lipgloss.Color("110")).
+			PaddingLeft(2)
 
 	focusedButton = focusedStyle.Render("[ Submit ]")
 	blurredButton = fmt.Sprintf("[ %s ]", blurredStyle.Render("Submit"))
@@ -36,12 +46,43 @@ type Msg struct {
 	GameMasterPassword string
 }
 
+/**
+ * questionItem
+ * @description: 質問項目を表す構造体
+ * @param question 質問文
+ * @param textinput.Model textinput.Model
+ */
+type questionItem struct {
+	question string
+	textinput.Model
+}
+
+func newQuestionItem() questionItem {
+	return questionItem{
+		question: "",
+		Model:    textinput.New(),
+	}
+}
+
+func (m questionItem) Update(msg tea.Msg) (questionItem, tea.Cmd) {
+	var cmd tea.Cmd
+	m.Model, cmd = m.Model.Update(msg)
+	return m, cmd
+}
+
 type Model struct {
 	ctx            *context.ProgramContext
 	villageCreator client.VillageCreator
 	focusIndex     int
-	inputs         []textinput.Model
+	inputs         []questionItem
 	errorMsg       *errormsg.ErrorMessage
+}
+
+func validateNotBlank(input string) error {
+	if input == "" {
+		return errors.New("input must not be empty")
+	}
+	return nil
 }
 
 func validatePassword(input string) error {
@@ -63,58 +104,69 @@ func NewModel(ctx *context.ProgramContext, villageCreator client.VillageCreator)
 		ctx:            ctx,
 		villageCreator: villageCreator,
 		focusIndex:     0,
-		inputs:         make([]textinput.Model, 9),
+		inputs:         make([]questionItem, 9),
 	}
 
-	var t textinput.Model
+	var qItem questionItem
 	for i := range m.inputs {
-		t = textinput.New()
-		t.Cursor.SetMode(cursor.CursorBlink)
-		t.Cursor.Style = cursorStyle
-		t.CharLimit = 32
+		qItem = newQuestionItem()
+		qItem.Cursor.SetMode(cursor.CursorBlink)
+		qItem.Cursor.Style = cursorStyle
+		qItem.CharLimit = 32
 
 		switch i {
 		case 0:
-			t.Placeholder = "Village Name"
-			t.Focus()
-			t.PromptStyle = focusedStyle
-			t.TextStyle = focusedStyle
+			qItem.question = "What is your village name?"
+			qItem.Placeholder = "Village Name"
+			qItem.Focus()
+			qItem.PromptStyle = focusedStyle
+			qItem.TextStyle = focusedStyle
+			qItem.Validate = validateNotBlank
 		case 1:
-			t.Placeholder = "Village Password"
-			t.EchoMode = textinput.EchoPassword
-			t.EchoCharacter = '•'
-			t.Validate = validatePassword
+			qItem.question = "What is your village password?"
+			qItem.Placeholder = "Village Password"
+			qItem.EchoMode = textinput.EchoPassword
+			qItem.EchoCharacter = '•'
+			qItem.Validate = validatePassword
 		case 2:
-			t.Placeholder = "Citizen Count"
-			t.CharLimit = 1
-			t.Validate = validateNumber
+			qItem.question = "How many citizens are there?"
+			qItem.Placeholder = "Citizen Count"
+			qItem.CharLimit = 1
+			qItem.Validate = validateNumber
 		case 3:
-			t.Placeholder = "Werewolf Count"
-			t.CharLimit = 1
-			t.Validate = validateNumber
+			qItem.question = "How many werewolves are there?"
+			qItem.Placeholder = "Werewolf Count"
+			qItem.CharLimit = 1
+			qItem.Validate = validateNumber
 		case 4:
-			t.Placeholder = "Fortune Teller Count"
-			t.CharLimit = 1
-			t.Validate = validateNumber
+			qItem.question = "How many fortune tellers are there?"
+			qItem.Placeholder = "Fortune Teller Count"
+			qItem.CharLimit = 1
+			qItem.Validate = validateNumber
 		case 5:
-			t.Placeholder = "Knight Count"
-			t.CharLimit = 1
-			t.Validate = validateNumber
+			qItem.question = "How many knights are there?"
+			qItem.Placeholder = "Knight Count"
+			qItem.CharLimit = 1
+			qItem.Validate = validateNumber
 		case 6:
-			t.Placeholder = "Madman Count"
-			t.CharLimit = 1
-			t.Validate = validateNumber
+			qItem.question = "How many madmen are there?"
+			qItem.Placeholder = "Madman Count"
+			qItem.CharLimit = 1
+			qItem.Validate = validateNumber
 		case 7:
-			t.Placeholder = "GameMaster Name"
-			t.CharLimit = 64
+			qItem.question = "GameMaster is you. What is your name?"
+			qItem.Placeholder = "GameMaster Name"
+			qItem.CharLimit = 64
+			qItem.Validate = validateNotBlank
 		case 8:
-			t.Placeholder = "GameMaster Password"
-			t.EchoMode = textinput.EchoPassword
-			t.EchoCharacter = '•'
-			t.Validate = validatePassword
+			qItem.question = "What is GameMaster password?"
+			qItem.Placeholder = "GameMaster Password"
+			qItem.EchoMode = textinput.EchoPassword
+			qItem.EchoCharacter = '•'
+			qItem.Validate = validatePassword
 		}
 
-		m.inputs[i] = t
+		m.inputs[i] = qItem
 	}
 
 	return m
@@ -144,7 +196,7 @@ func (m Model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 			// submit button が押されたとき
 			if s == "enter" && m.focusIndex == len(m.inputs) {
 				for i, input := range m.inputs {
-					if input.Err != nil || input.Value() == "" {
+					if input.Err != nil {
 						erroredFocusIndex = i
 						break
 					}
@@ -261,12 +313,13 @@ func (m Model) View() string {
 
 	for i := range m.inputs {
 		input := m.inputs[i]
+		b.WriteString(headingStyle.Render(input.question) + "\n")
 		b.WriteString(input.View())
 		if input.Err != nil {
 			b.WriteString("\n" + errStyle.Render(input.Err.Error()))
 		}
 		if i < len(m.inputs)-1 {
-			b.WriteRune('\n')
+			b.WriteString("\n\n")
 		}
 	}
 
