@@ -22,11 +22,17 @@ var (
 			Bold(true).
 			PaddingBottom(1)
 
-	focusedStyle = lipgloss.NewStyle().Foreground(lipgloss.Color("205"))
-	blurredStyle = lipgloss.NewStyle().Foreground(lipgloss.Color("240"))
-	cursorStyle  = focusedStyle
-	noStyle      = lipgloss.NewStyle()
-	errStyle     = lipgloss.NewStyle().Foreground(lipgloss.Color("110")).PaddingLeft(2)
+	focusedStyle = lipgloss.NewStyle().
+			Foreground(lipgloss.Color("205"))
+	blurredStyle = lipgloss.NewStyle().
+			Foreground(lipgloss.Color("240"))
+	cursorStyle = focusedStyle
+	noStyle     = lipgloss.NewStyle()
+
+	// エラーメッセージのスタイル
+	errStyle = lipgloss.NewStyle().
+			Foreground(lipgloss.Color("110")).
+			PaddingLeft(2)
 
 	focusedButton = focusedStyle.Render("[ Submit ]")
 	blurredButton = fmt.Sprintf("[ %s ]", blurredStyle.Render("Submit"))
