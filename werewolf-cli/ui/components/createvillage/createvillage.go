@@ -12,6 +12,7 @@ import (
 	"github.com/pokotsun/werewolf-game/ui/components/errormsg"
 	loggertype "github.com/pokotsun/werewolf-game/ui/components/logger"
 	"github.com/pokotsun/werewolf-game/ui/components/qustionitem"
+	"github.com/pokotsun/werewolf-game/ui/constants"
 	"github.com/pokotsun/werewolf-game/ui/context"
 	"strconv"
 	"strings"
@@ -281,6 +282,9 @@ func (m Model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 
 func (m Model) View() string {
 	var b strings.Builder
+
+	b.WriteString(constants.TitleStyle.Render("Creating New Village"))
+	b.WriteString("\n\n")
 
 	for i := range m.inputs {
 		input := m.inputs[i]
