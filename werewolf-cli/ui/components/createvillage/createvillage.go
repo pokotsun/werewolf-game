@@ -10,6 +10,7 @@ import (
 	client "github.com/pokotsun/werewolf-game/pkg/client/createvillage"
 	"github.com/pokotsun/werewolf-game/pkg/domain"
 	"github.com/pokotsun/werewolf-game/ui/components/errormsg"
+	loggertype "github.com/pokotsun/werewolf-game/ui/components/logger"
 	"github.com/pokotsun/werewolf-game/ui/context"
 	"strconv"
 	"strings"
@@ -146,60 +147,61 @@ func (m Model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 					}
 				}
 				if erroredFocusIndex < 0 {
-					villageName := m.inputs[0].Value()
-					villagePassword := m.inputs[1].Value()
-					citizenCount, _ := strconv.Atoi(m.inputs[2].Value())
-					werewolfCount, _ := strconv.Atoi(m.inputs[3].Value())
-					fortuneTellerCount, _ := strconv.Atoi(m.inputs[4].Value())
-					knightCount, _ := strconv.Atoi(m.inputs[5].Value())
-					madmanCount, _ := strconv.Atoi(m.inputs[6].Value())
-					gameMasterName := m.inputs[7].Value()
-					gameMasterPassword := m.inputs[8].Value()
+					return m, func() tea.Msg {
+						villageName := m.inputs[0].Value()
+						villagePassword := m.inputs[1].Value()
+						citizenCount, _ := strconv.Atoi(m.inputs[2].Value())
+						werewolfCount, _ := strconv.Atoi(m.inputs[3].Value())
+						fortuneTellerCount, _ := strconv.Atoi(m.inputs[4].Value())
+						knightCount, _ := strconv.Atoi(m.inputs[5].Value())
+						madmanCount, _ := strconv.Atoi(m.inputs[6].Value())
+						gameMasterName := m.inputs[7].Value()
+						gameMasterPassword := m.inputs[8].Value()
 
-					// Create village
-					req := client.CreateVillageRequest{
-						Name:               &villageName,
-						CitizenCount:       int32(citizenCount),
-						WerewolfCount:      int32(werewolfCount),
-						FortuneTellerCount: int32(fortuneTellerCount),
-						KnightCount:        int32(knightCount),
-						MadmanCount:        int32(madmanCount),
-						Password:           &villagePassword,
-						GameMasterName:     &gameMasterName,
-						GameMasterPassword: &gameMasterPassword,
-					}
-					v, err := m.ctx.WerewolfClient.CreateVillage(req)
-					if err != nil {
-						m.errorMsg = errormsg.NewErrorMessage(err.Error())
-						return m, tea.Tick(5*time.Second, func(_ time.Time) tea.Msg {
-							return errormsg.ClearErrorMsg{}
-						})
-					}
+						// Create village
+						req := client.CreateVillageRequest{
+							Name:               &villageName,
+							CitizenCount:       int32(citizenCount),
+							WerewolfCount:      int32(werewolfCount),
+							FortuneTellerCount: int32(fortuneTellerCount),
+							KnightCount:        int32(knightCount),
+							MadmanCount:        int32(madmanCount),
+							Password:           &villagePassword,
+							GameMasterName:     &gameMasterName,
+							GameMasterPassword: &gameMasterPassword,
+						}
+						v, err := m.ctx.WerewolfClient.CreateVillage(req)
+						if err != nil {
+							m.errorMsg = errormsg.NewErrorMessage(err.Error())
+							return tea.Tick(5*time.Second, func(_ time.Time) tea.Msg {
+								return errormsg.ClearErrorMsg{}
+							})
+						}
 
-					msg := Msg{
-						Village: domain.Village{
-							Name:                  &villageName,
-							CitizenCount:          int32(citizenCount),
-							WerewolfCount:         int32(werewolfCount),
-							FortuneTellerCount:    int32(fortuneTellerCount),
-							KnightCount:           int32(knightCount),
-							MadmanCount:           int32(madmanCount),
-							IsInitialActionActive: true,
-						},
-						VillagePassword:    villagePassword,
-						GameMasterName:     gameMasterName,
-						GameMasterPassword: gameMasterPassword,
-					}
+						msg := Msg{
+							Village: domain.Village{
+								Id:                    v.Id,
+								Name:                  &villageName,
+								CitizenCount:          int32(citizenCount),
+								WerewolfCount:         int32(werewolfCount),
+								FortuneTellerCount:    int32(fortuneTellerCount),
+								KnightCount:           int32(knightCount),
+								MadmanCount:           int32(madmanCount),
+								IsInitialActionActive: true,
+							},
+							VillagePassword:    villagePassword,
+							GameMasterName:     gameMasterName,
+							GameMasterPassword: gameMasterPassword,
+						}
 
-					m.errorMsg = errormsg.NewErrorMessage("Village: " + *v.Id + " created successfully!")
-					return m, tea.Batch(
-						tea.Tick(5*time.Second, func(_ time.Time) tea.Msg {
-							return errormsg.ClearErrorMsg{}
-						}),
-						func() tea.Msg {
-							return msg
-						},
-					)
+						m.errorMsg = errormsg.NewErrorMessage("Village: " + *v.Id + " created successfully!")
+						return loggertype.LogMsg{
+							Entry: loggertype.LogEntry{
+								Message: fmt.Sprintf("Village %v created successfully!", msg.Village.Id),
+								Level:   loggertype.Info,
+							},
+						}
+					}
 				}
 			}
 
@@ -227,12 +229,12 @@ func (m Model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 					cmds[i] = m.inputs[i].Focus()
 					m.inputs[i].PromptStyle = focusedStyle
 					m.inputs[i].TextStyle = focusedStyle
-					continue
+				} else {
+					// Remove focused state
+					m.inputs[i].Blur()
+					m.inputs[i].PromptStyle = noStyle
+					m.inputs[i].TextStyle = noStyle
 				}
-				// Remove focused state
-				m.inputs[i].Blur()
-				m.inputs[i].PromptStyle = noStyle
-				m.inputs[i].TextStyle = noStyle
 			}
 
 			return m, tea.Batch(cmds...)
@@ -240,12 +242,6 @@ func (m Model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 	}
 
 	// Handle character input and blinking
-	cmd := m.updateInputs(msg)
-
-	return m, cmd
-}
-
-func (m *Model) updateInputs(msg tea.Msg) tea.Cmd {
 	cmds := make([]tea.Cmd, len(m.inputs))
 
 	// Only text inputs with Focus() set will respond, so it's safe to simply
@@ -254,7 +250,7 @@ func (m *Model) updateInputs(msg tea.Msg) tea.Cmd {
 		m.inputs[i], cmds[i] = m.inputs[i].Update(msg)
 	}
 
-	return tea.Batch(cmds...)
+	return m, tea.Batch(cmds...)
 }
 
 func (m Model) View() string {

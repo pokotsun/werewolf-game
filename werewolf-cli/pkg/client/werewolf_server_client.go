@@ -3,6 +3,7 @@ package client
 import (
 	"context"
 	client "github.com/pokotsun/werewolf-game/pkg/client/createvillage"
+	client2 "github.com/pokotsun/werewolf-game/pkg/client/entervillage"
 	"github.com/pokotsun/werewolf-game/pkg/domain"
 	"github.com/pokotsun/werewolf-game/pkg/grpc/github.com/pokotsun/werewolf/grpc/village"
 	"google.golang.org/grpc"
@@ -93,4 +94,27 @@ func (c *WerewolfServerClient) ListVillages() ([]*domain.Village, error) {
 	}
 
 	return targetList, nil
+}
+
+func (c *WerewolfServerClient) EnterVillage(request client2.EnterVillageRequest) (string, string, error) {
+	// コンテキストを作成し、タイムアウトを設定
+	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
+	defer cancel()
+
+	req := village.EnterVillageRequest{
+		VillageId:       *request.VillageId,
+		VillagePassword: *request.VillagePassword,
+		UserName:        *request.UserName,
+		UserPassword:    *request.UserPassword,
+	}
+
+	// サーバーにリクエストを送信
+	res, err := (*c.villageServiceClient).EnterVillage(ctx, &req)
+	if err != nil {
+		return "", "", err
+	}
+
+	villageId, userId := res.VillageId, res.UserId
+
+	return villageId, userId, nil
 }

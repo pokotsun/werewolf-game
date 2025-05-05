@@ -18,7 +18,7 @@ type createModel struct {
 }
 
 func (m createModel) Init() tea.Cmd {
-	return nil
+	return m.page.Init()
 }
 
 func (m createModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {

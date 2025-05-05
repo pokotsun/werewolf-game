@@ -5,6 +5,7 @@ import (
 	tea "github.com/charmbracelet/bubbletea"
 	"github.com/pokotsun/werewolf-game/ui/constants"
 	"github.com/pokotsun/werewolf-game/ui/context"
+	"github.com/pokotsun/werewolf-game/ui/navigation"
 	"strings"
 )
 
@@ -27,10 +28,6 @@ func (i item) FilterValue() string { return i.title }
 var items = []list.Item{
 	item{"Create Village", "ゲームマスターとして村を作成します", CreateVillage},
 	item{"Enter Village", "ゲームマスターが既に作成した村に村人として参加します", EnterVillage},
-}
-
-type Msg struct {
-	Choice Choice
 }
 
 type Model struct {
@@ -61,12 +58,23 @@ func (m Model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 		case "enter":
 			return m, func() tea.Msg {
 				selectedChoice := m.list.SelectedItem().(item).choice
-				return Msg{Choice: selectedChoice}
+
+				var dest navigation.ViewState
+				switch selectedChoice {
+				case CreateVillage:
+					dest = navigation.CreateVillage
+				case EnterVillage:
+					dest = navigation.EnterVillage
+				}
+
+				return navigation.Msg{
+					Destination: dest,
+				}
 			}
 		}
 	case tea.WindowSizeMsg:
-		h, v := constants.DocStyle.GetFrameSize()
-		m.list.SetSize(msg.Width-h, msg.Height-v-2)
+		w, h := constants.DocStyle.GetFrameSize()
+		m.list.SetSize(msg.Width-w, msg.Height-h-2)
 	}
 
 	var cmd tea.Cmd

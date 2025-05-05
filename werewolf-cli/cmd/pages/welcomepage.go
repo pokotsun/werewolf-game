@@ -23,13 +23,6 @@ func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 		case "q", "ctrl+c", "esc":
 			return m, tea.Quit
 		}
-	case welcome.Msg:
-		switch msg.Choice {
-		case welcome.CreateVillage:
-			fmt.Println("Create Village selected")
-		case welcome.EnterVillage:
-			fmt.Println("Enter Village selected")
-		}
 	}
 
 	var cmds []tea.Cmd
