@@ -72,6 +72,13 @@ type Model struct {
 	errorMsg       *errormsg.ErrorMessage
 }
 
+func validateNotBlank(input string) error {
+	if input == "" {
+		return errors.New("input must not be empty")
+	}
+	return nil
+}
+
 func validatePassword(input string) error {
 	if input == "" || len(input) < 4 {
 		return errors.New("password must not be empty, and be at least 4 characters long")
@@ -108,6 +115,7 @@ func NewModel(ctx *context.ProgramContext, villageCreator client.VillageCreator)
 			qItem.Focus()
 			qItem.PromptStyle = focusedStyle
 			qItem.TextStyle = focusedStyle
+			qItem.Validate = validateNotBlank
 		case 1:
 			qItem.question = "What is your village password?"
 			qItem.Placeholder = "Village Password"
@@ -143,6 +151,7 @@ func NewModel(ctx *context.ProgramContext, villageCreator client.VillageCreator)
 			qItem.question = "GameMaster is you. What is your name?"
 			qItem.Placeholder = "GameMaster Name"
 			qItem.CharLimit = 64
+			qItem.Validate = validateNotBlank
 		case 8:
 			qItem.question = "What is GameMaster password?"
 			qItem.Placeholder = "GameMaster Password"
@@ -181,7 +190,7 @@ func (m Model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 			// submit button が押されたとき
 			if s == "enter" && m.focusIndex == len(m.inputs) {
 				for i, input := range m.inputs {
-					if input.Err != nil || input.Value() == "" {
+					if input.Err != nil {
 						erroredFocusIndex = i
 						break
 					}
