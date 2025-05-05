@@ -57,6 +57,16 @@ type Model struct {
 }
 
 func NewModel(ctx *context.ProgramContext, villageListMaker client.VillageListMaker) Model {
+	l := newListModel()
+
+	return Model{
+		ctx:              ctx,
+		villageListMaker: villageListMaker,
+		list:             l,
+	}
+}
+
+func newListModel() list.Model {
 	delegate := list.NewDefaultDelegate()
 	// 複数行の表示を有効にする
 	delegate.Styles.SelectedDesc.Height(3)
@@ -66,12 +76,9 @@ func NewModel(ctx *context.ProgramContext, villageListMaker client.VillageListMa
 	l := list.New([]list.Item{}, delegate, 0, 0)
 	l.Title = "Your join able Villages"
 	l.SetStatusBarItemName("village", "villages")
+	l.SetFilteringEnabled(false)
 
-	return Model{
-		ctx:              ctx,
-		villageListMaker: villageListMaker,
-		list:             l,
-	}
+	return l
 }
 
 func (m Model) Init() tea.Cmd {
