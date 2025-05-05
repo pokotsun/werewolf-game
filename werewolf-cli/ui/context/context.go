@@ -2,6 +2,7 @@ package context
 
 import (
 	tea "github.com/charmbracelet/bubbletea"
+	"github.com/pokotsun/werewolf-game/pkg/domain"
 )
 
 type State = int
@@ -18,11 +19,13 @@ type Task struct {
 }
 
 type ProgramContext struct {
-	CurrentTask func(task Task) tea.Cmd
+	JoinedVillage *domain.JoinedVillage
+	CurrentTask   func(task Task) tea.Cmd
 }
 
 func NewProgramContext() *ProgramContext {
 	return &ProgramContext{
-		CurrentTask: nil,
+		JoinedVillage: nil,
+		CurrentTask:   nil,
 	}
 }

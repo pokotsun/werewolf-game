@@ -38,14 +38,6 @@ var (
 	blurredButton = fmt.Sprintf("[ %s ]", blurredStyle.Render("Submit"))
 )
 
-// Msg TODO #74 加入した村の状態を ProgramContext に保存する
-type Msg struct {
-	Village            domain.Village
-	VillagePassword    string
-	GameMasterName     string
-	GameMasterPassword string
-}
-
 /**
  * questionItem
  * @description: 質問項目を表す構造体
@@ -233,8 +225,8 @@ func (m Model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 							})
 						}
 
-						msg := Msg{
-							Village: domain.Village{
+						joinedVillage := domain.NewJoinedVillageAsGameMaster(
+							&domain.Village{
 								Id:                    v.Id,
 								Name:                  villageName,
 								CitizenCount:          citizenCount,
@@ -244,15 +236,17 @@ func (m Model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 								MadmanCount:           madmanCount,
 								IsInitialActionActive: true,
 							},
-							VillagePassword:    villagePassword,
-							GameMasterName:     gameMasterName,
-							GameMasterPassword: gameMasterPassword,
-						}
+							villagePassword,
+							gameMasterName,
+							gameMasterPassword,
+						)
+
+						m.ctx.JoinedVillage = &joinedVillage
 
 						m.errorMsg = errormsg.NewErrorMessage("Village: " + v.Id + " created successfully!")
 						return loggertype.LogMsg{
 							Entry: loggertype.LogEntry{
-								Message: fmt.Sprintf("Village %v created successfully!", msg.Village.Id),
+								Message: fmt.Sprintf("Village %v created successfully!", joinedVillage.Id),
 								Level:   loggertype.Info,
 							},
 						}
