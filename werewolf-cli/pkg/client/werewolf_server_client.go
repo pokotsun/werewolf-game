@@ -2,13 +2,17 @@ package client
 
 import (
 	"context"
-	client "github.com/pokotsun/werewolf-game/pkg/client/createvillage"
+	cvc "github.com/pokotsun/werewolf-game/pkg/client/createvillage"
 	client2 "github.com/pokotsun/werewolf-game/pkg/client/entervillage"
+	lvmc "github.com/pokotsun/werewolf-game/pkg/client/listvillages"
 	"github.com/pokotsun/werewolf-game/pkg/domain"
 	"github.com/pokotsun/werewolf-game/pkg/grpc/github.com/pokotsun/werewolf/grpc/village"
 	"google.golang.org/grpc"
 	"time"
 )
+
+var _ cvc.VillageCreator = (*WerewolfServerClient)(nil)
+var _ lvmc.VillageListMaker = (*WerewolfServerClient)(nil)
 
 type WerewolfServerClient struct {
 	conn                 *grpc.ClientConn
@@ -23,7 +27,7 @@ func NewWerewolfServerClient(conn *grpc.ClientConn) *WerewolfServerClient {
 	}
 }
 
-func (c *WerewolfServerClient) CreateVillage(request client.CreateVillageRequest) (*domain.Village, error) {
+func (c *WerewolfServerClient) CreateVillage(request cvc.CreateVillageRequest) (*domain.Village, error) {
 	req := village.CreateVillageRequest{
 		Name:                  request.Name,
 		CitizenCount:          int32(request.CitizenCount),

@@ -7,9 +7,11 @@ import (
 	"github.com/pokotsun/werewolf-game/pkg/domain"
 )
 
+var _ VillageCreator = (*MockVillageCreator)(nil)
+
 type MockVillageCreator struct{}
 
-func (m *MockVillageCreator) createVillage(request CreateVillageRequest) (*domain.Village, error) {
+func (m *MockVillageCreator) CreateVillage(request CreateVillageRequest) (*domain.Village, error) {
 	jsonData, err := json.Marshal(request)
 	if err != nil {
 		fmt.Errorf("json marshal error: %v", err)

@@ -11,7 +11,7 @@ func TestSuccess(t *testing.T) {
 	mockVillageCreator := MockVillageListMaker{}
 
 	// when:
-	actualList, err := mockVillageCreator.ListVillage()
+	actualList, err := mockVillageCreator.ListVillages()
 
 	// then:
 	assert.Equal(t, nil, err)

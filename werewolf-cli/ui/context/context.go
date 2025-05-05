@@ -2,7 +2,6 @@ package context
 
 import (
 	tea "github.com/charmbracelet/bubbletea"
-	"github.com/pokotsun/werewolf-game/pkg/client"
 )
 
 type State = int
@@ -19,13 +18,11 @@ type Task struct {
 }
 
 type ProgramContext struct {
-	WerewolfClient *client.WerewolfServerClient
-	CurrentTask    func(task Task) tea.Cmd
+	CurrentTask func(task Task) tea.Cmd
 }
 
-func NewProgramContext(werewolfClient *client.WerewolfServerClient) *ProgramContext {
+func NewProgramContext() *ProgramContext {
 	return &ProgramContext{
-		WerewolfClient: werewolfClient,
-		CurrentTask:    nil,
+		CurrentTask: nil,
 	}
 }

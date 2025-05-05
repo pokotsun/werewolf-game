@@ -5,8 +5,9 @@ import (
 	"fmt"
 	tea "github.com/charmbracelet/bubbletea"
 	"github.com/pokotsun/werewolf-game/pkg/client"
+	lvmc "github.com/pokotsun/werewolf-game/pkg/client/listvillages"
 	"github.com/pokotsun/werewolf-game/ui/components/listvillages"
-	context2 "github.com/pokotsun/werewolf-game/ui/context"
+	uictxt "github.com/pokotsun/werewolf-game/ui/context"
 	"google.golang.org/grpc"
 	"log"
 	"os"
@@ -22,6 +23,7 @@ func (m listVillagesModel) Init() tea.Cmd {
 }
 
 func (m listVillagesModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
+	// TODO: #75 root model の不要なイベント取得をやめる
 	switch msg := msg.(type) {
 	case tea.KeyMsg:
 		switch msg.String() {
@@ -65,11 +67,10 @@ func main() {
 
 	c := client.NewWerewolfServerClient(conn)
 
-	programContext := context2.ProgramContext{
-		WerewolfClient: c,
-	}
+	programContext := uictxt.ProgramContext{}
+	var listVillageMaker lvmc.VillageListMaker = c
 	m := listVillagesModel{
-		page: listvillages.NewModel(&programContext),
+		page: listvillages.NewModel(&programContext, listVillageMaker),
 	}
 
 	if _, err := tea.NewProgram(

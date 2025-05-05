@@ -28,6 +28,7 @@ var (
 	blurredButton = fmt.Sprintf("[ %s ]", blurredStyle.Render("Submit"))
 )
 
+// Msg TODO #74 加入した村の状態を ProgramContext に保存する
 type Msg struct {
 	Village            domain.Village
 	VillagePassword    string
@@ -36,10 +37,11 @@ type Msg struct {
 }
 
 type Model struct {
-	ctx        *context.ProgramContext
-	focusIndex int
-	inputs     []textinput.Model
-	errorMsg   *errormsg.ErrorMessage
+	ctx            *context.ProgramContext
+	villageCreator client.VillageCreator
+	focusIndex     int
+	inputs         []textinput.Model
+	errorMsg       *errormsg.ErrorMessage
 }
 
 func validatePassword(input string) error {
@@ -56,11 +58,12 @@ func validateNumber(input string) error {
 	return nil
 }
 
-func NewModel(ctx *context.ProgramContext) Model {
+func NewModel(ctx *context.ProgramContext, villageCreator client.VillageCreator) Model {
 	m := Model{
-		ctx:        ctx,
-		focusIndex: 0,
-		inputs:     make([]textinput.Model, 9),
+		ctx:            ctx,
+		villageCreator: villageCreator,
+		focusIndex:     0,
+		inputs:         make([]textinput.Model, 9),
 	}
 
 	var t textinput.Model
@@ -170,7 +173,7 @@ func (m Model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 							GameMasterName:     gameMasterName,
 							GameMasterPassword: gameMasterPassword,
 						}
-						v, err := m.ctx.WerewolfClient.CreateVillage(req)
+						v, err := m.villageCreator.CreateVillage(req)
 						if err != nil {
 							m.errorMsg = errormsg.NewErrorMessage(err.Error())
 							return tea.Tick(5*time.Second, func(_ time.Time) tea.Msg {
