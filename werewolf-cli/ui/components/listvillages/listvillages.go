@@ -29,11 +29,17 @@ func (i item) Description() string {
 	b := strings.Builder{}
 	b.WriteString(fmt.Sprintf("村加入状況: %v / %v", i.CurrentUserNumber, i.GetTotalMemberCount()))
 	b.WriteString("\n")
-	b.WriteString(fmt.Sprintf("初日咬みあり: %v", i.IsInitialActionActive))
+	var isInitialActionActive string
+	if i.IsInitialActionActive {
+		isInitialActionActive = "⭕"
+	} else {
+		isInitialActionActive = "❌"
+	}
+	b.WriteString(fmt.Sprintf("初日咬みあり: %v", isInitialActionActive))
 	b.WriteString("\n")
 	b.WriteString(
 		fmt.Sprintf(
-			"🧑: %v, 🐺: %v, 🔮: %v, 🛡️: %v, 👁️: %v, 😈: %v",
+			"🧑: %v 🐺: %v 🔮: %v 🛡️: %v 👁️: %v 😈: %v",
 			i.CitizenCount,
 			i.WerewolfCount,
 			i.FortuneTellerCount,
