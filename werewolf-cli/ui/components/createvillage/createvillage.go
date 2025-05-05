@@ -11,6 +11,7 @@ import (
 	"github.com/pokotsun/werewolf-game/pkg/domain"
 	"github.com/pokotsun/werewolf-game/ui/components/errormsg"
 	loggertype "github.com/pokotsun/werewolf-game/ui/components/logger"
+	"github.com/pokotsun/werewolf-game/ui/components/qustionitem"
 	"github.com/pokotsun/werewolf-game/ui/context"
 	"strconv"
 	"strings"
@@ -38,35 +39,11 @@ var (
 	blurredButton = fmt.Sprintf("[ %s ]", blurredStyle.Render("Submit"))
 )
 
-/**
- * questionItem
- * @description: 質問項目を表す構造体
- * @param question 質問文
- * @param textinput.Model textinput.Model
- */
-type questionItem struct {
-	question string
-	textinput.Model
-}
-
-func newQuestionItem() questionItem {
-	return questionItem{
-		question: "",
-		Model:    textinput.New(),
-	}
-}
-
-func (m questionItem) Update(msg tea.Msg) (questionItem, tea.Cmd) {
-	var cmd tea.Cmd
-	m.Model, cmd = m.Model.Update(msg)
-	return m, cmd
-}
-
 type Model struct {
 	ctx            *context.ProgramContext
 	villageCreator client.VillageCreator
 	focusIndex     int
-	inputs         []questionItem
+	inputs         []qustionitem.QuestionItem
 	errorMsg       *errormsg.ErrorMessage
 }
 
@@ -96,62 +73,62 @@ func NewModel(ctx *context.ProgramContext, villageCreator client.VillageCreator)
 		ctx:            ctx,
 		villageCreator: villageCreator,
 		focusIndex:     0,
-		inputs:         make([]questionItem, 9),
+		inputs:         make([]qustionitem.QuestionItem, 9),
 	}
 
-	var qItem questionItem
+	var qItem qustionitem.QuestionItem
 	for i := range m.inputs {
-		qItem = newQuestionItem()
+		qItem = qustionitem.New()
 		qItem.Cursor.SetMode(cursor.CursorBlink)
 		qItem.Cursor.Style = cursorStyle
 		qItem.CharLimit = 32
 
 		switch i {
 		case 0:
-			qItem.question = "What is your village name?"
+			qItem.Question = "What is your village name?"
 			qItem.Placeholder = "Village Name"
 			qItem.Focus()
 			qItem.PromptStyle = focusedStyle
 			qItem.TextStyle = focusedStyle
 			qItem.Validate = validateNotBlank
 		case 1:
-			qItem.question = "What is your village password?"
+			qItem.Question = "What is your village password?"
 			qItem.Placeholder = "Village Password"
 			qItem.EchoMode = textinput.EchoPassword
 			qItem.EchoCharacter = '•'
 			qItem.Validate = validatePassword
 		case 2:
-			qItem.question = "How many citizens are there?"
+			qItem.Question = "How many citizens are there?"
 			qItem.Placeholder = "Citizen Count"
 			qItem.CharLimit = 1
 			qItem.Validate = validateNumber
 		case 3:
-			qItem.question = "How many werewolves are there?"
+			qItem.Question = "How many werewolves are there?"
 			qItem.Placeholder = "Werewolf Count"
 			qItem.CharLimit = 1
 			qItem.Validate = validateNumber
 		case 4:
-			qItem.question = "How many fortune tellers are there?"
+			qItem.Question = "How many fortune tellers are there?"
 			qItem.Placeholder = "Fortune Teller Count"
 			qItem.CharLimit = 1
 			qItem.Validate = validateNumber
 		case 5:
-			qItem.question = "How many knights are there?"
+			qItem.Question = "How many knights are there?"
 			qItem.Placeholder = "Knight Count"
 			qItem.CharLimit = 1
 			qItem.Validate = validateNumber
 		case 6:
-			qItem.question = "How many madmen are there?"
+			qItem.Question = "How many madmen are there?"
 			qItem.Placeholder = "Madman Count"
 			qItem.CharLimit = 1
 			qItem.Validate = validateNumber
 		case 7:
-			qItem.question = "GameMaster is you. What is your name?"
+			qItem.Question = "GameMaster is you. What is your name?"
 			qItem.Placeholder = "GameMaster Name"
 			qItem.CharLimit = 64
 			qItem.Validate = validateNotBlank
 		case 8:
-			qItem.question = "What is GameMaster password?"
+			qItem.Question = "What is GameMaster password?"
 			qItem.Placeholder = "GameMaster Password"
 			qItem.EchoMode = textinput.EchoPassword
 			qItem.EchoCharacter = '•'
@@ -307,7 +284,7 @@ func (m Model) View() string {
 
 	for i := range m.inputs {
 		input := m.inputs[i]
-		b.WriteString(headingStyle.Render(input.question) + "\n")
+		b.WriteString(headingStyle.Render(input.Question) + "\n")
 		b.WriteString(input.View())
 		if input.Err != nil {
 			b.WriteString("\n" + errStyle.Render(input.Err.Error()))
