@@ -19,7 +19,7 @@ func (m *MockVillageCreator) createVillage(request CreateVillageRequest) (*domai
 	hashString := fmt.Sprintf("%x", hash)
 
 	return &domain.Village{
-		Id:                    &hashString,
+		Id:                    hashString,
 		Name:                  request.Name,
 		CitizenCount:          request.CitizenCount,
 		WerewolfCount:         request.WerewolfCount,

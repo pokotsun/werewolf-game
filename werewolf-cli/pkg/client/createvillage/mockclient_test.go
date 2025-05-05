@@ -32,8 +32,8 @@ func TestSuccess(t *testing.T) {
 
 	// then:
 	assert.Equal(t, nil, err)
-	assert.Equal(t, "ffd8a8822eddbac951b1ece03fcbd3623c56d8d8d532aa945dd9970406cf1efd", *actual.Id)
-	assert.Equal(t, *req.Name, *actual.Name)
+	assert.Equal(t, "ffd8a8822eddbac951b1ece03fcbd3623c56d8d8d532aa945dd9970406cf1efd", actual.Id)
+	assert.Equal(t, *req.Name, actual.Name)
 	assert.Equal(t, req.CitizenCount, actual.CitizenCount)
 	assert.Equal(t, req.WerewolfCount, actual.WerewolfCount)
 	assert.Equal(t, req.FortuneTellerCount, actual.FortuneTellerCount)

@@ -21,7 +21,7 @@ type item struct {
 }
 
 func (i item) Title() string {
-	return fmt.Sprintf("%s", *i.Name)
+	return fmt.Sprintf("%s", i.Name)
 }
 
 func (i item) Description() string {
@@ -46,7 +46,7 @@ func (i item) Description() string {
 }
 
 func (i item) FilterValue() string {
-	return *i.Name
+	return i.Name
 }
 
 type Model struct {
