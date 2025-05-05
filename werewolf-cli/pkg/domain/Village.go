@@ -12,3 +12,7 @@ type Village struct {
 	IsInitialActionActive bool
 	CurrentUserNumber     int32
 }
+
+func (v *Village) GetTotalMemberCount() int32 {
+	return v.CitizenCount + v.WerewolfCount + v.FortuneTellerCount + v.KnightCount + v.PsychicCount + v.MadmanCount
+}
