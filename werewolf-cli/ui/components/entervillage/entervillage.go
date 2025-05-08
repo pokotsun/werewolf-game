@@ -159,7 +159,7 @@ func (m Model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 						m.ctx.JoinedVillage.VillagePassword = joiningGamePassword
 						m.ctx.JoinedVillage.YourUserId = res.UserId
 						m.ctx.JoinedVillage.YourUserName = userName
-						m.ctx.JoinedVillage.YourUserPassword = userName
+						m.ctx.JoinedVillage.YourUserPassword = userPassword
 
 						return loggertype.LogMsg{
 							Entry: loggertype.LogEntry{
