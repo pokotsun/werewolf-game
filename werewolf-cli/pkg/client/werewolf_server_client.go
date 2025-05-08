@@ -3,7 +3,7 @@ package client
 import (
 	"context"
 	cvc "github.com/pokotsun/werewolf-game/pkg/client/createvillage"
-	client2 "github.com/pokotsun/werewolf-game/pkg/client/entervillage"
+	vjc "github.com/pokotsun/werewolf-game/pkg/client/entervillage"
 	lvmc "github.com/pokotsun/werewolf-game/pkg/client/listvillages"
 	"github.com/pokotsun/werewolf-game/pkg/domain"
 	"github.com/pokotsun/werewolf-game/pkg/grpc/github.com/pokotsun/werewolf/grpc/village"
@@ -13,6 +13,7 @@ import (
 
 var _ cvc.VillageCreator = (*WerewolfServerClient)(nil)
 var _ lvmc.VillageListMaker = (*WerewolfServerClient)(nil)
+var _ vjc.VillageJoiner = (*WerewolfServerClient)(nil)
 
 type WerewolfServerClient struct {
 	conn                 *grpc.ClientConn
@@ -27,7 +28,7 @@ func NewWerewolfServerClient(conn *grpc.ClientConn) *WerewolfServerClient {
 	}
 }
 
-func (c *WerewolfServerClient) CreateVillage(request cvc.CreateVillageRequest) (*domain.Village, error) {
+func (c *WerewolfServerClient) CreateVillage(request cvc.CreateVillageRequest) (*domain.JoinedVillage, error) {
 	req := village.CreateVillageRequest{
 		Name:                  request.Name,
 		CitizenCount:          int32(request.CitizenCount),
@@ -52,20 +53,26 @@ func (c *WerewolfServerClient) CreateVillage(request cvc.CreateVillageRequest) (
 		return nil, err
 	}
 
-	response := domain.Village{
-		Id:                    res.Id,
-		Name:                  res.Name,
-		CitizenCount:          int(res.CitizenCount),
-		WerewolfCount:         int(res.WerewolfCount),
-		FortuneTellerCount:    request.FortuneTellerCount,
-		KnightCount:           request.KnightCount,
-		PsychicCount:          request.PsychicCount,
-		MadmanCount:           request.MadmanCount,
-		IsInitialActionActive: true,
-		CurrentUserNumber:     int(res.CurrentUserNumber),
-	}
+	joinedVillage := domain.NewJoinedVillageAsGameMaster(
+		&domain.Village{
+			Id:                    res.Id,
+			Name:                  res.Name,
+			CitizenCount:          int(res.CitizenCount),
+			WerewolfCount:         int(res.WerewolfCount),
+			FortuneTellerCount:    request.FortuneTellerCount,
+			KnightCount:           request.KnightCount,
+			PsychicCount:          request.PsychicCount,
+			MadmanCount:           request.MadmanCount,
+			IsInitialActionActive: true,
+			CurrentUserNumber:     int(res.CurrentUserNumber),
+		},
+		request.Password,
+		res.GameMasterUserId,
+		req.GameMasterName,
+		req.GameMasterPassword,
+	)
 
-	return &response, nil
+	return &joinedVillage, nil
 }
 
 func (c *WerewolfServerClient) ListVillages() ([]*domain.Village, error) {
@@ -100,7 +107,7 @@ func (c *WerewolfServerClient) ListVillages() ([]*domain.Village, error) {
 	return targetList, nil
 }
 
-func (c *WerewolfServerClient) EnterVillage(request client2.EnterVillageRequest) (string, string, error) {
+func (c *WerewolfServerClient) EnterVillage(request vjc.EnterVillageRequest) (*vjc.EnterVillageResponse, error) {
 	// コンテキストを作成し、タイムアウトを設定
 	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
 	defer cancel()
@@ -115,10 +122,13 @@ func (c *WerewolfServerClient) EnterVillage(request client2.EnterVillageRequest)
 	// サーバーにリクエストを送信
 	res, err := (*c.villageServiceClient).EnterVillage(ctx, &req)
 	if err != nil {
-		return "", "", err
+		return nil, err
 	}
 
 	villageId, userId := res.VillageId, res.UserId
 
-	return villageId, userId, nil
+	return &vjc.EnterVillageResponse{
+		VillageId: villageId,
+		UserId:    userId,
+	}, nil
 }

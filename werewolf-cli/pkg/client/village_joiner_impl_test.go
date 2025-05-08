@@ -41,11 +41,12 @@ func TestSuccessOnVillageJoinerServerIntegration(t *testing.T) {
 	}
 
 	// when:
-	villageId, _, err := c.EnterVillage(req)
+	res, err := c.EnterVillage(req)
 	if err != nil {
 		log.Fatalf("could not get village info: %v", err)
 	}
 
 	// レスポンスを表示
-	assert.Equal(t, "814611f7-06fa-4c59-ba5c-67bf686588b4", villageId)
+	assert.Equal(t, "814611f7-06fa-4c59-ba5c-67bf686588b4", res.VillageId)
+	assert.Equal(t, "814611f7-06fa-4c59-ba5c-67bf686588b4", res.UserId)
 }

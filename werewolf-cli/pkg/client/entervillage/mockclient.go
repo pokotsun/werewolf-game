@@ -8,7 +8,7 @@ import (
 
 type MockVillageJoiner struct{}
 
-func (m *MockVillageJoiner) enterVillage(request EnterVillageRequest) (EnterVillageResponse, error) {
+func (m *MockVillageJoiner) EnterVillage(request EnterVillageRequest) (*EnterVillageResponse, error) {
 	jsonData, err := json.Marshal(request)
 	if err != nil {
 		fmt.Errorf("json marshal error: %v", err)
@@ -21,5 +21,5 @@ func (m *MockVillageJoiner) enterVillage(request EnterVillageRequest) (EnterVill
 		VillageId: hashString,
 		UserId:    hashString,
 	}
-	return res, nil
+	return &res, nil
 }
