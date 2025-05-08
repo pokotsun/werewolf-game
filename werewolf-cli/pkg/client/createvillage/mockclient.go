@@ -20,8 +20,8 @@ func (m *MockVillageCreator) CreateVillage(request CreateVillageRequest) (*domai
 	hash := sha256.Sum256(jsonData)
 	hashString := fmt.Sprintf("%x", hash)
 
-	return &domain.JoinedVillage{
-		Village: domain.Village{
+	joinedVillage := domain.NewJoinedVillageAsGameMaster(
+		&domain.Village{
 			Id:                    hashString,
 			Name:                  request.Name,
 			CitizenCount:          request.CitizenCount,
@@ -33,10 +33,10 @@ func (m *MockVillageCreator) CreateVillage(request CreateVillageRequest) (*domai
 			IsInitialActionActive: request.IsInitialActionActive,
 			CurrentUserNumber:     1,
 		},
-		VillagePassword:  request.Password,
-		YourUserId:       hashString,
-		YourUserName:     request.GameMasterName,
-		YourUserPassword: request.GameMasterPassword,
-		AreYouGameMaster: true,
-	}, nil
+		request.Password,
+		hashString,
+		request.GameMasterName,
+		request.GameMasterPassword,
+	)
+	return &joinedVillage, nil
 }

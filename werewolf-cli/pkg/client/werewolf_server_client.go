@@ -53,8 +53,8 @@ func (c *WerewolfServerClient) CreateVillage(request cvc.CreateVillageRequest) (
 		return nil, err
 	}
 
-	response := domain.JoinedVillage{
-		Village: domain.Village{
+	joinedVillage := domain.NewJoinedVillageAsGameMaster(
+		&domain.Village{
 			Id:                    res.Id,
 			Name:                  res.Name,
 			CitizenCount:          int(res.CitizenCount),
@@ -66,14 +66,13 @@ func (c *WerewolfServerClient) CreateVillage(request cvc.CreateVillageRequest) (
 			IsInitialActionActive: true,
 			CurrentUserNumber:     int(res.CurrentUserNumber),
 		},
-		VillagePassword:  request.Password,
-		YourUserId:       res.GameMasterUserId,
-		YourUserName:     req.GameMasterName,
-		YourUserPassword: req.GameMasterPassword,
-		AreYouGameMaster: false,
-	}
+		request.Password,
+		res.GameMasterUserId,
+		req.GameMasterName,
+		req.GameMasterPassword,
+	)
 
-	return &response, nil
+	return &joinedVillage, nil
 }
 
 func (c *WerewolfServerClient) ListVillages() ([]*domain.Village, error) {

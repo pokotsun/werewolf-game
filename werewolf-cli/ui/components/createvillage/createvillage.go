@@ -8,7 +8,6 @@ import (
 	tea "github.com/charmbracelet/bubbletea"
 	"github.com/charmbracelet/lipgloss"
 	vcc "github.com/pokotsun/werewolf-game/pkg/client/createvillage"
-	"github.com/pokotsun/werewolf-game/pkg/domain"
 	"github.com/pokotsun/werewolf-game/ui/components/errormsg"
 	loggertype "github.com/pokotsun/werewolf-game/ui/components/logger"
 	"github.com/pokotsun/werewolf-game/ui/components/qustionitem"
@@ -206,29 +205,12 @@ func (m Model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 							})
 						}
 
-						joinedVillage := domain.NewJoinedVillageAsGameMaster(
-							&domain.Village{
-								Id:                    v.Id,
-								Name:                  villageName,
-								CitizenCount:          citizenCount,
-								WerewolfCount:         werewolfCount,
-								FortuneTellerCount:    fortuneTellerCount,
-								KnightCount:           knightCount,
-								MadmanCount:           madmanCount,
-								IsInitialActionActive: true,
-							},
-							villagePassword,
-							v.YourUserId,
-							gameMasterName,
-							gameMasterPassword,
-						)
-
-						m.ctx.JoinedVillage = &joinedVillage
+						m.ctx.JoinedVillage = v
 
 						m.errorMsg = errormsg.NewErrorMessage("Village: " + v.Id + " created successfully!")
 						return loggertype.LogMsg{
 							Entry: loggertype.LogEntry{
-								Message: fmt.Sprintf("Village %v created successfully!", joinedVillage.Id),
+								Message: fmt.Sprintf("Village %v created successfully!", v.Id),
 								Level:   loggertype.Info,
 							},
 						}
