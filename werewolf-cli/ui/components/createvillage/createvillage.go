@@ -8,7 +8,6 @@ import (
 	tea "github.com/charmbracelet/bubbletea"
 	"github.com/charmbracelet/lipgloss"
 	vcc "github.com/pokotsun/werewolf-game/pkg/client/createvillage"
-	vjc "github.com/pokotsun/werewolf-game/pkg/client/entervillage"
 	"github.com/pokotsun/werewolf-game/pkg/domain"
 	"github.com/pokotsun/werewolf-game/ui/components/errormsg"
 	loggertype "github.com/pokotsun/werewolf-game/ui/components/logger"
@@ -73,7 +72,6 @@ func validateNumber(input string) error {
 func NewModel(
 	ctx *context.ProgramContext,
 	villageCreator vcc.VillageCreator,
-	villageJoiner vjc.VillageJoiner,
 ) Model {
 	m := Model{
 		ctx:            ctx,
@@ -220,8 +218,7 @@ func (m Model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 								IsInitialActionActive: true,
 							},
 							villagePassword,
-							// TODO: userId を受け取るようにする
-							"",
+							v.YourUserId,
 							gameMasterName,
 							gameMasterPassword,
 						)

@@ -28,7 +28,7 @@ func NewWerewolfServerClient(conn *grpc.ClientConn) *WerewolfServerClient {
 	}
 }
 
-func (c *WerewolfServerClient) CreateVillage(request cvc.CreateVillageRequest) (*domain.Village, error) {
+func (c *WerewolfServerClient) CreateVillage(request cvc.CreateVillageRequest) (*domain.JoinedVillage, error) {
 	req := village.CreateVillageRequest{
 		Name:                  request.Name,
 		CitizenCount:          int32(request.CitizenCount),
@@ -53,17 +53,24 @@ func (c *WerewolfServerClient) CreateVillage(request cvc.CreateVillageRequest) (
 		return nil, err
 	}
 
-	response := domain.Village{
-		Id:                    res.Id,
-		Name:                  res.Name,
-		CitizenCount:          int(res.CitizenCount),
-		WerewolfCount:         int(res.WerewolfCount),
-		FortuneTellerCount:    request.FortuneTellerCount,
-		KnightCount:           request.KnightCount,
-		PsychicCount:          request.PsychicCount,
-		MadmanCount:           request.MadmanCount,
-		IsInitialActionActive: true,
-		CurrentUserNumber:     int(res.CurrentUserNumber),
+	response := domain.JoinedVillage{
+		Village: domain.Village{
+			Id:                    res.Id,
+			Name:                  res.Name,
+			CitizenCount:          int(res.CitizenCount),
+			WerewolfCount:         int(res.WerewolfCount),
+			FortuneTellerCount:    request.FortuneTellerCount,
+			KnightCount:           request.KnightCount,
+			PsychicCount:          request.PsychicCount,
+			MadmanCount:           request.MadmanCount,
+			IsInitialActionActive: true,
+			CurrentUserNumber:     int(res.CurrentUserNumber),
+		},
+		VillagePassword:  request.Password,
+		YourUserId:       res.GameMasterUserId,
+		YourUserName:     req.GameMasterName,
+		YourUserPassword: req.GameMasterPassword,
+		AreYouGameMaster: false,
 	}
 
 	return &response, nil

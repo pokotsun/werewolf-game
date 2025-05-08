@@ -17,5 +17,5 @@ type CreateVillageRequest struct {
 }
 
 type VillageCreator interface {
-	CreateVillage(request CreateVillageRequest) (*domain.Village, error)
+	CreateVillage(request CreateVillageRequest) (*domain.JoinedVillage, error)
 }
