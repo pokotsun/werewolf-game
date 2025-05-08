@@ -145,7 +145,7 @@ func (m Model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 							UserPassword:    userPassword,
 						}
 
-						_, err := m.villageJoiner.EnterVillage(req)
+						res, err := m.villageJoiner.EnterVillage(req)
 						if err != nil {
 							return loggertype.LogMsg{
 								Entry: loggertype.LogEntry{
@@ -156,8 +156,8 @@ func (m Model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 						}
 
 						// 村に参加した場合、村の情報を更新する
-						// TODO UserId 情報を JoinedVillage に含めるようにする
 						m.ctx.JoinedVillage.VillagePassword = joiningGamePassword
+						m.ctx.JoinedVillage.YourUserId = res.UserId
 						m.ctx.JoinedVillage.YourUserName = userName
 						m.ctx.JoinedVillage.YourUserPassword = userName
 

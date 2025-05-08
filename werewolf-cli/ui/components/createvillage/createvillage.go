@@ -7,7 +7,8 @@ import (
 	"github.com/charmbracelet/bubbles/textinput"
 	tea "github.com/charmbracelet/bubbletea"
 	"github.com/charmbracelet/lipgloss"
-	client "github.com/pokotsun/werewolf-game/pkg/client/createvillage"
+	vcc "github.com/pokotsun/werewolf-game/pkg/client/createvillage"
+	vjc "github.com/pokotsun/werewolf-game/pkg/client/entervillage"
 	"github.com/pokotsun/werewolf-game/pkg/domain"
 	"github.com/pokotsun/werewolf-game/ui/components/errormsg"
 	loggertype "github.com/pokotsun/werewolf-game/ui/components/logger"
@@ -42,7 +43,7 @@ var (
 
 type Model struct {
 	ctx            *context.ProgramContext
-	villageCreator client.VillageCreator
+	villageCreator vcc.VillageCreator
 	focusIndex     int
 	inputs         []qustionitem.QuestionItem
 	errorMsg       *errormsg.ErrorMessage
@@ -69,7 +70,11 @@ func validateNumber(input string) error {
 	return nil
 }
 
-func NewModel(ctx *context.ProgramContext, villageCreator client.VillageCreator) Model {
+func NewModel(
+	ctx *context.ProgramContext,
+	villageCreator vcc.VillageCreator,
+	villageJoiner vjc.VillageJoiner,
+) Model {
 	m := Model{
 		ctx:            ctx,
 		villageCreator: villageCreator,
@@ -184,7 +189,7 @@ func (m Model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 						gameMasterPassword := m.inputs[8].Value()
 
 						// Create village
-						req := client.CreateVillageRequest{
+						req := vcc.CreateVillageRequest{
 							Name:               villageName,
 							CitizenCount:       citizenCount,
 							WerewolfCount:      werewolfCount,
@@ -215,6 +220,8 @@ func (m Model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 								IsInitialActionActive: true,
 							},
 							villagePassword,
+							// TODO: userId を受け取るようにする
+							"",
 							gameMasterName,
 							gameMasterPassword,
 						)
