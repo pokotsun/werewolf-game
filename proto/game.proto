@@ -25,7 +25,7 @@ message GetActorRequest {
 }
 
 message GetActorResponse {
-  string actor = 1;
+  int32 actor = 1;
 }
 
 message GetGameStatusRequest {
