@@ -1,0 +1,103 @@
+syntax = "proto3";
+
+package game;
+
+option go_package = "github.com/pokotsun/werewolf/grpc/game";
+
+option java_multiple_files = true;
+option java_package = "com.example.backendkotlin.generated.grpc";
+option java_outer_classname = "GameServiceProto";
+
+// GameService 定義
+service GameService {
+  rpc GetActor(GetActorRequest) returns (GetActorResponse);
+  rpc GetGameStatus(GetGameStatusRequest) returns (GetGameStatusResponse);
+  rpc GetDeadPlayersLog(GetDeadPlayersLogRequest) returns (GetDeadPlayersLogResponse);
+  rpc GetSelfActionLog(GetSelfActionLogRequest) returns (GetSelfActionLogResponse);
+  rpc ExecSelfAction(ExecSelfActionRequest) returns (ExecSelfActionResponse);
+  rpc GetGameResult(GetGameResultRequest) returns (GetGameResultResponse);
+}
+
+message GetActorRequest {
+  string user_id = 1;
+  string user_password = 2;
+  string game_id = 3;
+}
+
+message GetActorResponse {
+  string actor = 1;
+}
+
+message GetGameStatusRequest {
+  string user_id = 1;
+  string user_password = 2;
+  string game_id = 3;
+}
+
+message GetGameStatusResponse {
+  int32 day = 1;
+  int32 term = 2;
+  bool did_action = 3;
+  int32 waiting_action_count = 4;
+  bool is_playing = 5;
+  repeated PlayerDeadAlive player_dead_alive = 6;
+}
+
+message PlayerDeadAlive {
+  string player_name = 1;
+  bool is_dead = 2;
+}
+
+message GetDeadPlayersLogRequest {
+  string user_id = 1;
+  string user_password = 2;
+  string game_id = 3;
+}
+
+message GetDeadPlayersLogResponse {
+  repeated DeadPlayerLog logs = 1;
+}
+
+message DeadPlayerLog {
+  int32 day = 1;
+  int32 term = 2;
+  optional string target_player = 3;
+}
+
+message GetSelfActionLogRequest {
+  string user_id = 1;
+  string user_password = 2;
+  string game_id = 3;
+}
+
+message GetSelfActionLogResponse {
+  repeated SelfActionLog logs = 1;
+}
+
+message SelfActionLog {
+  int32 day = 1;
+  int32 term = 2;
+  string target_user_name = 3;
+  bool result = 4;
+}
+
+message ExecSelfActionRequest {
+  string user_id = 1;
+  string user_password = 2;
+  string game_id = 3;
+  string target_player_id = 4;
+}
+
+message ExecSelfActionResponse {
+  int32 result = 1;
+}
+
+message GetGameResultRequest {
+  string user_id = 1;
+  string user_password = 2;
+  string game_id = 3;
+}
+
+message GetGameResultResponse {
+  optional int32 result = 1;  // 0: 市民陣営, 1: 人狼陣営
+}
