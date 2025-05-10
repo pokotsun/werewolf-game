@@ -10,14 +10,8 @@ public interface GetActorResponseOrBuilder extends
     com.google.protobuf.MessageOrBuilder {
 
   /**
-   * <code>string actor = 1;</code>
+   * <code>int32 actor = 1;</code>
    * @return The actor.
    */
-  java.lang.String getActor();
-  /**
-   * <code>string actor = 1;</code>
-   * @return The bytes for actor.
-   */
-  com.google.protobuf.ByteString
-      getActorBytes();
+  int getActor();
 }

@@ -112,7 +112,7 @@ public final class GameServiceProto {
       "\n\020proto/game.proto\022\004game\"J\n\017GetActorRequ" +
       "est\022\017\n\007user_id\030\001 \001(\t\022\025\n\ruser_password\030\002 " +
       "\001(\t\022\017\n\007game_id\030\003 \001(\t\"!\n\020GetActorResponse" +
-      "\022\r\n\005actor\030\001 \001(\t\"O\n\024GetGameStatusRequest\022" +
+      "\022\r\n\005actor\030\001 \001(\005\"O\n\024GetGameStatusRequest\022" +
       "\017\n\007user_id\030\001 \001(\t\022\025\n\ruser_password\030\002 \001(\t\022" +
       "\017\n\007game_id\030\003 \001(\t\"\252\001\n\025GetGameStatusRespon" +
       "se\022\013\n\003day\030\001 \001(\005\022\014\n\004term\030\002 \001(\005\022\022\n\ndid_act" +
