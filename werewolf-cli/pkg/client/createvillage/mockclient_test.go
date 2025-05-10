@@ -14,7 +14,7 @@ func TestSuccess(t *testing.T) {
 	gameMasterName := "GameMaster"
 	gameMasterPassword := "GameMasterPassword"
 	req := CreateVillageRequest{
-		Name:                  &name,
+		Name:                  name,
 		CitizenCount:          10,
 		WerewolfCount:         2,
 		FortuneTellerCount:    1,
@@ -22,9 +22,9 @@ func TestSuccess(t *testing.T) {
 		PsychicCount:          1,
 		MadmanCount:           1,
 		IsInitialActionActive: true,
-		Password:              &password,
-		GameMasterName:        &gameMasterName,
-		GameMasterPassword:    &gameMasterPassword,
+		Password:              password,
+		GameMasterName:        gameMasterName,
+		GameMasterPassword:    gameMasterPassword,
 	}
 
 	// when:
@@ -33,7 +33,7 @@ func TestSuccess(t *testing.T) {
 	// then:
 	assert.Equal(t, nil, err)
 	assert.Equal(t, "ffd8a8822eddbac951b1ece03fcbd3623c56d8d8d532aa945dd9970406cf1efd", actual.Id)
-	assert.Equal(t, *req.Name, actual.Name)
+	assert.Equal(t, req.Name, actual.Name)
 	assert.Equal(t, req.CitizenCount, actual.CitizenCount)
 	assert.Equal(t, req.WerewolfCount, actual.WerewolfCount)
 	assert.Equal(t, req.FortuneTellerCount, actual.FortuneTellerCount)
@@ -41,4 +41,9 @@ func TestSuccess(t *testing.T) {
 	assert.Equal(t, req.PsychicCount, actual.PsychicCount)
 	assert.Equal(t, req.MadmanCount, actual.MadmanCount)
 	assert.Equal(t, req.IsInitialActionActive, actual.IsInitialActionActive)
+	assert.Equal(t, "ffd8a8822eddbac951b1ece03fcbd3623c56d8d8d532aa945dd9970406cf1efd", actual.YourUserId)
+	assert.Equal(t, req.GameMasterName, actual.YourUserName)
+	assert.Equal(t, req.GameMasterPassword, actual.YourUserPassword)
+	assert.Equal(t, req.Password, actual.VillagePassword)
+	assert.Equal(t, 1, actual.CurrentUserNumber)
 }

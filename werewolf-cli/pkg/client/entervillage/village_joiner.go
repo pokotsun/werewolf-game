@@ -14,5 +14,5 @@ type EnterVillageResponse struct {
 
 type VillageJoiner interface {
 	// returns the village ID
-	enterVillage(request EnterVillageRequest) (EnterVillageResponse, error)
+	EnterVillage(request EnterVillageRequest) (*EnterVillageResponse, error)
 }
